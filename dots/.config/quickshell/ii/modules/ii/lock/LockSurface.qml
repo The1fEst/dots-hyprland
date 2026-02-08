@@ -11,6 +11,7 @@ import qs.modules.common.panels.lock
 import qs.modules.ii.bar as Bar
 import Quickshell
 import Quickshell.Services.SystemTray
+import Quickshell.Io
 
 MouseArea {
     id: root
@@ -18,6 +19,7 @@ MouseArea {
     property bool active: false
     property bool showInputField: active || context.currentText.length > 0
     readonly property bool requirePasswordToPower: Config.options.lock.security.requirePasswordToPower
+    property string userDisplayName: SystemInfo.username
 
     // Force focus on entry
     function forceFieldFocus() {
@@ -57,6 +59,22 @@ MouseArea {
         forceFieldFocus();
         toolbarScale = 1;
         toolbarOpacity = 1;
+        getFullNameProc.running = true;
+    }
+
+    // Get full name from /etc/passwd
+    Process {
+        id: getFullNameProc
+        command: ["bash", "-c", `grep "^${SystemInfo.username}:" /etc/passwd | cut -d: -f5 | cut -d, -f1`]
+        stdout: StdioCollector {
+            id: fullNameCollector
+            onStreamFinished: {
+                const fullName = fullNameCollector.text.trim();
+                if (fullName.length > 0) {
+                    root.userDisplayName = fullName;
+                }
+            }
+        }
     }
 
     // Key presses
@@ -244,11 +262,11 @@ MouseArea {
         scale: root.toolbarScale
         opacity: root.toolbarOpacity
 
-        // Username
+        // Username / Full Name
         IconAndTextPair {
             Layout.leftMargin: 8
             icon: "account_circle"
-            text: SystemInfo.username
+            text: root.userDisplayName
         }
 
         // Keyboard layout (Xkb)
