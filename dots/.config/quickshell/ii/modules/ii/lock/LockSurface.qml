@@ -273,7 +273,7 @@ MouseArea {
                 Loader {
                     anchors.verticalCenter: parent.verticalCenter
                     sourceComponent: StyledText {
-                        text: HyprlandXkb.currentLayoutCode
+                        text: HyprlandXkb.currentLayoutCode.toUpperCase()
                         color: Appearance.colors.colOnSurfaceVariant
                         animateChange: true
                     }
