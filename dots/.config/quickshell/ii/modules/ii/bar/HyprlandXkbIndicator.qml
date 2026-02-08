@@ -13,7 +13,7 @@ Loader {
     function abbreviateLayoutCode(fullCode) {
     return fullCode.split(':').map(layout => {
             const baseLayout = layout.split('-')[0];
-            return baseLayout.slice(0, 4);
+            return baseLayout.slice(0, 4).toUpperCase();
         }).join('\n');
     }
 
