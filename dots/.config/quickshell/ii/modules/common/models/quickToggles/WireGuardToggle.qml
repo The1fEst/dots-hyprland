@@ -33,7 +33,7 @@ QuickToggleModel {
 
     Timer {
         id: pollTimer
-        interval: 3000
+        interval: Config.options.resources.updateInterval
         running: true
         repeat: true
         onTriggered: checkConnectionState.running = true

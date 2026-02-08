@@ -9,11 +9,6 @@ import qs.modules.waffle.looks
 BarButton {
     id: root
 
-    checked: GlobalStates.sidebarLeftOpen
-    onClicked: {
-        GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen;
-    }
-
     contentItem: Item {
         anchors.fill: parent
         implicitHeight: column.implicitHeight

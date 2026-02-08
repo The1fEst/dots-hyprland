@@ -13,11 +13,6 @@ AppButton {
     leftInset: Config.options.waffles.bar.leftAlignApps ? 0 : 12
     implicitWidth: expandedForm ? 148 : (height - topInset - bottomInset + leftInset + rightInset)
     iconName: "widgets"
-
-    checked: GlobalStates.sidebarLeftOpen
-    onClicked: {
-        GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen
-    }
     onDownChanged: {
         scaleAnim.duration = root.down ? 150 : 200
         scaleAnim.easing.bezierCurve = root.down ? Looks.transition.easing.bezierCurve.easeIn : Looks.transition.easing.bezierCurve.easeOut

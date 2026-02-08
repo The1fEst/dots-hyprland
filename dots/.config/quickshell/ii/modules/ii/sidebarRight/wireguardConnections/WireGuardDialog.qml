@@ -97,7 +97,7 @@ WindowDialog {
 
     Timer {
         id: refreshTimer
-        interval: 1000
+        interval: 500
         onTriggered: refreshConnections.running = true
     }
 

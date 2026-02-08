@@ -2,7 +2,6 @@ import QtQuick
 import Quickshell
 
 import qs.modules.common
-import qs.modules.waffle.actionCenter
 import qs.modules.waffle.background
 import qs.modules.waffle.bar
 import qs.modules.waffle.lock
@@ -23,7 +22,6 @@ import qs.modules.ii.overlay
 import qs.modules.ii.wallpaperSelector
 
 Scope {
-    PanelLoader { component: WaffleActionCenter {} }
     PanelLoader { component: WaffleBar {} }
     PanelLoader { component: WaffleBackground {} }
     PanelLoader { component: WaffleLock {} }

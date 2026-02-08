@@ -7,50 +7,7 @@ import qs.modules.common.widgets
 ContentPage {
     forceWidth: true
 
-    ContentSection {
-        icon: "neurology"
-        title: Translation.tr("AI")
 
-        MaterialTextArea {
-            Layout.fillWidth: true
-            placeholderText: Translation.tr("System prompt")
-            text: Config.options.ai.systemPrompt
-            wrapMode: TextEdit.Wrap
-            onTextChanged: {
-                Qt.callLater(() => {
-                    Config.options.ai.systemPrompt = text;
-                });
-            }
-        }
-    }
-
-    ContentSection {
-        icon: "music_cast"
-        title: Translation.tr("Music Recognition")
-
-        ConfigSpinBox {
-            icon: "timer_off"
-            text: Translation.tr("Total duration timeout (s)")
-            value: Config.options.musicRecognition.timeout
-            from: 10
-            to: 100
-            stepSize: 2
-            onValueChanged: {
-                Config.options.musicRecognition.timeout = value;
-            }
-        }
-        ConfigSpinBox {
-            icon: "av_timer"
-            text: Translation.tr("Polling interval (s)")
-            value: Config.options.musicRecognition.interval
-            from: 2
-            to: 10
-            stepSize: 1
-            onValueChanged: {
-                Config.options.musicRecognition.interval = value;
-            }
-        }
-    }
 
     ContentSection {
         icon: "cell_tower"
