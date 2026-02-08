@@ -35,5 +35,6 @@ AbstractQuickPanel {
         IdleInhibitor {}
         EasyEffectsToggle {}
         CloudflareWarp {}
+        WireGuardToggle {}
     }
 }

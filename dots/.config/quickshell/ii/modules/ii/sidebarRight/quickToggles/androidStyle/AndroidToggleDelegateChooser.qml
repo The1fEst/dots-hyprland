@@ -19,6 +19,7 @@ DelegateChooser {
     signal openBluetoothDialog()
     signal openNightLightDialog()
     signal openWifiDialog()
+    signal openWireGuardDialog()
 
     role: "type"
 
@@ -81,6 +82,22 @@ DelegateChooser {
         baseCellHeight: root.baseCellHeight
         cellSpacing: root.spacing
         cellSize: modelData.size
+    } }
+
+    DelegateChoice { roleValue: "wireGuard"; AndroidWireGuardToggle {
+        required property int index
+        required property var modelData
+        buttonIndex: root.startingIndex + index
+        buttonData: modelData
+        editMode: root.editMode
+        expandedSize: modelData.size > 1
+        baseCellWidth: root.baseCellWidth
+        baseCellHeight: root.baseCellHeight
+        cellSpacing: root.spacing
+        cellSize: modelData.size
+        onOpenMenu: {
+            root.openWireGuardDialog()
+        }
     } }
 
     DelegateChoice { roleValue: "colorPicker"; AndroidColorPickerToggle {

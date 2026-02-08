@@ -2,6 +2,7 @@ import qs.modules.ii.bar.weather
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.UPower
 import qs
 import qs.services
@@ -306,6 +307,36 @@ Item { // Bar content region
                         text: Network.materialSymbol
                         iconSize: Appearance.font.pixelSize.larger
                         color: rightSidebarButton.colText
+                    }
+                    Revealer {
+                        id: wireGuardRevealer
+                        property bool wireGuardActive: false
+                        reveal: wireGuardActive
+                        Layout.leftMargin: reveal ? indicatorsRowLayout.realSpacing : 0
+                        Behavior on Layout.leftMargin {
+                            animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                        }
+                        CustomIcon {
+                            source: 'wireguard-symbolic'
+                            width: Appearance.font.pixelSize.larger
+                            height: Appearance.font.pixelSize.larger
+                            colorize: true
+                            color: rightSidebarButton.colText
+                        }
+                        Process {
+                            id: wireGuardPollProcess
+                            running: true
+                            command: ["bash", "-c", "nmcli connection show --active | grep -q WireGuard"]
+                            onExited: (exitCode, exitStatus) => {
+                                wireGuardRevealer.wireGuardActive = exitCode === 0
+                            }
+                        }
+                        Timer {
+                            interval: 3000
+                            running: true
+                            repeat: true
+                            onTriggered: wireGuardPollProcess.running = true
+                        }
                     }
                     MaterialSymbol {
                         Layout.leftMargin: indicatorsRowLayout.realSpacing
