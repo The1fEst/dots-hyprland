@@ -15,7 +15,7 @@ import Quickshell.Hyprland
 Scope {
     id: root
     property bool visible: false
-    readonly property MprisPlayer activePlayer: MprisController.activePlayer
+    readonly property var activePlayer: MprisController.activePlayer
     readonly property var realPlayers: MprisController.players
     readonly property var meaningfulPlayers: filterDuplicatePlayers(realPlayers)
     readonly property real osdWidth: Appearance.sizes.osdWidth
@@ -34,10 +34,14 @@ Scope {
             let p1 = players[i];
             let group = [i];
 
-            // Find duplicates by trackTitle prefix
+            // Find duplicates: only group if they have matching titles AND position/length
             for (let j = i + 1; j < players.length; ++j) {
                 let p2 = players[j];
-                if (p1.trackTitle && p2.trackTitle && (p1.trackTitle.includes(p2.trackTitle) || p2.trackTitle.includes(p1.trackTitle)) || (p1.position - p2.position <= 2 && p1.length - p2.length <= 2)) {
+                const titleMatch = p1.trackTitle && p2.trackTitle && (p1.trackTitle.includes(p2.trackTitle) || p2.trackTitle.includes(p1.trackTitle));
+                const posMatch = p1.position !== undefined && p2.position !== undefined && Math.abs(p1.position - p2.position) <= 2 && Math.abs(p1.length - p2.length) <= 2;
+                
+                // Only group if both title AND position match (not just one)
+                if (titleMatch && posMatch) {
                     group.push(j);
                 }
             }
@@ -131,7 +135,7 @@ Scope {
                         values: root.meaningfulPlayers
                     }
                     delegate: PlayerControl {
-                        required property MprisPlayer modelData
+                        required property var modelData
                         player: modelData
                         visualizerPoints: root.visualizerPoints
                         implicitWidth: root.widgetWidth

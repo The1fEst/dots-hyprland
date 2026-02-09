@@ -14,7 +14,7 @@ import Quickshell.Services.Mpris
 
 Item { // Player instance
     id: root
-    required property MprisPlayer player
+    required property var player
     property var artUrl: player?.trackArtUrl
     property string artDownloadLocation: Directories.coverArt
     property string artFileName: Qt.md5(artUrl)
@@ -252,7 +252,7 @@ Item { // Player instance
                                     handleColor: blendedColors.colPrimary
                                     value: root.player?.position / root.player?.length
                                     onMoved: {
-                                        root.player.position = value * root.player.length;
+                                        root.player?.seek(value * root.player.length);
                                     }
                                 }
                             }
