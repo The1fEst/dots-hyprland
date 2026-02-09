@@ -1,15 +1,15 @@
 # This script is meant to be sourced.
 # It's not for directly running.
 
-install-yay(){
+install-paru(){
   x sudo pacman -S --needed --noconfirm base-devel
-  x git clone https://aur.archlinux.org/yay-bin.git /tmp/buildyay
-  x cd /tmp/buildyay
+  x git clone https://aur.archlinux.org/paru.git /tmp/buildparu
+  x cd /tmp/buildparu
   x makepkg -o
   x makepkg -se
   x makepkg -i --noconfirm
   x cd ${REPO_ROOT}
-  rm -rf /tmp/buildyay
+  rm -rf /tmp/buildparu
 }
 
 remove_deprecated_dependencies(){
@@ -32,7 +32,7 @@ implicitize_old_dependencies(){
 
   echo "Attempting to set previously explicitly installed deps as implicit..."
   for i in "${explicitly_installed[@]}"; do for j in "${old_deps_list[@]}"; do
-    [ "$i" = "$j" ] && yay -D --asdeps "$i"
+    [ "$i" = "$j" ] && paru -D --asdeps "$i"
   done; done
 
   return 0
@@ -58,19 +58,19 @@ case $SKIP_SYSUPDATE in
   *) v sudo pacman -Syu;;
 esac
 
-# Use yay. Because paru does not support cleanbuild.
+# Use paru as AUR helper
 # Also see https://wiki.hyprland.org/FAQ/#how-do-i-update
-if ! command -v yay >/dev/null 2>&1;then
-  echo -e "${STY_YELLOW}[$0]: \"yay\" not found.${STY_RST}"
-  showfun install-yay
-  v install-yay
+if ! command -v paru >/dev/null 2>&1;then
+  echo -e "${STY_YELLOW}[$0]: \"paru\" not found.${STY_RST}"
+  showfun install-paru
+  v install-paru
 fi
 
 showfun implicitize_old_dependencies
 v implicitize_old_dependencies
 
 # https://github.com/end-4/dots-hyprland/issues/581
-# yay -Bi is kinda hit or miss, instead cd into the relevant directory and manually source and install deps
+# paru -Bi is kinda hit or miss, instead cd into the relevant directory and manually source and install deps
 install-local-pkgbuild() {
   local location=$1
   local installflags=$2
@@ -78,7 +78,7 @@ install-local-pkgbuild() {
   x pushd $location
 
   source ./PKGBUILD
-  x yay -S --sudoloop $installflags --asdeps "${depends[@]}"
+  x paru -S --sudoloop $installflags --asdeps "${depends[@]}"
   # man makepkg:
   # -A, --ignorearch: Ignore a missing or incomplete arch field in the build script.
   # -s, --syncdeps: Install missing dependencies using pacman. When build-time or run-time dependencies are not found, pacman will try to resolve them.
