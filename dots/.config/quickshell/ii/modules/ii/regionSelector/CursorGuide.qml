@@ -12,8 +12,6 @@ Item {
     case RegionSelection.SnipAction.Copy:
     case RegionSelection.SnipAction.Edit:
         return Translation.tr("Copy region (LMB) or annotate (RMB)");
-    case RegionSelection.SnipAction.CharRecognition:
-        return Translation.tr("Recognize text");
     case RegionSelection.SnipAction.Record:
     case RegionSelection.SnipAction.RecordWithSound:
         return Translation.tr("Record region");
@@ -22,8 +20,6 @@ Item {
     case RegionSelection.SnipAction.Copy:
     case RegionSelection.SnipAction.Edit:
         return "content_cut";
-    case RegionSelection.SnipAction.CharRecognition:
-        return "document_scanner";
     case RegionSelection.SnipAction.Record:
     case RegionSelection.SnipAction.RecordWithSound:
         return "videocam";

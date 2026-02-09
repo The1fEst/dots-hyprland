@@ -23,8 +23,7 @@ PanelWindow {
     }
     enum ImageAction {
         Copy,
-        Menu,
-        CharRecognition
+        Menu
     }
     enum VideoAction {
         Record,
@@ -91,11 +90,6 @@ PanelWindow {
             switch (root.imageAction) {
             case WRegionSelectionPanel.ImageAction.Copy:
                 return ScreenshotAction.Action.Copy;
-
-            case WRegionSelectionPanel.ImageAction.CharRecognition:
-                return ScreenshotAction.Action.CharRecognition;
-            case WRegionSelectionPanel.ImageAction.Search:
-                return ScreenshotAction.Action.Search;
             default:
                 return ScreenshotAction.Action.Copy;
             }
@@ -328,22 +322,6 @@ PanelWindow {
                 text: Translation.tr("Color picker")
             }
         }
-        WToolbarIconButton {
-            icon.name: "scan-text"
-            checked: root.imageAction === WRegionSelectionPanel.ImageAction.CharRecognition
-            onClicked: {
-                if (root.imageAction === WRegionSelectionPanel.ImageAction.CharRecognition && root.mediaType === WRegionSelectionPanel.MediaType.Image) {
-                    root.imageAction = WRegionSelectionPanel.ImageAction.Copy;
-                } else {
-                    root.mediaType = WRegionSelectionPanel.MediaType.Image;
-                    root.imageAction = WRegionSelectionPanel.ImageAction.CharRecognition;
-                }
-            }
-            WToolTip {
-                text: Translation.tr("Text extractor")
-            }
-        }
-
         WToolbarSeparator {}
 
         WToolbarIconButton {

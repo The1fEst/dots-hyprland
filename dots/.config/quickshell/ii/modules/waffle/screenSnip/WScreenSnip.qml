@@ -34,12 +34,6 @@ Scope {
         GlobalStates.regionSelectorOpen = true;
     }
 
-    function ocr() {
-        GlobalStates.regionSelectorOpen = true;
-        regionSelectorLoader.item.mediaType = WRegionSelectionPanel.MediaType.Image;
-        regionSelectorLoader.item.imageAction = WRegionSelectionPanel.ImageAction.CharRecognition;
-    }
-
     function record() {
         GlobalStates.regionSelectorOpen = true;
         regionSelectorLoader.item.mediaType = WRegionSelectionPanel.MediaType.Video;
@@ -64,9 +58,6 @@ Scope {
         function screenshot() {
             root.screenshot();
         }
-        function ocr() {
-            root.ocr();
-        }
         function record() {
             root.record();
         }
@@ -82,16 +73,6 @@ Scope {
         name: "regionScreenshot"
         description: "Takes a screenshot of the selected region"
         onPressed: root.screenshot()
-    }
-    GlobalShortcut {
-        name: "regionSearch"
-        description: "Searches the selected region"
-        onPressed: root.search()
-    }
-    GlobalShortcut {
-        name: "regionOcr"
-        description: "Recognizes text in the selected region"
-        onPressed: root.ocr()
     }
     GlobalShortcut {
         name: "regionRecord"
