@@ -16,13 +16,11 @@ Singleton {
     enum Action {
         Copy,
         Edit,
-        Search,
         CharRecognition,
         Record,
         RecordWithSound
     }
 
-    property string imageSearchEngineBaseUrl: Config.options.search.imageSearch.imageSearchEngineBaseUrl
     property string fileUploadApiEndpoint: "https://uguu.se/upload"
 
     function getCommand(x, y, width, height, screenshotPath, action, saveDir = "") {
@@ -60,9 +58,6 @@ Singleton {
                 break;
             case ScreenshotAction.Action.Edit:
                 return ["bash", "-c", `${cropToStdout} | ${annotationCommand} && ${cleanup}`]
-                break;
-            case ScreenshotAction.Action.Search:
-                return ["bash", "-c", `${cropInPlace} && xdg-open "${root.imageSearchEngineBaseUrl}$(${uploadAndGetUrl(screenshotPath)})" && ${cleanup}`]
                 break;
             case ScreenshotAction.Action.CharRecognition:
                 return ["bash", "-c", `${cropInPlace} && tesseract '${StringUtils.shellSingleQuoteEscape(screenshotPath)}' stdout -l $(tesseract --list-langs | awk 'NR>1{print $1}' | tr '\\n' '+' | sed 's/\\+$/\\n/') | wl-copy && ${cleanup}`]

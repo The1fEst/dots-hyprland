@@ -41,11 +41,7 @@ ApplicationWindow {
     height: 650
     color: Appearance.m3colors.m3background
 
-    Process {
-        id: translationProc
-        property string locale: ""
-        command: [Directories.aiTranslationScriptPath, translationProc.locale]
-    }
+
 
     ColumnLayout {
         anchors {

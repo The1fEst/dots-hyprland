@@ -46,16 +46,6 @@ Scope {
         GlobalStates.regionSelectorOpen = true
     }
 
-    function search() {
-        root.action = RegionSelection.SnipAction.Search
-        if (Config.options.search.imageSearch.useCircleSelection) {
-            root.selectionMode = RegionSelection.SelectionMode.Circle
-        } else {
-            root.selectionMode = RegionSelection.SelectionMode.RectCorners
-        }
-        GlobalStates.regionSelectorOpen = true
-    }
-
     function ocr() {
         root.action = RegionSelection.SnipAction.CharRecognition
         root.selectionMode = RegionSelection.SelectionMode.RectCorners

@@ -24,8 +24,7 @@ PanelWindow {
     enum ImageAction {
         Copy,
         Menu,
-        CharRecognition,
-        Search
+        CharRecognition
     }
     enum VideoAction {
         Record,
@@ -92,8 +91,7 @@ PanelWindow {
             switch (root.imageAction) {
             case WRegionSelectionPanel.ImageAction.Copy:
                 return ScreenshotAction.Action.Copy;
-            case WRegionSelectionPanel.ImageAction.Menu:
-                return ScreenshotAction.Action.Edit;
+
             case WRegionSelectionPanel.ImageAction.CharRecognition:
                 return ScreenshotAction.Action.CharRecognition;
             case WRegionSelectionPanel.ImageAction.Search:
@@ -320,21 +318,6 @@ PanelWindow {
         WToolbarSeparator {}
 
         // Tools
-        WToolbarIconButton {
-            icon.name: "search-visual"
-            checked: root.imageAction === WRegionSelectionPanel.ImageAction.Search
-            onClicked: {
-                if (root.imageAction === WRegionSelectionPanel.ImageAction.Search && root.mediaType === WRegionSelectionPanel.MediaType.Image) {
-                    root.imageAction = WRegionSelectionPanel.ImageAction.Copy;
-                } else {
-                    root.mediaType = WRegionSelectionPanel.MediaType.Image;
-                    root.imageAction = WRegionSelectionPanel.ImageAction.Search;
-                }
-            }
-            WToolTip {
-                text: Translation.tr("Image search")
-            }
-        }
         WToolbarIconButton {
             icon.name: "eyedropper"
             onClicked: {
