@@ -103,13 +103,14 @@ Item { // Bar content region
             anchors.verticalCenter: parent.verticalCenter
             implicitWidth: root.centerSideModuleWidth
 
-            Resources {
-                alwaysShowAllResources: root.useShortenedForm === 2
-                Layout.fillWidth: root.useShortenedForm === 2
-            }
-
             Media {
                 visible: root.useShortenedForm < 2
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            Resources {
+                alwaysShowAllResources: root.useShortenedForm === 2
+                Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
             }
         }
