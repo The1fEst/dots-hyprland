@@ -5,9 +5,7 @@ install-paru(){
   x sudo pacman -S --needed --noconfirm base-devel
   x git clone https://aur.archlinux.org/paru.git /tmp/buildparu
   x cd /tmp/buildparu
-  x makepkg -o
-  x makepkg -se
-  x makepkg -i --noconfirm
+  x makepkg -si --noconfirm
   x cd ${REPO_ROOT}
   rm -rf /tmp/buildparu
 }
