@@ -282,6 +282,17 @@ ContentPage {
             }
         }
 
+        MaterialTextField {
+            Layout.fillWidth: true
+            Layout.leftMargin: 8
+            Layout.rightMargin: 8
+            placeholderText: Translation.tr("Workspace dispatcher command")
+            text: Config.options.bar.workspaces.dispatcherCommand ?? "workspace"
+            onTextChanged: {
+                Config.options.bar.workspaces.dispatcherCommand = text;
+            }
+        }
+
         ConfigSpinBox {
             icon: "view_column"
             text: Translation.tr("Workspaces shown")

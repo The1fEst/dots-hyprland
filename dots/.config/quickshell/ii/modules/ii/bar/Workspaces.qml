@@ -87,10 +87,12 @@ Item {
     // Scroll to switch workspaces
     WheelHandler {
         onWheel: (event) => {
-            if (event.angleDelta.y < 0)
-                Hyprland.dispatch(`workspace r+1`);
-            else if (event.angleDelta.y > 0)
-                Hyprland.dispatch(`workspace r-1`);
+            const workspaceCommand = Config.options.bar.workspaces.dispatcherCommand ?? "workspace"
+            if (event.angleDelta.y < 0) {
+                Hyprland.dispatch(`${workspaceCommand} +1`)
+            } else if (event.angleDelta.y > 0) {
+                Hyprland.dispatch(`${workspaceCommand} -1`)
+            }
         }
         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
     }
