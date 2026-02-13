@@ -251,8 +251,10 @@ Item { // Player instance
                                     trackColor: blendedColors.colSecondaryContainer
                                     handleColor: blendedColors.colPrimary
                                     value: root.player?.position / root.player?.length
-                                    onMoved: {
-                                        root.player?.seek(value * root.player.length);
+                                    onPressedChanged: {
+                                        if (!pressed) {
+                                            root.player.position = value * root.player.length;
+                                        }
                                     }
                                 }
                             }
@@ -273,7 +275,6 @@ Item { // Player instance
                                 }
                             }
 
-                            
                         }
                         TrackChangeButton {
                             iconName: "skip_next"
