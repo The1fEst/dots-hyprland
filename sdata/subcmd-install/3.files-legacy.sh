@@ -6,7 +6,7 @@
 #####################################################################################
 # MISC (For dots/.config/* but not quickshell, not fish, not Hyprland, not fontconfig)
 case "${SKIP_MISCCONF}" in
-  true) sleep 0;;
+  true) true;;
   *)
     for i in $(find dots/.config/ -mindepth 1 -maxdepth 1 ! -name 'quickshell' ! -name 'fish' ! -name 'hypr' ! -name 'fontconfig' -exec basename {} \;); do
 #      i="dots/.config/$i"
@@ -20,7 +20,7 @@ case "${SKIP_MISCCONF}" in
 esac
 
 case "${SKIP_QUICKSHELL}" in
-  true) sleep 0;;
+  true) true;;
   *)
      # Should overwriting the whole directory not only ~/.config/quickshell/ii/ cuz https://github.com/end-4/dots-hyprland/issues/2294#issuecomment-3448671064
     install_dir__sync dots/.config/quickshell "$XDG_CONFIG_HOME"/quickshell
@@ -28,14 +28,14 @@ case "${SKIP_QUICKSHELL}" in
 esac
 
 case "${SKIP_FISH}" in
-  true) sleep 0;;
+  true) true;;
   *)
     install_dir__sync_exclude dots/.config/fish "$XDG_CONFIG_HOME"/fish "conf.d"
     ;;
 esac
 
 case "${SKIP_FONTCONFIG}" in
-  true) sleep 0;;
+  true) true;;
   *)
     case "$FONTSET_DIR_NAME" in
       "") install_dir__sync dots/.config/fontconfig "$XDG_CONFIG_HOME"/fontconfig ;;
@@ -45,11 +45,21 @@ esac
 
 # For Hyprland
 case "${SKIP_HYPRLAND}" in
-  true) sleep 0;;
+  true) true;;
   *)
     install_dir__sync dots/.config/hypr/hyprland "$XDG_CONFIG_HOME"/hypr/hyprland
-    for i in hypr{land,lock}.conf {monitors,workspaces}.conf ; do
+    if [ -f "${XDG_CONFIG_HOME}/hypr/hyprland.conf" ]; then
+      mv "${XDG_CONFIG_HOME}/hypr/hyprland.conf" "${XDG_CONFIG_HOME}/hypr/hyprland.conf.old" # disable old config
+      echo 'hyprland.conf has been renamed to hyprland.conf.old. This is to allow the new lua config to load.'
+    fi
+    for i in hyprlock.conf ; do
       install_file__auto_backup "dots/.config/hypr/$i" "${XDG_CONFIG_HOME}/hypr/$i"
+    done
+    for i in hyprland.lua ; do
+      case "${SKIP_HYPRLAND_ENTRY}" in
+        true) true;;
+        *) install_file "dots/.config/hypr/$i" "${XDG_CONFIG_HOME}/hypr/$i" ;;
+      esac
     done
     for i in hypridle.conf ; do
       if [[ "${INSTALL_VIA_NIX}" == true ]]; then
@@ -62,7 +72,7 @@ case "${SKIP_HYPRLAND}" in
       v bash -c "printf \"# For fedora to setup polkit\nexec-once = /usr/libexec/kf6/polkit-kde-authentication-agent-1\n\" >> ${XDG_CONFIG_HOME}/hypr/hyprland/execs.conf"
     fi
 
-    install_dir__skip_existed "dots/.config/hypr/custom" "${XDG_CONFIG_HOME}/hypr/custom"
+    install_dir__ignore_existing "dots/.config/hypr/custom" "${XDG_CONFIG_HOME}/hypr/custom"
     ;;
 esac
 

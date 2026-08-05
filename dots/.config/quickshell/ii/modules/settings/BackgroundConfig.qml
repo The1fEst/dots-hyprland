@@ -43,8 +43,8 @@ ContentPage {
             icon: "loupe"
             text: Translation.tr("Preferred wallpaper zoom (%)")
             value: Config.options.background.parallax.workspaceZoom * 100
-            from: 100
-            to: 150
+            from: 10
+            to: 200
             stepSize: 1
             onValueChanged: {
                 Config.options.background.parallax.workspaceZoom = value / 100;
@@ -246,8 +246,8 @@ ContentPage {
                 value: Config.options.background.widgets.clock.digital.font.size
                 usePercentTooltip: false
                 buttonIcon: "format_size"
-                from: 70
-                to: 150
+                from: 50
+                to: 700
                 stopIndicatorValues: [90]
                 onValueChanged: {
                     Config.options.background.widgets.clock.digital.font.size = value;
@@ -291,7 +291,7 @@ ContentPage {
                     Config.options.background.widgets.clock.cookie.useSineCookie = checked;
                 }
                 StyledToolTip {
-                    text: "Looks a bit softer and more consistent with different number of sides,\nbut has less impressive morphing"
+                    text: Translation.tr("Looks a bit softer and more consistent with different number of sides,\nbut has less impressive morphing")
                 }
             }
 
@@ -315,7 +315,7 @@ ContentPage {
                     Config.options.background.widgets.clock.cookie.constantlyRotate = checked;
                 }
                 StyledToolTip {
-                    text: "Makes the clock always rotate. This is extremely expensive\n(expect 50% usage on Intel UHD Graphics) and thus impractical."
+                    text: Translation.tr("Makes the clock always rotate. This is extremely expensive\n(expect 50% usage on Intel UHD Graphics) and thus impractical.")
                 }
             }
 
@@ -333,7 +333,7 @@ ContentPage {
                         Config.options.background.widgets.clock.cookie.hourMarks = checked;
                     }
                     StyledToolTip {
-                        text: "Can only be turned on using the 'Dots' or 'Full' dial style for aesthetic reasons"
+                        text: Translation.tr("Can only be turned on using the 'Dots' or 'Full' dial style for aesthetic reasons")
                     }
                 }
 
@@ -349,7 +349,7 @@ ContentPage {
                         Config.options.background.widgets.clock.cookie.timeIndicators = checked;
                     }
                     StyledToolTip {
-                        text: "Can't be turned on when using 'Numbers' dial style for aesthetic reasons"
+                        text: Translation.tr("Can't be turned on when using 'Numbers' dial style for aesthetic reasons")
                     }
                 }
             }
