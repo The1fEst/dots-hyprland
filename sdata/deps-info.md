@@ -154,10 +154,6 @@ Tips:
   - Used in Hyprland and Quickshell config.
 - `swappy`
   - Used in Quickshell config.
-- `tesseract`
-  - Used in Quickshell and Hyprland config.
-- `tesseract-data-eng`
-  - Used as data for tesseract.
 - `wf-recorder`
   - Used in Quickshell config.
 

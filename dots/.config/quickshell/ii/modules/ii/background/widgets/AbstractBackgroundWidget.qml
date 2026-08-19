@@ -52,6 +52,9 @@ AbstractWidget {
     property bool wallpaperIsVideo: Config.options.background.wallpaperPath.endsWith(".mp4") || Config.options.background.wallpaperPath.endsWith(".webm") || Config.options.background.wallpaperPath.endsWith(".mkv") || Config.options.background.wallpaperPath.endsWith(".avi") || Config.options.background.wallpaperPath.endsWith(".mov")
     property string wallpaperPath: wallpaperIsVideo ? Config.options.background.thumbnailPath : Config.options.background.wallpaperPath
     
+    // Padding so widgets don't end up glued to a screen edge
+    property int placementPadding: 200
+
     onWallpaperPathChanged: refreshPlacementIfNeeded()
     onPlacementStrategyChanged: refreshPlacementIfNeeded()
     Connections {
@@ -60,43 +63,12 @@ AbstractWidget {
     }
     function refreshPlacementIfNeeded() {
         if (!Config.ready) return;
-        if (root.placementStrategy === "free" && !root.needsColText) return;
-        leastBusyRegionProc.wallpaperPath = root.wallpaperPath;
-        leastBusyRegionProc.running = false;
-        leastBusyRegionProc.running = true;
-    }
-    Process {
-        id: leastBusyRegionProc
-        property string wallpaperPath: root.wallpaperPath
-        // TODO: make these less arbitrary
-        property int contentWidth: 300
-        property int contentHeight: 300
-        property int horizontalPadding: 200
-        property int verticalPadding: 200
-        command: [Quickshell.shellPath("scripts/images/least-busy-region-venv.sh") // Comments to force the formatter to break lines
-            , "--screen-width", Math.round(root.scaledScreenWidth) //
-            , "--screen-height", Math.round(root.scaledScreenHeight) //
-            , "--width", contentWidth //
-            , "--height", contentHeight //
-            , "--horizontal-padding", horizontalPadding //
-            , "--vertical-padding", verticalPadding //
-            , wallpaperPath //
-            , ...(root.placementStrategy === "mostBusy" ? ["--busiest"] : [])
-            // "--visual-output",
-        ]
-        stdout: StdioCollector {
-            id: leastBusyRegionOutputCollector
-            onStreamFinished: {
-                const output = leastBusyRegionOutputCollector.text;
-                // console.log("[Background] Least busy region output:", output)
-                if (output.length === 0) return;
-                const parsedContent = JSON.parse(output);
-                root.dominantColor = parsedContent.dominant_color || Appearance.colors.colPrimary;
-                if (root.placementStrategy === "free") return;
-                root.targetX = parsedContent.center_x * root.wallpaperScale - root.width / 2;
-                root.targetY  = parsedContent.center_y * root.wallpaperScale - root.height / 2;
-            }
-        }
+        if (root.placementStrategy === "free") return;
+        // Random spot on the monitor, whose size comes from Hyprland
+        const maxX = root.scaledScreenWidth - root.width - root.placementPadding;
+        const maxY = root.scaledScreenHeight - root.height - root.placementPadding;
+        root.targetX = Math.max(0, root.placementPadding + Math.random() * Math.max(0, maxX - root.placementPadding));
+        root.targetY = Math.max(0, root.placementPadding + Math.random() * Math.max(0, maxY - root.placementPadding));
     }
 }
 

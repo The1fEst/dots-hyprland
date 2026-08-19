@@ -20,8 +20,6 @@ Singleton {
         RecordWithSound
     }
 
-    property string fileUploadApiEndpoint: "https://uguu.se/upload"
-
     function getCommand(x, y, width, height, screenshotPath, action, saveDir = "") {
         // Set command for action
         const rx = Math.round(x);
@@ -34,9 +32,6 @@ Singleton {
         const cropInPlace = `${cropBase} '${StringUtils.shellSingleQuoteEscape(screenshotPath)}'`
         const cleanup = `rm '${StringUtils.shellSingleQuoteEscape(screenshotPath)}'`
         const slurpRegion = `${rx},${ry} ${rw}x${rh}`
-        const uploadAndGetUrl = (filePath) => {
-            return `curl -sF files[]=@'${StringUtils.shellSingleQuoteEscape(filePath)}' ${root.fileUploadApiEndpoint} | jq -r '.files[0].url'`
-        }
         const annotationCommand = `${Config.options.regionSelector.annotation.useSatty ? "satty" : "swappy"} -f -`;
         switch (action) {
             case ScreenshotAction.Action.Copy:

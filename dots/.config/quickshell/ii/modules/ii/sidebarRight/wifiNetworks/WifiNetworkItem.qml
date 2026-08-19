@@ -92,26 +92,6 @@ DialogListItem {
             }
         }
 
-        ColumnLayout { // Public wifi login page
-            id: publicWifiPortal
-            Layout.topMargin: 8
-            visible: (root.wifiNetwork?.active && (root.wifiNetwork?.security ?? "").trim().length === 0) ?? false
-
-            RowLayout {
-                DialogButton {
-                    Layout.fillWidth: true
-                    buttonText: Translation.tr("Open network portal")
-                    colBackground: Appearance.colors.colLayer4
-                    colBackgroundHover: Appearance.colors.colLayer4Hover
-                    colRipple: Appearance.colors.colLayer4Active
-                    onClicked: {
-                        Network.openPublicWifiPortal()
-                        GlobalStates.sidebarRightOpen = false
-                    }
-                }
-            }
-        }
-
         Item {
             Layout.fillHeight: true
         }

@@ -86,15 +86,6 @@ RippleButton {
     }
     property string displayContent: highlightContent(root.itemName, root.query)
 
-    property list<string> urls: {
-        if (!root.itemName) return [];
-        // Regular expression to match URLs
-        const urlRegex = /https?:\/\/[^\s<>"{}|\\^`[\]]+/gi;
-        const matches = root.itemName?.match(urlRegex)
-            ?.filter(url => !url.includes("…")) // Elided = invalid
-        return matches ? matches : [];
-    }
-    
     PointingHandInteraction {}
 
     background {
@@ -207,14 +198,6 @@ RippleButton {
                             font.pixelSize: Appearance.font.pixelSize.normal
                             color: Appearance.m3colors.m3onPrimary
                         }
-                    }
-                }
-                Repeater { // Favicons for links
-                    model: root.query == root.itemName ? [] : root.urls
-                    Favicon {
-                        required property var modelData
-                        size: parent.height
-                        url: modelData
                     }
                 }
                 StyledText { // Item name/content

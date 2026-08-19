@@ -14,7 +14,10 @@ import Quickshell.Hyprland
 ButtonMouseArea {
     id: root
 
-    readonly property HyprlandMonitor monitor: Hyprland.monitorFor(root.QsWindow.window?.screen)
+    // monitorFor() is a plain function call, so this binding only tracks QsWindow.window.
+    // Touching focusedMonitor also re-runs it once Hyprland's IPC data lands, otherwise a
+    // window that has no screen yet at creation time keeps monitor null forever.
+    readonly property HyprlandMonitor monitor: Hyprland.monitorFor(root.QsWindow.window?.screen) ?? Hyprland.focusedMonitor
     WorkspaceModel {
         id: wsModel
         monitor: root.monitor

@@ -315,60 +315,6 @@ ContentPage {
     }
 
     ContentSection {
-        icon: "point_scan"
-        title: Translation.tr("Overlay: Crosshair")
-
-        MaterialTextArea {
-            Layout.fillWidth: true
-            placeholderText: Translation.tr("Crosshair code (in Valorant's format)")
-            text: Config.options.crosshair.code
-            wrapMode: TextEdit.Wrap
-            onTextChanged: {
-                Config.options.crosshair.code = text;
-            }
-        }
-
-        RowLayout {
-            StyledText {
-                Layout.leftMargin: 10
-                color: Appearance.colors.colSubtext
-                font.pixelSize: Appearance.font.pixelSize.smallie
-                text: Translation.tr("Press Super+G to open the overlay and pin the crosshair")
-            }
-            Item {
-                Layout.fillWidth: true
-            }
-            RippleButtonWithIcon {
-                id: editorButton
-                buttonRadius: Appearance.rounding.full
-                materialIcon: "open_in_new"
-                mainText: Translation.tr("Open editor")
-                onClicked: {
-                    Qt.openUrlExternally(`https://www.vcrdb.net/builder?c=${Config.options.crosshair.code}`);
-                }
-                StyledToolTip {
-                    text: "www.vcrdb.net"
-                }
-            }
-        }
-    }
-
-    ContentSection {
-        icon: "point_scan"
-        title: Translation.tr("Overlay: Floating Image")
-
-        MaterialTextArea {
-            Layout.fillWidth: true
-            placeholderText: Translation.tr("Image source")
-            text: Config.options.overlay.floatingImage.imageSource
-            wrapMode: TextEdit.Wrap
-            onTextChanged: {
-                Config.options.overlay.floatingImage.imageSource = text;
-            }
-        }
-    }
-
-    ContentSection {
         icon: "screenshot_frame_2"
         title: Translation.tr("Region selector (screen snipping)")
 
@@ -389,17 +335,6 @@ ContentPage {
                     checked: Config.options.regionSelector.targetRegions.layers
                     onCheckedChanged: {
                         Config.options.regionSelector.targetRegions.layers = checked;
-                    }
-                }
-                ConfigSwitch {
-                    buttonIcon: "nearby"
-                    text: Translation.tr('Content')
-                    checked: Config.options.regionSelector.targetRegions.content
-                    onCheckedChanged: {
-                        Config.options.regionSelector.targetRegions.content = checked;
-                    }
-                    StyledToolTip {
-                        text: Translation.tr("Could be images or parts of the screen that have some containment.\nMight not always be accurate.\nThis is done with an image processing algorithm run locally and no AI is used.")
                     }
                 }
             }
@@ -461,15 +396,6 @@ ContentPage {
             }
             StyledToolTip {
                 text: Translation.tr("When enabled keeps the content of the right sidebar loaded to reduce the delay when opening,\nat the cost of around 15MB of consistent RAM usage. Delay significance depends on your system's performance.\nUsing a custom kernel like linux-cachyos might help")
-            }
-        }
-
-        ConfigSwitch {
-            buttonIcon: "translate"
-            text: Translation.tr('Enable translator')
-            checked: Config.options.sidebar.translator.enable
-            onCheckedChanged: {
-                Config.options.sidebar.translator.enable = checked;
             }
         }
 

@@ -15,6 +15,5 @@ RDEPEND="
 	gui-apps/hyprshot
 	gui-apps/slurp
 	gui-apps/swappy
-	app-text/tesseract
 	gui-apps/wf-recorder
 "

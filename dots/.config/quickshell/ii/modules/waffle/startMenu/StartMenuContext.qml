@@ -55,10 +55,6 @@ Scope {
             name: Translation.tr("Commands"),
             prefix: Config.options.search.prefix.shellCommand
         },
-        {
-            name: Translation.tr("Web"),
-            prefix: Config.options.search.prefix.webSearch
-        },
     ]
 
 }

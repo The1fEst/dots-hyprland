@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys
-import cv2
-import numpy as np
+from PIL import Image, ImageChops, ImageStat
 
 # Allowed scheme types
 SCHEMES = [
@@ -17,14 +16,15 @@ SCHEMES = [
 
 def image_colorfulness(image):
     # Based on Hasler and Süsstrunk's colorfulness metric
-    (B, G, R) = cv2.split(image.astype("float"))
-    rg = np.absolute(R - G)
-    yb = np.absolute(0.5 * (R + G) - B)
-    std_rg = np.std(rg)
-    std_yb = np.std(yb)
-    mean_rg = np.mean(rg)
-    mean_yb = np.mean(yb)
-    colorfulness = np.sqrt(std_rg ** 2 + std_yb ** 2) + (0.3 * np.sqrt(mean_rg ** 2 + mean_yb ** 2))
+    (R, G, B) = image.split()
+    rg = ImageChops.difference(R, G)
+    # ImageChops.add(a, b, scale=2) is (a + b) / 2
+    yb = ImageChops.difference(ImageChops.add(R, G, scale=2), B)
+    rg_stat = ImageStat.Stat(rg)
+    yb_stat = ImageStat.Stat(yb)
+    std_rg, mean_rg = rg_stat.stddev[0], rg_stat.mean[0]
+    std_yb, mean_yb = yb_stat.stddev[0], yb_stat.mean[0]
+    colorfulness = (std_rg ** 2 + std_yb ** 2) ** 0.5 + (0.3 * (mean_rg ** 2 + mean_yb ** 2) ** 0.5)
     return colorfulness
 
 # scheme-content respects the image's colors very well, but it might
@@ -36,13 +36,16 @@ def pick_scheme(colorfulness):
         return "scheme-tonal-spot"
 
 def load_and_resize_image(img_path, max_dim=128):
-    img = cv2.imread(img_path)
-    if img is None:
+    try:
+        img = Image.open(img_path)
+        img.load()
+    except Exception:
         return None
-    h, w = img.shape[:2]
+    img = img.convert("RGB")
+    w, h = img.size
     if max(h, w) > max_dim:
         scale = max_dim / max(h, w)
-        img = cv2.resize(img, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
+        img = img.resize((max(1, int(w * scale)), max(1, int(h * scale))), Image.LANCZOS)
     return img
 
 def main():

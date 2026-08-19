@@ -102,24 +102,6 @@ WindowDialog {
                 right: parent.right
             }
             iconSize: Appearance.font.pixelSize.larger
-            buttonIcon: "filter"
-            text: Translation.tr("Content adjustment")
-            checked: HyprlandAntiFlashbangShader.enabled
-            onCheckedChanged: {
-                if (checked) HyprlandAntiFlashbangShader.enable()
-                else HyprlandAntiFlashbangShader.disable()
-            }
-            StyledToolTip {
-                text: Translation.tr("<b>Dims screen content</b> as needed.<br><br>Pros: Immediately responsive<br>Cons: Expensive and can hurt color accuracy<br><br><i>Uses a Hyprland screen shader</i>")
-            }
-        }
-
-        ConfigSwitch {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            iconSize: Appearance.font.pixelSize.larger
             buttonIcon: "light_mode"
             text: Translation.tr("Brightness adjustment")
             checked: Config.options.light.antiFlashbang.enable

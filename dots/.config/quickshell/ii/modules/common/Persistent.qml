@@ -58,11 +58,6 @@ Singleton {
 
             property string hyprlandInstanceSignature: ""
 
-            property JsonObject ai: JsonObject {
-                property string model: "gemini-2.5-flash"
-                property real temperature: 0.5
-            }
-
             property JsonObject cheatsheet: JsonObject {
                 property int tabIndex: 0
             }
@@ -74,33 +69,12 @@ Singleton {
                 }
             }
 
-            property JsonObject booru: JsonObject {
-                property bool allowNsfw: false
-                property string provider: "yandere"
-            }
-
             property JsonObject idle: JsonObject {
                 property bool inhibit: false
             }
 
             property JsonObject overlay: JsonObject {
-                property list<string> open: ["crosshair", "recorder", "volumeMixer", "resources"]
-                property JsonObject crosshair: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: true
-                    property real x: 827
-                    property real y: 441
-                    property real width: 250
-                    property real height: 100
-                }
-                property JsonObject floatingImage: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: false
-                    property real x: 1650
-                    property real y: 390
-                    property real width: 0
-                    property real height: 0
-                }
+                property list<string> open: ["recorder", "volumeMixer", "resources"]
                 property JsonObject fpsLimiter: JsonObject {
                     property bool pinned: false
                     property bool clickthrough: false

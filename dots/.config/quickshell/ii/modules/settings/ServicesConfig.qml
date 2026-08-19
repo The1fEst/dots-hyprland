@@ -10,21 +10,6 @@ ContentPage {
 
 
     ContentSection {
-        icon: "cell_tower"
-        title: Translation.tr("Networking")
-
-        MaterialTextArea {
-            Layout.fillWidth: true
-            placeholderText: Translation.tr("User agent (for services that require it)")
-            text: Config.options.networking.userAgent
-            wrapMode: TextEdit.Wrap
-            onTextChanged: {
-                Config.options.networking.userAgent = text;
-            }
-        }
-    }
-
-    ContentSection {
         icon: "memory"
         title: Translation.tr("Resources")
 
@@ -134,27 +119,6 @@ ContentPage {
                     onTextChanged: {
                         Config.options.search.prefix.shellCommand = text;
                     }
-                }
-                MaterialTextArea {
-                    Layout.fillWidth: true
-                    placeholderText: Translation.tr("Web search")
-                    text: Config.options.search.prefix.webSearch
-                    wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.webSearch = text;
-                    }
-                }
-            }
-        }
-        ContentSubsection {
-            title: Translation.tr("Web search")
-            MaterialTextArea {
-                Layout.fillWidth: true
-                placeholderText: Translation.tr("Base URL")
-                text: Config.options.search.engineBaseUrl
-                wrapMode: TextEdit.Wrap
-                onTextChanged: {
-                    Config.options.search.engineBaseUrl = text;
                 }
             }
         }

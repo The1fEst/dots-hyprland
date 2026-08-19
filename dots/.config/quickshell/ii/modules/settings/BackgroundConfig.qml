@@ -98,14 +98,9 @@ ContentPage {
                         value: "free"
                     },
                     {
-                        displayName: Translation.tr("Least busy"),
-                        icon: "category",
-                        value: "leastBusy"
-                    },
-                    {
-                        displayName: Translation.tr("Most busy"),
-                        icon: "shapes",
-                        value: "mostBusy"
+                        displayName: Translation.tr("Random"),
+                        icon: "shuffle",
+                        value: "random"
                     },
                 ]
             }
@@ -589,14 +584,9 @@ ContentPage {
                         value: "free"
                     },
                     {
-                        displayName: Translation.tr("Least busy"),
-                        icon: "category",
-                        value: "leastBusy"
-                    },
-                    {
-                        displayName: Translation.tr("Most busy"),
-                        icon: "shapes",
-                        value: "mostBusy"
+                        displayName: Translation.tr("Random"),
+                        icon: "shuffle",
+                        value: "random"
                     },
                 ]
             }

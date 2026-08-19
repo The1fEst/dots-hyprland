@@ -148,8 +148,6 @@ quickshell, home_attrs, ... }:
       hyprshot #hyprshot
       slurp #slurp
       swappy #swappy
-      tesseract #tesseract
-      #tesseract-data-eng (TODO: Seems not available as nixpkg)
       wf-recorder #wf-recorder
 
 

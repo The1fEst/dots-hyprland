@@ -174,9 +174,6 @@ packages = [
   "hyprshot",
   "slurp",
   "swappy",
-  "tesseract",
-  "tesseract-langpack-eng",
-  "tesseract-langpack-chi_sim",
   "wf-recorder"
 ]
 

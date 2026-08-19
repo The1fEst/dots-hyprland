@@ -20,16 +20,6 @@ DelegateChooser {
     // role: "type" is implied by usage
 
     DelegateChoice {
-        roleValue: "antiFlashbang"
-        ActionCenterToggleButton {
-            toggleModel: AntiFlashbangToggle {}
-            icon: "flash-off"
-            menu: Component {
-                NightLightControl {}
-            }
-        }
-    }
-    DelegateChoice {
         roleValue: "bluetooth"
         ActionCenterToggleButton {
             toggleModel: BluetoothToggle {}
@@ -66,13 +56,6 @@ DelegateChooser {
         ActionCenterToggleButton {
             toggleModel: EasyEffectsToggle {}
             icon: "device-eq"
-        }
-    }
-    DelegateChoice {
-        roleValue: "gameMode"
-        ActionCenterToggleButton {
-            toggleModel: GameModeToggle {}
-            icon: "games"
         }
     }
     DelegateChoice {
