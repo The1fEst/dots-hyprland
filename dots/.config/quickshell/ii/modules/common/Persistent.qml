@@ -73,51 +73,6 @@ Singleton {
                 property bool inhibit: false
             }
 
-            property JsonObject overlay: JsonObject {
-                property list<string> open: ["recorder", "volumeMixer", "resources"]
-                property JsonObject fpsLimiter: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: false
-                    property real x: 1570
-                    property real y: 615
-                    property real width: 280
-                    property real height: 80
-                }
-                property JsonObject recorder: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: false
-                    property real x: 80
-                    property real y: 80
-                    property real width: 350
-                    property real height: 130
-                }
-                property JsonObject resources: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: true
-                    property real x: 1500
-                    property real y: 770
-                    property real width: 350
-                    property real height: 200
-                    property int tabIndex: 0
-                }
-                property JsonObject volumeMixer: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: false
-                    property real x: 80
-                    property real y: 280
-                    property real width: 350
-                    property real height: 600
-                    property int tabIndex: 0
-                }
-                property JsonObject notes: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: true
-                    property real x: 1400
-                    property real y: 42
-                    property real width: 460
-                    property real height: 330
-                }
-            }
 
             property JsonObject timer: JsonObject {
                 property JsonObject pomodoro: JsonObject {

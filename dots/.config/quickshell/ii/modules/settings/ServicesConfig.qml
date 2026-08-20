@@ -24,7 +24,50 @@ ContentPage {
                 Config.options.resources.updateInterval = value;
             }
         }
-        
+
+        ConfigSpinBox {
+            icon: "timeline"
+            text: Translation.tr("History length (data points)")
+            value: Config.options.resources.historyLength
+            from: 10
+            to: 500
+            stepSize: 10
+            onValueChanged: {
+                Config.options.resources.historyLength = value;
+            }
+            StyledToolTip {
+                text: Translation.tr("How many measurements the usage graphs keep")
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "block"
+        title: Translation.tr("Conflict killer")
+
+        ConfigSwitch {
+            buttonIcon: "notifications_off"
+            text: Translation.tr("Kill notification daemons without asking")
+            checked: Config.options.conflictKiller.autoKillNotificationDaemons
+            onCheckedChanged: {
+                Config.options.conflictKiller.autoKillNotificationDaemons = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Conflicting daemons like dunst or mako are killed silently instead of showing a dialog")
+            }
+        }
+
+        ConfigSwitch {
+            buttonIcon: "shelf_auto_hide"
+            text: Translation.tr("Kill tray hosts without asking")
+            checked: Config.options.conflictKiller.autoKillTrays
+            onCheckedChanged: {
+                Config.options.conflictKiller.autoKillTrays = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Other panels holding the system tray are killed silently instead of showing a dialog")
+            }
+        }
     }
 
     ContentSection {
@@ -67,10 +110,44 @@ ContentPage {
             }
         }
 
+        ConfigSpinBox {
+            icon: "av_timer"
+            text: Translation.tr("Non-app result delay (ms)")
+            value: Config.options.search.nonAppResultDelay
+            from: 0
+            to: 500
+            stepSize: 10
+            onValueChanged: {
+                Config.options.search.nonAppResultDelay = value;
+            }
+            StyledToolTip {
+                text: Translation.tr("Delays the expensive result types (math, commands, web) so typing stays smooth")
+            }
+        }
+
         ContentSubsection {
             title: Translation.tr("Prefixes")
+
+            ConfigSwitch {
+                buttonIcon: "bolt"
+                text: Translation.tr("Show default actions without a prefix")
+                checked: Config.options.search.prefix.showDefaultActionsWithoutPrefix
+                onCheckedChanged: {
+                    Config.options.search.prefix.showDefaultActionsWithoutPrefix = checked;
+                }
+            }
+
             ConfigRow {
                 uniform: true
+                MaterialTextArea {
+                    Layout.fillWidth: true
+                    placeholderText: Translation.tr("Apps")
+                    text: Config.options.search.prefix.app
+                    wrapMode: TextEdit.Wrap
+                    onTextChanged: {
+                        Config.options.search.prefix.app = text;
+                    }
+                }
                 MaterialTextArea {
                     Layout.fillWidth: true
                     placeholderText: Translation.tr("Action")
@@ -124,31 +201,64 @@ ContentPage {
         }
     }
 
-    // There's no update indicator in ii for now so we shouldn't show this yet
-    // ContentSection {
-    //     icon: "deployed_code_update"
-    //     title: Translation.tr("System updates (Arch only)")
+    ContentSection {
+        icon: "deployed_code_update"
+        title: Translation.tr("System updates (Arch only)")
 
-    //     ConfigSwitch {
-    //         text: Translation.tr("Enable update checks")
-    //         checked: Config.options.updates.enableCheck
-    //         onCheckedChanged: {
-    //             Config.options.updates.enableCheck = checked;
-    //         }
-    //     }
+        ConfigSwitch {
+            buttonIcon: "check"
+            text: Translation.tr("Enable update checks")
+            checked: Config.options.updates.enableCheck
+            onCheckedChanged: {
+                Config.options.updates.enableCheck = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Only the Waffle panel shows an update indicator; the ii bar doesn't have one")
+            }
+        }
 
-    //     ConfigSpinBox {
-    //         icon: "av_timer"
-    //         text: Translation.tr("Check interval (mins)")
-    //         value: Config.options.updates.checkInterval
-    //         from: 60
-    //         to: 1440
-    //         stepSize: 60
-    //         onValueChanged: {
-    //             Config.options.updates.checkInterval = value;
-    //         }
-    //     }
-    // }
+        ConfigSpinBox {
+            icon: "av_timer"
+            text: Translation.tr("Check interval (mins)")
+            enabled: Config.options.updates.enableCheck
+            value: Config.options.updates.checkInterval
+            from: 60
+            to: 1440
+            stepSize: 60
+            onValueChanged: {
+                Config.options.updates.checkInterval = value;
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Pending package thresholds")
+            enabled: Config.options.updates.enableCheck
+
+            ConfigSpinBox {
+                icon: "info"
+                text: Translation.tr("Advise updating at")
+                value: Config.options.updates.adviseUpdateThreshold
+                from: 1
+                to: 1000
+                stepSize: 25
+                onValueChanged: {
+                    Config.options.updates.adviseUpdateThreshold = value;
+                }
+            }
+
+            ConfigSpinBox {
+                icon: "warning"
+                text: Translation.tr("Strongly advise updating at")
+                value: Config.options.updates.stronglyAdviseUpdateThreshold
+                from: 1
+                to: 2000
+                stepSize: 25
+                onValueChanged: {
+                    Config.options.updates.stronglyAdviseUpdateThreshold = value;
+                }
+            }
+        }
+    }
 
     ContentSection {
         icon: "weather_mix"

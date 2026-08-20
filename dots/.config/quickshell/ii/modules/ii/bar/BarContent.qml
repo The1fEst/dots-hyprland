@@ -57,7 +57,7 @@ Item { // Bar content region
             left: parent.left
             right: middleSection.left
         }
-        implicitWidth: leftSectionRowLayout.implicitWidth
+        implicitWidth: 0
         implicitHeight: Appearance.sizes.baseBarHeight
 
         onScrollDown: Brightness.decreaseBrightness()
@@ -72,20 +72,6 @@ Item { // Bar content region
             side: "left"
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-        }
-
-        RowLayout {
-            id: leftSectionRowLayout
-            anchors.fill: parent
-            spacing: 0
-
-            ActiveWindow {
-                Layout.leftMargin: Appearance.rounding.screenRounding
-                Layout.rightMargin: Appearance.rounding.screenRounding
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                visible: root.useShortenedForm === 0
-            }
         }
     }
 

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.services
 import qs.modules.common
+import qs.modules.common.functions
 import qs.modules.common.widgets
 
 ContentPage {
@@ -84,8 +85,59 @@ ContentPage {
             }
         }
 
+        ContentSubsection {
+            title: Translation.tr("Auto-hide behavior")
+            enabled: Config.options.bar.autoHide.enable
+
+            ConfigRow {
+                uniform: true
+                ConfigSwitch {
+                    buttonIcon: "move_down"
+                    text: Translation.tr("Push windows away")
+                    checked: Config.options.bar.autoHide.pushWindows
+                    onCheckedChanged: {
+                        Config.options.bar.autoHide.pushWindows = checked;
+                    }
+                    StyledToolTip {
+                        text: Translation.tr("Reserve space for the bar even when it's hidden")
+                    }
+                }
+                ConfigSwitch {
+                    buttonIcon: "keyboard_command_key"
+                    text: Translation.tr("Show when pressing Super")
+                    checked: Config.options.bar.autoHide.showWhenPressingSuper.enable
+                    onCheckedChanged: {
+                        Config.options.bar.autoHide.showWhenPressingSuper.enable = checked;
+                    }
+                }
+            }
+            ConfigSpinBox {
+                icon: "touch_long"
+                text: Translation.tr("Super press delay (ms)")
+                enabled: Config.options.bar.autoHide.showWhenPressingSuper.enable
+                value: Config.options.bar.autoHide.showWhenPressingSuper.delay
+                from: 0
+                to: 1000
+                stepSize: 20
+                onValueChanged: {
+                    Config.options.bar.autoHide.showWhenPressingSuper.delay = value;
+                }
+            }
+            ConfigSpinBox {
+                icon: "width"
+                text: Translation.tr("Hover region thickness (px)")
+                value: Config.options.bar.autoHide.hoverRegionWidth
+                from: 1
+                to: 50
+                stepSize: 1
+                onValueChanged: {
+                    Config.options.bar.autoHide.hoverRegionWidth = value;
+                }
+            }
+        }
+
         ConfigRow {
-            
+
             ContentSubsection {
                 title: Translation.tr("Corner style")
                 Layout.fillWidth: true
@@ -142,6 +194,122 @@ ContentPage {
     }
 
     ContentSection {
+        icon: "format_paint"
+        title: Translation.tr("Appearance")
+
+        ConfigSwitch {
+            buttonIcon: "rectangle"
+            text: Translation.tr("Show background")
+            checked: Config.options.bar.showBackground
+            onCheckedChanged: {
+                Config.options.bar.showBackground = checked;
+            }
+        }
+
+        ConfigSwitch {
+            buttonIcon: "ev_shadow"
+            text: Translation.tr("Shadow when floating")
+            enabled: Config.options.bar.showBackground && Config.options.bar.cornerStyle === 1
+            checked: Config.options.bar.floatStyleShadow
+            onCheckedChanged: {
+                Config.options.bar.floatStyleShadow = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Only applies with the Float corner style")
+            }
+        }
+
+        ConfigSwitch {
+            buttonIcon: "notes"
+            text: Translation.tr("Verbose")
+            checked: Config.options.bar.verbose
+            onCheckedChanged: {
+                Config.options.bar.verbose = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Shows the date next to the clock and the utility buttons")
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Monitors")
+            tooltip: Translation.tr("Comma-separated monitor names (see 'hyprctl monitors'). Leave empty to show the bar everywhere.")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("e.g. eDP-1, HDMI-A-1")
+                text: (Config.options.bar.screenList ?? []).join(", ")
+                onEditingFinished: {
+                    Config.options.bar.screenList = StringUtils.splitList(text);
+                }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "memory"
+        title: Translation.tr("Resources")
+
+        ConfigRow {
+            uniform: true
+            ConfigSwitch {
+                buttonIcon: "memory_alt"
+                text: Translation.tr("Always show swap")
+                checked: Config.options.bar.resources.alwaysShowSwap
+                onCheckedChanged: {
+                    Config.options.bar.resources.alwaysShowSwap = checked;
+                }
+            }
+            ConfigSwitch {
+                buttonIcon: "memory"
+                text: Translation.tr("Always show CPU")
+                checked: Config.options.bar.resources.alwaysShowCpu
+                onCheckedChanged: {
+                    Config.options.bar.resources.alwaysShowCpu = checked;
+                }
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Warning thresholds (%)")
+
+            ConfigSpinBox {
+                icon: "memory"
+                text: Translation.tr("Memory")
+                value: Config.options.bar.resources.memoryWarningThreshold
+                from: 0
+                to: 100
+                stepSize: 5
+                onValueChanged: {
+                    Config.options.bar.resources.memoryWarningThreshold = value;
+                }
+            }
+            ConfigSpinBox {
+                icon: "memory_alt"
+                text: Translation.tr("Swap")
+                value: Config.options.bar.resources.swapWarningThreshold
+                from: 0
+                to: 100
+                stepSize: 5
+                onValueChanged: {
+                    Config.options.bar.resources.swapWarningThreshold = value;
+                }
+            }
+            ConfigSpinBox {
+                icon: "speed"
+                text: Translation.tr("CPU")
+                value: Config.options.bar.resources.cpuWarningThreshold
+                from: 0
+                to: 100
+                stepSize: 5
+                onValueChanged: {
+                    Config.options.bar.resources.cpuWarningThreshold = value;
+                }
+            }
+        }
+    }
+
+    ContentSection {
         icon: "shelf_auto_hide"
         title: Translation.tr("Tray")
 
@@ -160,6 +328,44 @@ ContentPage {
             checked: Config.options.tray.monochromeIcons
             onCheckedChanged: {
                 Config.options.tray.monochromeIcons = checked;
+            }
+        }
+
+        ConfigSwitch {
+            buttonIcon: "visibility_off"
+            text: Translation.tr('Hide passive items')
+            checked: Config.options.tray.filterPassive
+            onCheckedChanged: {
+                Config.options.tray.filterPassive = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Hides tray items that report themselves as passive")
+            }
+        }
+
+        ConfigSwitch {
+            buttonIcon: "id_card"
+            text: Translation.tr('Show item IDs in tooltips')
+            checked: Config.options.tray.showItemId
+            onCheckedChanged: {
+                Config.options.tray.showItemId = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Useful for finding out what to type below")
+            }
+        }
+
+        ContentSubsection {
+            title: Config.options.tray.invertPinnedItems ? Translation.tr("Unpinned items") : Translation.tr("Pinned items")
+            tooltip: Translation.tr("Comma-separated tray item IDs")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("e.g. Fcitx, steam")
+                text: (Config.options.tray.pinnedItems ?? []).join(", ")
+                onEditingFinished: {
+                    Config.options.tray.pinnedItems = StringUtils.splitList(text);
+                }
             }
         }
     }
@@ -282,14 +488,15 @@ ContentPage {
             }
         }
 
-        MaterialTextField {
-            Layout.fillWidth: true
-            Layout.leftMargin: 8
-            Layout.rightMargin: 8
-            placeholderText: Translation.tr("Workspace dispatcher command")
-            text: Config.options.bar.workspaces.dispatcherCommand ?? "workspace"
-            onTextChanged: {
-                Config.options.bar.workspaces.dispatcherCommand = text;
+        ConfigSwitch {
+            buttonIcon: "font_download"
+            text: Translation.tr('Nerd Font for workspace numbers')
+            checked: Config.options.bar.workspaces.useNerdFont
+            onCheckedChanged: {
+                Config.options.bar.workspaces.useNerdFont = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Renders workspace numbers with your Nerd Font instead of the main one")
             }
         }
 
@@ -302,18 +509,6 @@ ContentPage {
             stepSize: 1
             onValueChanged: {
                 Config.options.bar.workspaces.shown = value;
-            }
-        }
-
-        ConfigSpinBox {
-            icon: "touch_long"
-            text: Translation.tr("Number show delay when pressing Super (ms)")
-            value: Config.options.bar.workspaces.showNumberDelay
-            from: 0
-            to: 1000
-            stepSize: 50
-            onValueChanged: {
-                Config.options.bar.workspaces.showNumberDelay = value;
             }
         }
 

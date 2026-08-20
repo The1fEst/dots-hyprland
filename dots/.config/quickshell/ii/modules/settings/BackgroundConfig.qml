@@ -8,15 +8,46 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
+        icon: "wallpaper"
+        title: Translation.tr("Wallpaper")
+
+        ConfigSwitch {
+            buttonIcon: "fullscreen"
+            text: Translation.tr("Hide when a window is fullscreen")
+            checked: Config.options.background.hideWhenFullscreen
+            onCheckedChanged: {
+                Config.options.background.hideWhenFullscreen = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Saves a bit of resources while gaming or watching videos")
+            }
+        }
+    }
+
+    ContentSection {
         icon: "sync_alt"
         title: Translation.tr("Parallax")
 
-        ConfigSwitch {
-            buttonIcon: "unfold_more_double"
-            text: Translation.tr("Vertical")
-            checked: Config.options.background.parallax.vertical
-            onCheckedChanged: {
-                Config.options.background.parallax.vertical = checked;
+        ConfigRow {
+            uniform: true
+            ConfigSwitch {
+                buttonIcon: "unfold_more_double"
+                text: Translation.tr("Vertical")
+                checked: Config.options.background.parallax.vertical
+                onCheckedChanged: {
+                    Config.options.background.parallax.vertical = checked;
+                }
+            }
+            ConfigSwitch {
+                buttonIcon: "aspect_ratio"
+                text: Translation.tr("Vertical for tall wallpapers")
+                checked: Config.options.background.parallax.autoVertical
+                onCheckedChanged: {
+                    Config.options.background.parallax.autoVertical = checked;
+                }
+                StyledToolTip {
+                    text: Translation.tr("Automatically pans vertically when the wallpaper is taller than it is wide")
+                }
             }
         }
 
@@ -48,6 +79,20 @@ ContentPage {
             stepSize: 1
             onValueChanged: {
                 Config.options.background.parallax.workspaceZoom = value / 100;
+            }
+        }
+        ConfigSpinBox {
+            icon: "widgets"
+            text: Translation.tr("Widget movement (%)")
+            value: Math.round(Config.options.background.parallax.widgetsFactor * 100)
+            from: 0
+            to: 300
+            stepSize: 10
+            onValueChanged: {
+                Config.options.background.parallax.widgetsFactor = value / 100;
+            }
+            StyledToolTip {
+                text: Translation.tr("How much the clock and weather widgets follow the wallpaper's movement")
             }
         }
     }

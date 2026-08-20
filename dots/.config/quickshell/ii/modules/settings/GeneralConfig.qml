@@ -53,6 +53,89 @@ ContentPage {
     }
 
     ContentSection {
+        icon: "apps"
+        title: Translation.tr("Applications")
+
+        ContentSubsection {
+            title: Translation.tr("Commands")
+            tooltip: Translation.tr("Programs launched by shell actions and buttons")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Terminal")
+                text: Config.options.apps.terminal
+                onEditingFinished: {
+                    Config.options.apps.terminal = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Task manager")
+                text: Config.options.apps.taskManager
+                onEditingFinished: {
+                    Config.options.apps.taskManager = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Volume mixer")
+                text: Config.options.apps.volumeMixer
+                onEditingFinished: {
+                    Config.options.apps.volumeMixer = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Bluetooth settings")
+                text: Config.options.apps.bluetooth
+                onEditingFinished: {
+                    Config.options.apps.bluetooth = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Network settings")
+                text: Config.options.apps.network
+                onEditingFinished: {
+                    Config.options.apps.network = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Ethernet settings")
+                text: Config.options.apps.networkEthernet
+                onEditingFinished: {
+                    Config.options.apps.networkEthernet = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("User management")
+                text: Config.options.apps.manageUser
+                onEditingFinished: {
+                    Config.options.apps.manageUser = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Change password")
+                text: Config.options.apps.changePassword
+                onEditingFinished: {
+                    Config.options.apps.changePassword = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("System update")
+                text: Config.options.apps.update
+                onEditingFinished: {
+                    Config.options.apps.update = text;
+                }
+            }
+        }
+    }
+
+    ContentSection {
         icon: "battery_android_full"
         title: Translation.tr("Battery")
 
@@ -124,6 +207,22 @@ ContentPage {
     }
 
     ContentSection {
+        icon: "calendar_month"
+        title: Translation.tr("Calendar")
+
+        MaterialTextField {
+            Layout.fillWidth: true
+            Layout.leftMargin: 8
+            Layout.rightMargin: 8
+            placeholderText: Translation.tr("Locale (e.g. en-GB, determines the first day of week)")
+            text: Config.options.calendar.locale
+            onEditingFinished: {
+                Config.options.calendar.locale = text.trim();
+            }
+        }
+    }
+
+    ContentSection {
         icon: "language"
         title: Translation.tr("Language")
 
@@ -182,6 +281,17 @@ ContentPage {
                 }
             }
         }
+
+        MaterialTextField {
+            Layout.fillWidth: true
+            Layout.leftMargin: 8
+            Layout.rightMargin: 8
+            placeholderText: Translation.tr("Sound theme (e.g. freedesktop)")
+            text: Config.options.sounds.theme
+            onEditingFinished: {
+                Config.options.sounds.theme = text.trim();
+            }
+        }
     }
 
     ContentSection {
@@ -231,6 +341,91 @@ ContentPage {
                 ]
             }
         }
+
+        ContentSubsection {
+            title: Translation.tr("Date formats")
+            tooltip: Translation.tr("Qt date format strings, see https://doc.qt.io/qt-6/qdate.html#toString")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Date (e.g. ddd, dd/MM)")
+                text: Config.options.time.dateFormat
+                onEditingFinished: {
+                    Config.options.time.dateFormat = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Short date (e.g. dd/MM)")
+                text: Config.options.time.shortDateFormat
+                onEditingFinished: {
+                    Config.options.time.shortDateFormat = text;
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Date with year (e.g. dd/MM/yyyy)")
+                text: Config.options.time.dateWithYearFormat
+                onEditingFinished: {
+                    Config.options.time.dateWithYearFormat = text;
+                }
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Pomodoro")
+
+            ConfigRow {
+                uniform: true
+                ConfigSpinBox {
+                    icon: "target"
+                    text: Translation.tr("Focus (min)")
+                    value: Math.round(Config.options.time.pomodoro.focus / 60)
+                    from: 1
+                    to: 180
+                    stepSize: 5
+                    onValueChanged: {
+                        Config.options.time.pomodoro.focus = value * 60;
+                    }
+                }
+                ConfigSpinBox {
+                    icon: "coffee"
+                    text: Translation.tr("Break (min)")
+                    value: Math.round(Config.options.time.pomodoro.breakTime / 60)
+                    from: 1
+                    to: 60
+                    stepSize: 1
+                    onValueChanged: {
+                        Config.options.time.pomodoro.breakTime = value * 60;
+                    }
+                }
+            }
+            ConfigRow {
+                uniform: true
+                ConfigSpinBox {
+                    icon: "airline_seat_recline_extra"
+                    text: Translation.tr("Long break (min)")
+                    value: Math.round(Config.options.time.pomodoro.longBreak / 60)
+                    from: 1
+                    to: 120
+                    stepSize: 5
+                    onValueChanged: {
+                        Config.options.time.pomodoro.longBreak = value * 60;
+                    }
+                }
+                ConfigSpinBox {
+                    icon: "repeat"
+                    text: Translation.tr("Cycles before long break")
+                    value: Config.options.time.pomodoro.cyclesBeforeLongBreak
+                    from: 1
+                    to: 12
+                    stepSize: 1
+                    onValueChanged: {
+                        Config.options.time.pomodoro.cyclesBeforeLongBreak = value;
+                    }
+                }
+            }
+        }
     }
 
     ContentSection {
@@ -251,6 +446,36 @@ ContentPage {
             checked: Config.options.workSafety.enable.wallpaper
             onCheckedChanged: {
                 Config.options.workSafety.enable.wallpaper = checked;
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Trigger keywords")
+            tooltip: Translation.tr("Comma-separated. Work safety kicks in when one of these shows up.")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Network names")
+                text: (Config.options.workSafety.triggerCondition.networkNameKeywords ?? []).join(", ")
+                onEditingFinished: {
+                    Config.options.workSafety.triggerCondition.networkNameKeywords = StringUtils.splitList(text);
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("File names")
+                text: (Config.options.workSafety.triggerCondition.fileKeywords ?? []).join(", ")
+                onEditingFinished: {
+                    Config.options.workSafety.triggerCondition.fileKeywords = StringUtils.splitList(text);
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("Links")
+                text: (Config.options.workSafety.triggerCondition.linkKeywords ?? []).join(", ")
+                onEditingFinished: {
+                    Config.options.workSafety.triggerCondition.linkKeywords = StringUtils.splitList(text);
+                }
             }
         }
     }

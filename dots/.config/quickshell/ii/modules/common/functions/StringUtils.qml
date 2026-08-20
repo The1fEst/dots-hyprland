@@ -286,6 +286,15 @@ Singleton {
         return str;
     }
 
+    /**
+     * Splits a comma-separated user-entered string into a list of trimmed, non-empty entries
+     * @param { string } str
+     * @returns { string[] }
+     */
+    function splitList(str) {
+        return (str ?? "").split(",").map(entry => entry.trim()).filter(entry => entry.length > 0);
+    }
+
     function toTitleCase(str) {
         // Replace "-" and "_" with space, then capitalize each word
         return str.replace(/[-_]/g, " ").replace(

@@ -158,7 +158,6 @@ Singleton {
                             property string dateStyle: "bubble"       // Options: "border", "rect", "bubble" , "hide"
                             property bool timeIndicators: true
                             property bool hourMarks: false
-                            property bool dateInClock: true
                             property bool constantlyRotate: false
                             property bool useSineCookie: false
                         }
@@ -214,7 +213,6 @@ Singleton {
                 property int cornerStyle: 0 // 0: Hug | 1: Float | 2: Plain rectangle
                 property bool floatStyleShadow: true // Show shadow behind bar when cornerStyle == 1 (Float)
                 property bool borderless: false // true for no grouping of items
-                property string topLeftIcon: "spark" // Options: "distro" or any icon name in ~/.config/quickshell/ii/assets/icons
                 property bool showBackground: true
                 property bool verbose: true
                 property bool vertical: false
@@ -240,10 +238,8 @@ Singleton {
                     property int shown: 10
                     property bool showAppIcons: true
                     property bool alwaysShowNumbers: false
-                    property int showNumberDelay: 300 // milliseconds
                     property list<string> numberMap: ["1", "2"] // Characters to show instead of numbers on workspace indicator
                     property bool useNerdFont: false
-                    property string dispatcherCommand: "workspace" // Hyprland workspace dispatch command
                 }
                 property JsonObject weather: JsonObject {
                     property bool enable: false
@@ -334,9 +330,6 @@ Singleton {
                     property string to: "06:30"   // Format: "HH:mm", 24-hour time
                     property int colorTemperature: 5000
                 }
-                property JsonObject antiFlashbang: JsonObject {
-                    property bool enable: false
-                }
             }
 
             property JsonObject lock: JsonObject {
@@ -356,13 +349,12 @@ Singleton {
                 property bool materialShapeChars: true
             }
 
-            property JsonObject media: JsonObject {
-                // Attempt to remove dupes (the aggregator playerctl one and browsers' native ones when there's plasma browser integration)
-                property bool filterDuplicatePlayers: true
-            }
-
             property JsonObject notifications: JsonObject {
                 property int timeout: 7000
+                property JsonObject forceMonitor: JsonObject {
+                    property bool enable: false
+                    property string name: "" // Monitor name, like "eDP-1"
+                }
             }
 
             property JsonObject osd: JsonObject {
@@ -370,14 +362,8 @@ Singleton {
             }
 
             property JsonObject osk: JsonObject {
-                property string layout: "qwerty_full"
+                property string layout: "English (US)"
                 property bool pinnedOnStartup: false
-            }
-
-            property JsonObject overlay: JsonObject {
-                property bool openingZoomAnimation: true
-                property bool darkenScreen: true
-                property real clickthroughOpacity: 0.8
             }
 
             property JsonObject overview: JsonObject {

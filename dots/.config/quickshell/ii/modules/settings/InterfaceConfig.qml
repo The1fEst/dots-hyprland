@@ -1,7 +1,9 @@
+import "../ii/onScreenKeyboard/layouts.js" as OskLayouts
 import QtQuick
 import QtQuick.Layouts
 import qs.services
 import qs.modules.common
+import qs.modules.common.functions
 import qs.modules.common.widgets
 
 ContentPage {
@@ -139,6 +141,126 @@ ContentPage {
                 Config.options.dock.monochromeIcons = checked;
             }
         }
+
+        ConfigSpinBox {
+            icon: "height"
+            text: Translation.tr("Height (px)")
+            value: Config.options.dock.height
+            from: 30
+            to: 150
+            stepSize: 5
+            onValueChanged: {
+                Config.options.dock.height = value;
+            }
+        }
+
+        ConfigSpinBox {
+            icon: "highlight_mouse_cursor"
+            text: Translation.tr("Hover region height (px)")
+            enabled: Config.options.dock.hoverToReveal
+            value: Config.options.dock.hoverRegionHeight
+            from: 1
+            to: 50
+            stepSize: 1
+            onValueChanged: {
+                Config.options.dock.hoverRegionHeight = value;
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Pinned apps")
+            tooltip: Translation.tr("Comma-separated desktop entry IDs, in the order they should appear")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("e.g. org.kde.dolphin, kitty")
+                text: (Config.options.dock.pinnedApps ?? []).join(", ")
+                onEditingFinished: {
+                    Config.options.dock.pinnedApps = StringUtils.splitList(text);
+                }
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Ignored apps")
+            tooltip: Translation.tr("Comma-separated regexes. Matching windows won't get a dock entry.")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("e.g. ^steam_app_.*")
+                text: (Config.options.dock.ignoredAppRegexes ?? []).join(", ")
+                onEditingFinished: {
+                    Config.options.dock.ignoredAppRegexes = StringUtils.splitList(text);
+                }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "apps"
+        title: Translation.tr("Launcher")
+
+        ContentSubsection {
+            title: Translation.tr("Pinned apps")
+            tooltip: Translation.tr("Comma-separated desktop entry IDs shown when the search field is empty")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("e.g. org.kde.dolphin, kitty")
+                text: (Config.options.launcher.pinnedApps ?? []).join(", ")
+                onEditingFinished: {
+                    Config.options.launcher.pinnedApps = StringUtils.splitList(text);
+                }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "nightlight"
+        title: Translation.tr("Night light")
+
+        ConfigSwitch {
+            buttonIcon: "schedule"
+            text: Translation.tr("Automatic schedule")
+            checked: Config.options.light.night.automatic
+            onCheckedChanged: {
+                Config.options.light.night.automatic = checked;
+            }
+        }
+
+        ConfigRow {
+            uniform: true
+            enabled: Config.options.light.night.automatic
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("From (HH:mm)")
+                text: Config.options.light.night.from
+                onEditingFinished: {
+                    Config.options.light.night.from = text.trim();
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("To (HH:mm)")
+                text: Config.options.light.night.to
+                onEditingFinished: {
+                    Config.options.light.night.to = text.trim();
+                }
+            }
+        }
+
+        ConfigSpinBox {
+            icon: "thermostat"
+            text: Translation.tr("Color temperature (K)")
+            value: Config.options.light.night.colorTemperature
+            from: 1000
+            to: 6500
+            stepSize: 100
+            onValueChanged: {
+                Config.options.light.night.colorTemperature = value;
+            }
+        }
+
     }
 
     ContentSection {
@@ -189,7 +311,7 @@ ContentPage {
                     Config.options.lock.security.unlockKeyring = checked;
                 }
                 StyledToolTip {
-                    text: Translation.tr("This is usually safe and needed for your browser and AI sidebar anyway\nMostly useful for those who use lock on startup instead of a display manager that does it (GDM, SDDM, etc.)")
+                    text: Translation.tr("This is usually safe and needed for your browser anyway\nMostly useful for those who use lock on startup instead of a display manager that does it (GDM, SDDM, etc.)")
                 }
             }
         }
@@ -247,6 +369,19 @@ ContentPage {
                     Config.options.lock.blur.extraZoom = value / 100;
                 }
             }
+
+            ConfigSpinBox {
+                icon: "blur_circular"
+                text: Translation.tr("Blur radius")
+                enabled: Config.options.lock.blur.enable
+                value: Config.options.lock.blur.radius
+                from: 0
+                to: 300
+                stepSize: 10
+                onValueChanged: {
+                    Config.options.lock.blur.radius = value;
+                }
+            }
         }
     }
 
@@ -293,28 +428,6 @@ ContentPage {
     }
 
     ContentSection {
-        icon: "select_window"
-        title: Translation.tr("Overlay: General")
-
-        ConfigSwitch {
-            buttonIcon: "high_density"
-            text: Translation.tr("Enable opening zoom animation")
-            checked: Config.options.overlay.openingZoomAnimation
-            onCheckedChanged: {
-                Config.options.overlay.openingZoomAnimation = checked;
-            }
-        }
-        ConfigSwitch {
-            buttonIcon: "texture"
-            text: Translation.tr("Darken screen")
-            checked: Config.options.overlay.darkenScreen
-            onCheckedChanged: {
-                Config.options.overlay.darkenScreen = checked;
-            }
-        }
-    }
-
-    ContentSection {
         icon: "screenshot_frame_2"
         title: Translation.tr("Region selector (screen snipping)")
 
@@ -336,6 +449,39 @@ ContentPage {
                     onCheckedChanged: {
                         Config.options.regionSelector.targetRegions.layers = checked;
                     }
+                }
+            }
+
+            ConfigSwitch {
+                buttonIcon: "label"
+                text: Translation.tr('Show region labels')
+                checked: Config.options.regionSelector.targetRegions.showLabel
+                onCheckedChanged: {
+                    Config.options.regionSelector.targetRegions.showLabel = checked;
+                }
+            }
+
+            ConfigSpinBox {
+                icon: "opacity"
+                text: Translation.tr("Hint opacity (%)")
+                value: Math.round(Config.options.regionSelector.targetRegions.opacity * 100)
+                from: 0
+                to: 100
+                stepSize: 5
+                onValueChanged: {
+                    Config.options.regionSelector.targetRegions.opacity = value / 100;
+                }
+            }
+
+            ConfigSpinBox {
+                icon: "padding"
+                text: Translation.tr("Selection padding")
+                value: Config.options.regionSelector.targetRegions.selectionPadding
+                from: 0
+                to: 50
+                stepSize: 1
+                onValueChanged: {
+                    Config.options.regionSelector.targetRegions.selectionPadding = value;
                 }
             }
         }
@@ -381,6 +527,22 @@ ContentPage {
                 }
             }
         }
+
+        ContentSubsection {
+            title: Translation.tr("Annotation")
+
+            ConfigSwitch {
+                buttonIcon: "draw"
+                text: Translation.tr("Use Satty")
+                checked: Config.options.regionSelector.annotation.useSatty
+                onCheckedChanged: {
+                    Config.options.regionSelector.annotation.useSatty = checked;
+                }
+                StyledToolTip {
+                    text: Translation.tr("Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.")
+                }
+            }
+        }
     }
 
     ContentSection {
@@ -401,7 +563,8 @@ ContentPage {
 
         ContentSubsection {
             title: Translation.tr("Quick toggles")
-            
+            tooltip: Translation.tr("Which toggles are shown, their size and their order are edited in the sidebar itself, with its edit mode")
+
             ConfigSelectionArray {
                 Layout.fillWidth: false
                 currentValue: Config.options.sidebar.quickToggles.style
@@ -713,6 +876,66 @@ ContentPage {
                         value: 1
                     }
                 ]
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "keyboard"
+        title: Translation.tr("On-screen keyboard")
+
+        ConfigSwitch {
+            buttonIcon: "keep"
+            text: Translation.tr("Pinned on startup")
+            checked: Config.options.osk.pinnedOnStartup
+            onCheckedChanged: {
+                Config.options.osk.pinnedOnStartup = checked;
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Layout")
+
+            StyledComboBox {
+                id: oskLayoutSelector
+                buttonIcon: "keyboard_alt"
+                readonly property var layoutNames: Object.keys(OskLayouts.byName)
+
+                model: layoutNames
+                currentIndex: {
+                    const index = layoutNames.indexOf(Config.options.osk.layout);
+                    return index !== -1 ? index : 0;
+                }
+                onActivated: index => {
+                    Config.options.osk.layout = layoutNames[index];
+                }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "select_window_2"
+        title: Translation.tr("Shell windows")
+
+        ConfigSwitch {
+            buttonIcon: "toolbar"
+            text: Translation.tr("Show title bar")
+            checked: Config.options.windows.showTitlebar
+            onCheckedChanged: {
+                Config.options.windows.showTitlebar = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Client-side decorations for shell apps like this one")
+            }
+        }
+
+        ConfigSwitch {
+            buttonIcon: "format_align_center"
+            text: Translation.tr("Center title")
+            enabled: Config.options.windows.showTitlebar
+            checked: Config.options.windows.centerTitle
+            onCheckedChanged: {
+                Config.options.windows.centerTitle = checked;
             }
         }
     }

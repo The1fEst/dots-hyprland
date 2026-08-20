@@ -174,12 +174,76 @@ ContentPage {
             ]
         }
 
+        MaterialTextField {
+            Layout.fillWidth: true
+            Layout.leftMargin: 8
+            Layout.rightMargin: 8
+            placeholderText: Translation.tr("Accent color (e.g. #8caaee, empty to use the wallpaper's)")
+            text: Config.options.appearance.palette.accentColor
+            onEditingFinished: {
+                Config.options.appearance.palette.accentColor = text.trim();
+                Quickshell.execDetached(["bash", "-c", `${Directories.wallpaperSwitchScriptPath} --noswitch`]);
+            }
+        }
+
+        ConfigSwitch {
+            buttonIcon: "invert_colors"
+            text: Translation.tr("Extra background tint")
+            checked: Config.options.appearance.extraBackgroundTint
+            onCheckedChanged: {
+                Config.options.appearance.extraBackgroundTint = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Tints backgrounds of shell surfaces more strongly with the accent color")
+            }
+        }
+
         ConfigSwitch {
             buttonIcon: "ev_shadow"
             text: Translation.tr("Transparency")
             checked: Config.options.appearance.transparency.enable
             onCheckedChanged: {
                 Config.options.appearance.transparency.enable = checked;
+            }
+        }
+
+        ConfigSwitch {
+            enabled: Config.options.appearance.transparency.enable
+            buttonIcon: "auto_awesome"
+            text: Translation.tr("Automatic transparency values")
+            checked: Config.options.appearance.transparency.automatic
+            onCheckedChanged: {
+                Config.options.appearance.transparency.automatic = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Derives transparency from the generated color scheme instead of the values below")
+            }
+        }
+
+        ConfigRow {
+            uniform: true
+            enabled: Config.options.appearance.transparency.enable && !Config.options.appearance.transparency.automatic
+            ConfigSpinBox {
+                icon: "background_replace"
+                text: Translation.tr("Background (%)")
+                value: Math.round(Config.options.appearance.transparency.backgroundTransparency * 100)
+                from: 0
+                to: 100
+                stepSize: 1
+                onValueChanged: {
+                    Config.options.appearance.transparency.backgroundTransparency = value / 100;
+                }
+            }
+            ConfigSpinBox {
+                icon: "select_window"
+                text: Translation.tr("Content (%)")
+                value: Math.round(Config.options.appearance.transparency.contentTransparency * 100)
+                from: 0
+                to: 100
+                stepSize: 1
+                onValueChanged: {
+                    Config.options.appearance.transparency.contentTransparency = value / 100;
+                }
             }
         }
     }
@@ -278,40 +342,7 @@ ContentPage {
                     ]
                 }
             }
-            
-        }
-    }
 
-    NoticeBox {
-        Layout.fillWidth: true
-        text: Translation.tr('Not all options are available in this app. You should also check the config file by hitting the "Config file" button on the topleft corner or opening %1 manually.').arg(Directories.shellConfigPath)
-
-        Item {
-            Layout.fillWidth: true
-        }
-        RippleButtonWithIcon {
-            id: copyPathButton
-            property bool justCopied: false
-            Layout.fillWidth: false
-            buttonRadius: Appearance.rounding.small
-            materialIcon: justCopied ? "check" : "content_copy"
-            mainText: justCopied ? Translation.tr("Path copied") : Translation.tr("Copy path")
-            onClicked: {
-                copyPathButton.justCopied = true
-                Quickshell.clipboardText = FileUtils.trimFileProtocol(`${Directories.config}/illogical-impulse/config.json`);
-                revertTextTimer.restart();
-            }
-            colBackground: ColorUtils.transparentize(Appearance.colors.colPrimaryContainer)
-            colBackgroundHover: Appearance.colors.colPrimaryContainerHover
-            colRipple: Appearance.colors.colPrimaryContainerActive
-
-            Timer {
-                id: revertTextTimer
-                interval: 1500
-                onTriggered: {
-                    copyPathButton.justCopied = false
-                }
-            }
         }
     }
 }

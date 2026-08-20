@@ -97,19 +97,6 @@ Item {
             Layout.fillWidth: true
         }
 
-        SectionText {
-            text: Translation.tr("Anti-flashbang (experimental)")
-        }
-
-        ToggleItem {
-            name: Translation.tr("Enable")
-            description: Translation.tr("Balance brightness based on content")
-            iconName: "flash-off"
-            checked: Config.options.light.antiFlashbang.enable
-            onCheckedChanged: {
-                Config.options.light.antiFlashbang.enable = checked;
-            }
-        }
     }
 
     component IntensityEntry: RowLayout {
