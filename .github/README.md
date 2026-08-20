@@ -21,82 +21,6 @@
 > Hyprland 0.55 update:
 > If your distro has not shipped Hyprland 0.55 and/or you're not ready for it, you should switch to the Pre-Hyprland Luaification release (or not update yet, if you're going to do that). See the wiki for more info: [Install](https://ii.clsty.link/en/ii-qs/01setup/#automated-installation) | [Update](https://ii.clsty.link/en/ii-qs/01setup/#updating)
 
-## Fork changes
-
-This fork strips everything that talks to a remote service or runs inference, plus a few
-features that depended on that machinery. Upstream behaviour is otherwise untouched.
-
-<details>
-  <summary>What was removed</summary>
-
-**Anything leaving the machine**
-
-  - Screen translator — sent full screenshots to Google Cloud Vision (OCR) and the recognised
-    text to Google Translate, together with the service-account keyring plumbing
-  - `snip_to_search.sh` — uploaded screen regions to the public host uguu.se, then opened Google Lens
-  - Google favicons in the launcher, which leaked searched domains before you pressed Enter
-  - Web search in the launcher and the start menu
-  - Random wallpapers from the konachan and osu APIs
-  - Floating image overlay and its URL downloader
-  - "Open network portal" button (nmcheck.gnome.org) and the Valorant crosshair editor link
-
-**AI and heavy dependencies**
-
-  - Ollama scripts and the primary-selection query keybind
-  - OpenCV, entirely. It backed content-region hints in the region selector and background
-    widget placement; the latter now picks a random spot on the monitor. `scheme_for_image.py`
-    was rewritten on PIL with the same colorfulness metric
-  - `hyprconfigurator.py`, along with game mode and the anti-flashbang Hyprland shader, the two
-    features that wrote through it
-  - tesseract OCR keybind
-
-**Features**
-
-  - Widget overlay on `Super`+`G`, with its FPS limiter, notes, recorder, resources and volume mixer
-  - Crosshair overlay
-  - Anti-flashbang in both variants — the Hyprland screen shader and the content-based
-    brightness adjustment that screenshotted the display on every window switch
-
-**Dead code left over from features upstream had already dropped**
-
-  - AI chat state, booru service and directories, translate-shell config, a broken
-    "Enable translator" switch bound to a nonexistent option, and a broken
-    "Generate translation with Gemini" button whose process was never declared
-
-</details>
-
-<details>
-  <summary>What still uses the network</summary>
-
-  - **Weather** — `wttr.in`, with GPS coordinates when `enableGPS` is set. Off by default
-  - **Album art** — downloaded from the URL the MPRIS player reports
-  - The installer fetches `uv` from `astral.sh` and cursors from GitHub releases
-
-Nothing else in `dots/` makes an outgoing request.
-
-</details>
-
-<details>
-  <summary>Dependency changes</summary>
-
-  - Python packages drop from 33 to 16. Removed `opencv-contrib-python`, `google-auth` and
-    `requests`, plus `pywayland`, `psutil`, `setproctitle`, `libsass` and
-    `material-color-utilities`, which nothing in the repo referenced
-  - `tesseract` and its language data dropped from the Arch, Fedora, Gentoo and Nix manifests
-  - `colors.lua` and `hyprlock/colors.conf` are no longer tracked — matugen regenerates them
-    on every wallpaper change
-
-</details>
-
-<details>
-  <summary>Behaviour changes</summary>
-
-  - Background widget placement: the `leastBusy` and `mostBusy` strategies are replaced by
-    a single `random` one, since both needed OpenCV
-  - Display brightness no longer has a content-based multiplier
-
-</details>
-
 <details> 
   <summary>What this is/isn't</summary>
 
@@ -142,6 +66,106 @@ Nothing else in `dots/` makes an outgoing request.
 <details>
     <summary>Discord</summary>
         <a href="https://discord.gg/GtdRBXgMwq"> Server link</a> | I hope this provides a friendlier environment for support without needing me to personally accept every friend request/DM. For real issues, prefer GitHub
+
+</details>
+
+<div align="center">
+    <h2>• fork changes •</h2>
+    <h3></h3>
+</div>
+
+This fork drops everything that talks to a remote service or runs inference, adds a few things
+upstream doesn't have, and rewrites some of the media and bar code. Everything else is upstream.
+
+<details>
+  <summary>Added</summary>
+
+  - **WireGuard** — quick toggle plus a connections dialog in the right sidebar
+  - **Settings app** — a large pass over all seven pages, exposing options that previously could
+    only be edited by hand in `config.json`. New sections include applications and commands,
+    calendar and date formats, pomodoro, panel family and shell style, waffle panel and action
+    center toggles, bar auto-hide, monitors, resources and warning thresholds, launcher and
+    pinned apps, night light, annotation, on-screen keyboard, conflict killer, and update checks
+  - **Lock screen** — shows the account's full name when one is set, and the keyboard layout in
+    upper case
+  - **Bar** — keyboard layout indicator in upper case
+  - `StringUtils.splitList()` for parsing the comma-separated fields the settings app now uses
+
+</details>
+
+<details>
+  <summary>Rewritten</summary>
+
+  - **Media controls** — reworked `MprisController`, seeking and player filtering, plus a
+    standalone `mpris_player_control.sh`
+  - **Bar layout** — consistency pass across the bar; the active-window widget was dropped
+  - **Installer** — uses `paru` instead of `yay`
+  - `scheme_for_image.py` moved from OpenCV to PIL, keeping the same colorfulness metric
+  - Lock screen clock uses a 12-hour format
+
+</details>
+
+<details>
+  <summary>Removed: anything leaving the machine</summary>
+
+  - Screen translator — sent full screenshots to Google Cloud Vision (OCR) and the recognised
+    text to Google Translate, together with the service-account keyring plumbing
+  - `snip_to_search.sh` — uploaded screen regions to the public host uguu.se, then opened Google Lens
+  - Google favicons in the launcher, which leaked searched domains before you pressed Enter
+  - Web search in the launcher and the start menu
+  - Random wallpapers from the konachan and osu APIs
+  - Floating image overlay and its URL downloader
+  - "Open network portal" button (nmcheck.gnome.org) and the Valorant crosshair editor link
+
+</details>
+
+<details>
+  <summary>Removed: AI and heavy dependencies</summary>
+
+  - Ollama scripts and the primary-selection query keybind
+  - OpenCV, entirely. It backed content-region hints in the region selector and background
+    widget placement; the latter now picks a random spot on the monitor
+  - `hyprconfigurator.py`, along with game mode and the anti-flashbang Hyprland shader, the two
+    features that wrote through it
+  - tesseract OCR keybind
+
+</details>
+
+<details>
+  <summary>Removed: features and dead code</summary>
+
+  - Widget overlay on `Super`+`G`, with its FPS limiter, notes, recorder, resources and volume mixer
+  - Crosshair overlay
+  - Anti-flashbang in both variants — the Hyprland screen shader and the content-based
+    brightness adjustment that screenshotted the display on every window switch
+  - Left sidebar, AI chat, anime and music recognition
+  - Leftovers from features upstream had already dropped: AI chat state, the booru service and
+    its directories, translate-shell config, an "Enable translator" switch bound to a
+    nonexistent option, and a "Generate translation with Gemini" button whose process was
+    never declared
+
+</details>
+
+<details>
+  <summary>What still uses the network</summary>
+
+  - **Weather** — `wttr.in`, with GPS coordinates when `enableGPS` is set. Off by default
+  - **Album art** — downloaded from the URL the MPRIS player reports
+  - The installer fetches `uv` from `astral.sh` and cursors from GitHub releases
+
+Nothing else in `dots/` makes an outgoing request.
+
+</details>
+
+<details>
+  <summary>Dependency changes</summary>
+
+  - Python packages drop from 33 to 16. Removed `opencv-contrib-python`, `google-auth` and
+    `requests`, plus `pywayland`, `psutil`, `setproctitle`, `libsass` and
+    `material-color-utilities`, which nothing in the repo referenced
+  - `tesseract` and its language data dropped from the Arch, Fedora, Gentoo and Nix manifests
+  - `colors.lua` and `hyprlock/colors.conf` are no longer tracked — matugen regenerates them
+    on every wallpaper change
 
 </details>
 
