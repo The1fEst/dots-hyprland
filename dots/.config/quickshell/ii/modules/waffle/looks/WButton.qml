@@ -76,6 +76,7 @@ Button {
     property alias monochromeIcon: buttonIcon.monochrome
     property alias buttonSpacing: contentLayout.spacing
     property bool forceShowIcon: false
+    property real iconLeftMargin: 0
 
     property var altAction: () => {}
     property var middleClickAction: () => {}

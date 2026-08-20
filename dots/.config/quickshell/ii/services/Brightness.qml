@@ -117,8 +117,9 @@ Singleton {
             }
         }
         onClampedBrightnessChanged: {
-            if (monitor.animationEnabled) syncBrightness();
-            else setTimer.restart();
+            // Always debounce: setProc is shared by every monitor, and syncing on each frame of
+            // the Behavior animation would thrash it. A zero interval still coalesces to one call.
+            setTimer.restart();
         }
 
         function initialize() {

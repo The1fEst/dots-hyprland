@@ -40,6 +40,7 @@ PanelWindow {
 
     property var mediaType: WRegionSelectionPanel.MediaType.Image
     property var imageAction: WRegionSelectionPanel.ImageAction.Copy
+    property var videoAction: WRegionSelectionPanel.VideoAction.Record
     property var selectionMode: WRegionSelectionPanel.SelectionMode.Rect
 
     visible: false
