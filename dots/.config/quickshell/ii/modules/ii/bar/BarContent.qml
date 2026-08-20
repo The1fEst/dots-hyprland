@@ -95,7 +95,6 @@ Item { // Bar content region
             }
 
             Resources {
-                alwaysShowAllResources: root.useShortenedForm === 2
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
             }

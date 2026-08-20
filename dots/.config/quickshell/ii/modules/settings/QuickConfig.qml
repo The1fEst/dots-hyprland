@@ -208,7 +208,6 @@ ContentPage {
         }
 
         ConfigSwitch {
-            enabled: Config.options.appearance.transparency.enable
             buttonIcon: "auto_awesome"
             text: Translation.tr("Automatic transparency values")
             checked: Config.options.appearance.transparency.automatic
@@ -216,16 +215,16 @@ ContentPage {
                 Config.options.appearance.transparency.automatic = checked;
             }
             StyledToolTip {
-                text: Translation.tr("Derives transparency from the generated color scheme instead of the values below")
+                text: Translation.tr("Derives the values below from the wallpaper instead of using them as entered")
             }
         }
 
         ConfigRow {
             uniform: true
-            enabled: Config.options.appearance.transparency.enable && !Config.options.appearance.transparency.automatic
             ConfigSpinBox {
                 icon: "background_replace"
                 text: Translation.tr("Background (%)")
+                enabled: Config.options.appearance.transparency.enable && !Config.options.appearance.transparency.automatic
                 value: Math.round(Config.options.appearance.transparency.backgroundTransparency * 100)
                 from: 0
                 to: 100
@@ -237,12 +236,16 @@ ContentPage {
             ConfigSpinBox {
                 icon: "select_window"
                 text: Translation.tr("Content (%)")
+                enabled: !Config.options.appearance.transparency.automatic
                 value: Math.round(Config.options.appearance.transparency.contentTransparency * 100)
                 from: 0
                 to: 100
                 stepSize: 1
                 onValueChanged: {
                     Config.options.appearance.transparency.contentTransparency = value / 100;
+                }
+                StyledToolTip {
+                    text: Translation.tr("Affects how surfaces are layered even when transparency is off")
                 }
             }
         }

@@ -86,34 +86,23 @@ ContentPage {
         }
 
         ContentSubsection {
-            title: Translation.tr("Auto-hide behavior")
-            enabled: Config.options.bar.autoHide.enable
+            title: Translation.tr("Holding Super")
+            tooltip: Translation.tr("Applies whether or not the bar auto-hides: this is also what makes workspace numbers appear while Super is held")
 
-            ConfigRow {
-                uniform: true
-                ConfigSwitch {
-                    buttonIcon: "move_down"
-                    text: Translation.tr("Push windows away")
-                    checked: Config.options.bar.autoHide.pushWindows
-                    onCheckedChanged: {
-                        Config.options.bar.autoHide.pushWindows = checked;
-                    }
-                    StyledToolTip {
-                        text: Translation.tr("Reserve space for the bar even when it's hidden")
-                    }
+            ConfigSwitch {
+                buttonIcon: "keyboard_command_key"
+                text: Translation.tr("Reveal bar and workspace numbers")
+                checked: Config.options.bar.autoHide.showWhenPressingSuper.enable
+                onCheckedChanged: {
+                    Config.options.bar.autoHide.showWhenPressingSuper.enable = checked;
                 }
-                ConfigSwitch {
-                    buttonIcon: "keyboard_command_key"
-                    text: Translation.tr("Show when pressing Super")
-                    checked: Config.options.bar.autoHide.showWhenPressingSuper.enable
-                    onCheckedChanged: {
-                        Config.options.bar.autoHide.showWhenPressingSuper.enable = checked;
-                    }
+                StyledToolTip {
+                    text: Translation.tr("Turn off to never show workspace numbers, unless \"Always show numbers\" is on")
                 }
             }
             ConfigSpinBox {
                 icon: "touch_long"
-                text: Translation.tr("Super press delay (ms)")
+                text: Translation.tr("Hold delay (ms)")
                 enabled: Config.options.bar.autoHide.showWhenPressingSuper.enable
                 value: Config.options.bar.autoHide.showWhenPressingSuper.delay
                 from: 0
@@ -123,16 +112,33 @@ ContentPage {
                     Config.options.bar.autoHide.showWhenPressingSuper.delay = value;
                 }
             }
-            ConfigSpinBox {
-                icon: "width"
-                text: Translation.tr("Hover region thickness (px)")
-                value: Config.options.bar.autoHide.hoverRegionWidth
-                from: 1
-                to: 50
-                stepSize: 1
-                onValueChanged: {
-                    Config.options.bar.autoHide.hoverRegionWidth = value;
-                }
+        }
+
+        ConfigSwitch {
+            buttonIcon: "move_down"
+            text: Translation.tr("Push windows away")
+            enabled: Config.options.bar.autoHide.enable
+            checked: Config.options.bar.autoHide.pushWindows
+            onCheckedChanged: {
+                Config.options.bar.autoHide.pushWindows = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Reserve space for the bar even when it's hidden")
+            }
+        }
+
+        ConfigSpinBox {
+            icon: "width"
+            text: Translation.tr("Hover region thickness (px)")
+            value: Config.options.bar.autoHide.hoverRegionWidth
+            from: 1
+            to: 50
+            stepSize: 1
+            onValueChanged: {
+                Config.options.bar.autoHide.hoverRegionWidth = value;
+            }
+            StyledToolTip {
+                text: Translation.tr("How far past the bar's edge the cursor still counts as touching it. Also what reveals an auto-hidden bar.")
             }
         }
 
@@ -249,26 +255,6 @@ ContentPage {
     ContentSection {
         icon: "memory"
         title: Translation.tr("Resources")
-
-        ConfigRow {
-            uniform: true
-            ConfigSwitch {
-                buttonIcon: "memory_alt"
-                text: Translation.tr("Always show swap")
-                checked: Config.options.bar.resources.alwaysShowSwap
-                onCheckedChanged: {
-                    Config.options.bar.resources.alwaysShowSwap = checked;
-                }
-            }
-            ConfigSwitch {
-                buttonIcon: "memory"
-                text: Translation.tr("Always show CPU")
-                checked: Config.options.bar.resources.alwaysShowCpu
-                onCheckedChanged: {
-                    Config.options.bar.resources.alwaysShowCpu = checked;
-                }
-            }
-        }
 
         ContentSubsection {
             title: Translation.tr("Warning thresholds (%)")
