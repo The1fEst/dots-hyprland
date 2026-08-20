@@ -86,6 +86,13 @@ upstream doesn't have, and rewrites some of the media and bar code. Everything e
     calendar and date formats, pomodoro, panel family and shell style, waffle panel and action
     center toggles, bar auto-hide, monitors, resources and warning thresholds, launcher and
     pinned apps, night light, annotation, on-screen keyboard, conflict killer, and update checks
+  - **Reboot to Windows** — a session screen button in place of the task manager one, backed by
+    `scripts/system/boot-next-windows.sh`. It arms a one-shot UEFI `BootNext` at the Windows Boot
+    Manager and reboots; the firmware clears `BootNext` itself, so a failed Windows boot lands
+    back in Linux. Needs no setup — writing the variable goes through `pkexec`, so the shell's
+    polkit agent asks for the password. To skip that prompt, allow the one call in
+    `/etc/sudoers.d` and swap `pkexec` for `sudo -n` in the script
+
   - **Lock screen** — shows the account's full name when one is set, and the keyboard layout in
     upper case
   - **Bar** — keyboard layout indicator in upper case

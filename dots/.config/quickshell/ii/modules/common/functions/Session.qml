@@ -51,4 +51,9 @@ Singleton {
         closeAllWindows();
         Quickshell.execDetached(["bash", "-c", `systemctl reboot --firmware-setup || loginctl reboot --firmware-setup`]);
     }
+
+    function rebootToWindows() {
+        closeAllWindows();
+        Quickshell.execDetached(["bash", "-c", `'${Directories.bootNextWindowsScriptPath}' && (systemctl reboot || loginctl reboot)`]);
+    }
 }

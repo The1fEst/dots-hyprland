@@ -149,15 +149,15 @@ Scope {
                                 sessionRoot.subtitle = buttonText;
                         }
                         KeyNavigation.left: sessionSleep
-                        KeyNavigation.right: sessionTaskManager
+                        KeyNavigation.right: sessionWindows
                         KeyNavigation.down: sessionReboot
                     }
                     SessionActionButton {
-                        id: sessionTaskManager
-                        buttonIcon: "browse_activity"
-                        buttonText: Translation.tr("Task Manager")
+                        id: sessionWindows
+                        buttonIcon: "desktop_windows"
+                        buttonText: Translation.tr("Reboot to Windows")
                         onClicked: {
-                            Session.launchTaskManager();
+                            Session.rebootToWindows();
                             sessionRoot.hide();
                         }
                         onFocusChanged: {
@@ -227,7 +227,7 @@ Scope {
                             if (focus)
                                 sessionRoot.subtitle = buttonText;
                         }
-                        KeyNavigation.up: sessionTaskManager
+                        KeyNavigation.up: sessionWindows
                         KeyNavigation.left: sessionReboot
                     }
                 }
