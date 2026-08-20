@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Bluetooth
 import qs
 import qs.services
@@ -106,7 +107,7 @@ Item {
                 }
                 text: Translation.tr("More Bluetooth settings")
                 onClicked: {
-                    Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "sidebarLeft", "toggle"]);
+                    Hyprland.dispatch('hl.dsp.global("quickshell:sidebarRightToggle")');
                     Quickshell.execDetached(["bash", "-c", Config.options.apps.bluetooth]);
                 }
             }

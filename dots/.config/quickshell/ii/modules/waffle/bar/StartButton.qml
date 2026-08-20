@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Hyprland
 import qs
 import qs.services
 import qs.modules.common
@@ -60,7 +61,7 @@ AppButton {
             {
                 text: Translation.tr("Search"),
                 action: () => {
-                    Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "overview", "toggle"]);
+                    Hyprland.dispatch('hl.dsp.global("quickshell:overviewWorkspacesToggle")');
                 }
             },
         ]

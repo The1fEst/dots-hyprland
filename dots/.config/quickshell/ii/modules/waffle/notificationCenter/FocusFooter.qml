@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Hyprland
 import qs
 import qs.services
 import qs.modules.common
@@ -64,7 +65,7 @@ FooterRectangle {
                     TimerService.resetPomodoro();
                 } else {
                     TimerService.togglePomodoro();
-                    Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "sidebarRight", "toggle"]);
+                    Hyprland.dispatch('hl.dsp.global("quickshell:sidebarRightToggle")');
                 }
             }
         }

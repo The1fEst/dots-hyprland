@@ -25,7 +25,9 @@ Item {
             visible: Config.options.bar.utilButtons.showScreenSnip
             sourceComponent: CircleUtilButton {
                 Layout.alignment: Qt.AlignVCenter
-                onClicked: Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "region", "screenshot"]);
+                // Same path the Print keybind takes. Spawning `qs ... ipc call` instead would
+                // shell out to a second process that has to find this one by config path.
+                onClicked: Hyprland.dispatch('hl.dsp.global("quickshell:regionScreenshot")')
                 MaterialSymbol {
                     horizontalAlignment: Qt.AlignHCenter
                     fill: 1

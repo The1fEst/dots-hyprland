@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import Quickshell
+import Quickshell.Hyprland
 import qs
 import qs.services
 import qs.services.network
@@ -96,7 +97,7 @@ Item {
                 }
                 text: Translation.tr("More Internet settings")
                 onClicked: {
-                    Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "sidebarLeft", "toggle"]);
+                    Hyprland.dispatch('hl.dsp.global("quickshell:sidebarRightToggle")');
                     Quickshell.execDetached(["bash", "-c", Config.options.apps.network]);
                 }
             }

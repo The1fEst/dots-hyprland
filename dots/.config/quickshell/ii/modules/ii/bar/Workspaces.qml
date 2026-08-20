@@ -26,6 +26,9 @@ ButtonMouseArea {
     property bool vertical: Config.options.bar.vertical
     property bool superPressAndHeld: false // Relevant modifications at bottom of file
 
+    // Padding the enclosing BarGroup should use. Matches BarGroup's own default, so this
+    // restores the value the binding in BarContent.qml has been silently falling back to.
+    property real widgetPadding: 5
     property real workspaceButtonWidth: 26
     property real activeWorkspaceMargin: 2
     property real activeWorkspaceSize: workspaceButtonWidth - activeWorkspaceMargin * 2
