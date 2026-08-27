@@ -7,7 +7,6 @@ import qs.modules.common.functions
 import QtQuick
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
-import Quickshell.Io
 
 import qs.modules.ii.background.widgets.clock.dateIndicator
 import qs.modules.ii.background.widgets.clock.minuteMarks
@@ -42,20 +41,6 @@ Item {
         Config.options.background.widgets.clock.cookie.minuteHandStyle = minuteHandStyle
         Config.options.background.widgets.clock.cookie.secondHandStyle = secondHandStyle
         Config.options.background.widgets.clock.cookie.dateStyle = dateStyle
-    }
-
-    function setClockPreset(category) {
-        // AI styling removed - wallpaper categorization is no longer available
-    }
-
-    FileView {
-        id: categoryFileView
-        path: Config.ready ? Directories.generatedWallpaperCategoryPath : ""
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: {
-            root.setClockPreset(categoryFileView.text().trim())
-        }
     }
 
     property bool useSineCookie: Config.options.background.widgets.clock.cookie.useSineCookie

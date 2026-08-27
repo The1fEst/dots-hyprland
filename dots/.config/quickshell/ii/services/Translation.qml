@@ -127,6 +127,7 @@ Singleton {
             translationReader.reload();
         }
         path: ""
+        printErrors: false
 
         onLoaded: {
             var textContent = "";

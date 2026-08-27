@@ -7,6 +7,7 @@ import qs.services
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt.labs.synchronizer
 import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Io
@@ -29,9 +30,8 @@ Toolbar {
             {"icon": "activity_zone", "name": Translation.tr("Rect")},
             {"icon": "gesture", "name": Translation.tr("Circle")}
         ]
-        currentIndex: root.selectionMode === RegionSelection.SelectionMode.RectCorners ? 0 : 1
-        onCurrentIndexChanged: {
-            root.selectionMode = currentIndex === 0 ? RegionSelection.SelectionMode.RectCorners : RegionSelection.SelectionMode.Circle;
+        Synchronizer on currentIndex {
+            property alias source: root.selectionMode
         }
     }
 }
