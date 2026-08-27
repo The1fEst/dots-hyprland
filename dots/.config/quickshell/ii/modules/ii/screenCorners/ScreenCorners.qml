@@ -13,14 +13,25 @@ Scope {
     id: screenCorners
     readonly property Toplevel activeWindow: ToplevelManager.activeToplevel
     property var actionForCorner: ({
-        [RoundCorner.CornerEnum.TopRight]: () => GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen,
-        [RoundCorner.CornerEnum.BottomRight]: () => GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen
+        [RoundCorner.CornerEnum.TopRight]: open => GlobalStates.sidebarRightOpen = open,
+        [RoundCorner.CornerEnum.BottomRight]: open => GlobalStates.sidebarRightOpen = open
+    })
+    property var stateForCorner: ({
+        [RoundCorner.CornerEnum.TopRight]: () => GlobalStates.sidebarRightOpen,
+        [RoundCorner.CornerEnum.BottomRight]: () => GlobalStates.sidebarRightOpen
     })
 
-    function triggerCorner(corner) {
+    function openCorner(corner) {
         const action = screenCorners.actionForCorner[corner];
         if (action)
-            action();
+            action(true);
+    }
+
+    function toggleCorner(corner) {
+        const action = screenCorners.actionForCorner[corner];
+        const state = screenCorners.stateForCorner[corner];
+        if (action && state)
+            action(!state());
     }
 
     component CornerPanelWindow: PanelWindow {
@@ -89,20 +100,34 @@ Scope {
                     implicitWidth: Config.options.sidebar.cornerOpen.cornerRegionWidth
                     implicitHeight: Config.options.sidebar.cornerOpen.cornerRegionHeight
                     hoverEnabled: true
-                    onPositionChanged: {
+                    property bool atCornerEnd: false
+                    function checkCornerEnd() {
                         if (!Config.options.sidebar.cornerOpen.clicklessCornerEnd) return;
                         const verticalOffset = Config.options.sidebar.cornerOpen.clicklessCornerVerticalOffset;
                         const correctX = (cornerWidget.isRight && mouseArea.mouseX >= mouseArea.width - 2) || (cornerWidget.isLeft && mouseArea.mouseX <= 2);
                         const correctY = (cornerWidget.isTop && mouseArea.mouseY > verticalOffset || cornerWidget.isBottom && mouseArea.mouseY < mouseArea.height - verticalOffset);
-                        if (correctX && correctY)
-                            screenCorners.triggerCorner(cornerPanelWindow.corner);
+                        const atCornerEnd = correctX && correctY;
+                        if (atCornerEnd && !mouseArea.atCornerEnd)
+                            screenCorners.openCorner(cornerPanelWindow.corner);
+                        mouseArea.atCornerEnd = atCornerEnd;
+                    }
+                    Connections {
+                        target: mouseArea
+                        function onExited() {
+                            mouseArea.atCornerEnd = false;
+                        }
+                    }
+                    onPositionChanged: {
+                        mouseArea.checkCornerEnd();
                     }
                     onEntered: {
                         if (Config.options.sidebar.cornerOpen.clickless)
-                            screenCorners.triggerCorner(cornerPanelWindow.corner);
+                            screenCorners.openCorner(cornerPanelWindow.corner);
+                        else
+                            mouseArea.checkCornerEnd();
                     }
                     onPressed: {
-                        screenCorners.triggerCorner(cornerPanelWindow.corner);
+                        screenCorners.toggleCorner(cornerPanelWindow.corner);
                     }
                     onScrollDown: {
                         if (!Config.options.sidebar.cornerOpen.valueScroll)
