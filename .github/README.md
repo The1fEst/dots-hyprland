@@ -103,8 +103,8 @@ upstream doesn't have, and rewrites some of the media and bar code. Everything e
 <details>
   <summary>Rewritten</summary>
 
-  - **Media controls** — reworked `MprisController`, seeking and player filtering, plus a
-    standalone `mpris_player_control.sh`
+  - **Media controls** — reworked `MprisController`, seeking and player filtering; the media
+    keys drive the shell over IPC instead of shelling out to `playerctl`
   - **Bar layout** — consistency pass across the bar; the active-window widget was dropped
   - **Installer** — uses `paru` instead of `yay`
   - `scheme_for_image.py` moved from OpenCV to PIL, keeping the same colorfulness metric

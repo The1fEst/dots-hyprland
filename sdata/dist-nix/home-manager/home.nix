@@ -61,7 +61,6 @@ quickshell, home_attrs, ... }:
       wireplumber #wireplumber
       pipewire #pipewire-pulse
       libdbusmenu-gtk3 #libdbusmenu-gtk3
-      playerctl #playerctl
 
 
       ### illogical-impulse-backlight

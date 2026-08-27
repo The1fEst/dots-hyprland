@@ -3,7 +3,6 @@ media-sound/cava pipewire -pulseaudio
 #media-sound/pavucontrol-qt (no use flags)
 #media-video/wireplumber (no use flags)
 dev-libs/libdbusmenu gtk3 introspection
-media-sound/playerctl introspection
 
 ################### BACKLIGHT ################### 
 app-misc/geoclue introspection

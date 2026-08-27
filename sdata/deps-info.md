@@ -20,8 +20,6 @@ Tips:
   - not explicitly used.
 - `libdbusmenu-gtk3`
   - not explicitly used.
-- `playerctl`
-  - Used in Hyprland and Quickshell config.
 
 ## illogical-impulse-backlight
 - `geoclue`

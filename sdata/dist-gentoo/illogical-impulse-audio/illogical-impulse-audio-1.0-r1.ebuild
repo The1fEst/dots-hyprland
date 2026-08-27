@@ -17,5 +17,4 @@ RDEPEND="
 	media-sound/pavucontrol-qt
 	media-video/wireplumber
 	dev-libs/libdbusmenu[gtk3]
-	media-sound/playerctl
 "

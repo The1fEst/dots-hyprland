@@ -17,8 +17,7 @@ packages = [
   "cava",
   "pavucontrol",
   "wireplumber",
-  "libdbusmenu-gtk3-devel",
-  "playerctl"
+  "libdbusmenu-gtk3-devel"
 ]
 
 # Backlight
