@@ -6,7 +6,6 @@ import qs.modules.common.functions
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Services.Mpris
 
 import qs.modules.ii.bar as Bar
 
@@ -19,13 +18,6 @@ MouseArea {
     Layout.fillHeight: true
     implicitHeight: mediaCircProg.implicitHeight
     implicitWidth: Appearance.sizes.verticalBarWidth
-
-    Timer {
-        running: activePlayer?.playbackState == MprisPlaybackState.Playing
-        interval: Config.options.resources.updateInterval
-        repeat: true
-        onTriggered: activePlayer.positionChanged()
-    }
 
     acceptedButtons: Qt.MiddleButton | Qt.BackButton | Qt.ForwardButton | Qt.RightButton | Qt.LeftButton
     hoverEnabled: !Config.options.bar.tooltips.clickToShow
@@ -47,7 +39,7 @@ MouseArea {
         implicitSize: 20
 
         lineWidth: Appearance.rounding.unsharpen
-        value: activePlayer?.position / activePlayer?.length
+        value: MprisController.hasTrackLength(activePlayer) ? (activePlayer.position / MprisController.trackLength(activePlayer)) : 0
         colPrimary: Appearance.colors.colOnSecondaryContainer
         enableAnimation: false
 

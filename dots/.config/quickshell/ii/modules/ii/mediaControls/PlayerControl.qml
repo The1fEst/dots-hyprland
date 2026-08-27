@@ -10,7 +10,6 @@ import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
-import Quickshell.Services.Mpris
 
 Item { // Player instance
     id: root
@@ -47,15 +46,6 @@ Item { // Player instance
             Behavior on color {
                 animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
             }
-        }
-    }
-
-    Timer { // Force update for revision
-        running: root.player?.playbackState == MprisPlaybackState.Playing
-        interval: Config.options.resources.updateInterval
-        repeat: true
-        onTriggered: {
-            root.player.positionChanged()
         }
     }
 
@@ -137,7 +127,7 @@ Item { // Player instance
         WaveVisualizer {
             id: visualizerCanvas
             anchors.fill: parent
-            live: root.player?.isPlaying
+            live: root.player?.isPlaying ?? false
             points: root.visualizerPoints
             maxVisualizerValue: root.maxVisualizerValue
             smoothing: root.visualizerSmoothing
@@ -219,7 +209,9 @@ Item { // Player instance
                         font.pixelSize: Appearance.font.pixelSize.small
                         color: blendedColors.colSubtext
                         elide: Text.ElideRight
-                        text: `${StringUtils.friendlyTimeForSeconds(root.player?.position)} / ${StringUtils.friendlyTimeForSeconds(root.player?.length)}`
+                        text: MprisController.hasTrackLength(root.player)
+                            ? `${StringUtils.friendlyTimeForSeconds(root.player.position)} / ${StringUtils.friendlyTimeForSeconds(MprisController.trackLength(root.player))}`
+                            : StringUtils.friendlyTimeForSeconds(root.player?.position)
                     }
                     RowLayout {
                         id: sliderRow
@@ -240,16 +232,16 @@ Item { // Player instance
                             Loader {
                                 id: sliderLoader
                                 anchors.fill: parent
-                                active: root.player?.canSeek ?? false
-                                sourceComponent: StyledSlider { 
+                                active: (root.player?.canSeek ?? false) && MprisController.hasTrackLength(root.player)
+                                sourceComponent: StyledSlider {
                                     configuration: StyledSlider.Configuration.Wavy
                                     highlightColor: blendedColors.colPrimary
                                     trackColor: blendedColors.colSecondaryContainer
                                     handleColor: blendedColors.colPrimary
-                                    value: root.player?.position / root.player?.length
+                                    value: root.player?.position / MprisController.trackLength(root.player)
                                     onPressedChanged: {
                                         if (!pressed) {
-                                            root.player.position = value * root.player.length;
+                                            root.player.position = value * MprisController.trackLength(root.player);
                                         }
                                     }
                                 }
@@ -262,12 +254,12 @@ Item { // Player instance
                                     left: parent.left
                                     right: parent.right
                                 }
-                                active: !(root.player?.canSeek ?? false)
-                                sourceComponent: StyledProgressBar { 
-                                    wavy: root.player?.isPlaying
+                                active: !sliderLoader.active
+                                sourceComponent: StyledProgressBar {
+                                    wavy: root.player?.isPlaying ?? false
                                     highlightColor: blendedColors.colPrimary
                                     trackColor: blendedColors.colSecondaryContainer
-                                    value: root.player?.position / root.player?.length
+                                    value: MprisController.hasTrackLength(root.player) ? (root.player.position / MprisController.trackLength(root.player)) : 0
                                 }
                             }
 

@@ -23,7 +23,69 @@ Singleton {
 
 	property bool __reverse: false;
 	property var activeTrack;
-	
+
+	property var knownLengths: ({});
+
+	function trackKey(player: MprisPlayer): string {
+		return `${player.metadata?.["xesam:url"] ?? ""}|${player.trackTitle ?? ""}`;
+	}
+
+	function trackLength(player: MprisPlayer): real {
+		if (!player) return 0;
+		if (player.lengthSupported) return player.length;
+		const known = root.knownLengths[player.dbusName];
+		return (known && known.key === root.trackKey(player)) ? known.length : 0;
+	}
+
+	function hasTrackLength(player: MprisPlayer): bool {
+		return root.trackLength(player) > 0;
+	}
+
+	function rememberLength(player: MprisPlayer): void {
+		if (!player?.lengthSupported || player.length <= 0) return;
+		const key = root.trackKey(player);
+		const known = root.knownLengths[player.dbusName];
+		if (known && known.key === key && known.length === player.length) return;
+
+		const lengths = Object.assign({}, root.knownLengths);
+		lengths[player.dbusName] = { key: key, length: player.length };
+		root.knownLengths = lengths;
+	}
+
+	Timer {
+		running: {
+			for (const player of Mpris.players.values) {
+				if (player.isPlaying) return true;
+			}
+			return false;
+		}
+		interval: Config.options.resources.updateInterval
+		repeat: true
+		onTriggered: {
+			for (const player of Mpris.players.values) {
+				if (player.isPlaying) player.positionChanged();
+			}
+		}
+	}
+
+	Instantiator {
+		model: Mpris.players
+		delegate: QtObject {
+			id: lengthMemory
+			required property MprisPlayer modelData
+
+			property Connections playerConnections: Connections {
+				target: lengthMemory.modelData
+
+				function onLengthChanged() { root.rememberLength(lengthMemory.modelData); }
+				function onLengthSupportedChanged() { root.rememberLength(lengthMemory.modelData); }
+				function onPostTrackChanged() { root.rememberLength(lengthMemory.modelData); }
+			}
+
+			Component.onCompleted: root.rememberLength(lengthMemory.modelData)
+		}
+	}
+
 	// Original stuff from fox below
 	Instantiator {
 		model: Mpris.players;
@@ -41,7 +103,7 @@ Singleton {
 			Component.onDestruction: {
 				if (root.trackedPlayer == null || !root.trackedPlayer.isPlaying) {
 					for (const player of Mpris.players.values) {
-						if (player.playbackState.isPlaying) {
+						if (player.isPlaying) {
 							root.trackedPlayer = player;
 							break;
 						}
@@ -163,6 +225,14 @@ Singleton {
 
 		function playPause(): void { root.togglePlaying(); }
 		function previous(): void { root.previous(); }
-		function next(): void { root.next(); }
+
+		function next(): void {
+			if (root.canGoNext) {
+				root.next();
+				return;
+			}
+			const player = root.activePlayer;
+			if (player?.canSeek && player.lengthSupported) player.position = player.length;
+		}
 	}
 }

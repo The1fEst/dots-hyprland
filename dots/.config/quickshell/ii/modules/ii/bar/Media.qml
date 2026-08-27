@@ -6,7 +6,6 @@ import qs.modules.common.functions
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Services.Mpris
 import Quickshell.Hyprland
 
 Item {
@@ -18,13 +17,6 @@ Item {
     Layout.fillHeight: true
     implicitWidth: rowLayout.implicitWidth + rowLayout.spacing * 2
     implicitHeight: Appearance.sizes.barHeight
-
-    Timer {
-        running: activePlayer?.playbackState == MprisPlaybackState.Playing
-        interval: Config.options.resources.updateInterval
-        repeat: true
-        onTriggered: activePlayer.positionChanged()
-    }
 
     MouseArea {
         anchors.fill: parent
@@ -52,7 +44,7 @@ Item {
             id: mediaCircProg
             Layout.alignment: Qt.AlignVCenter
             lineWidth: Appearance.rounding.unsharpen
-            value: activePlayer?.position / activePlayer?.length
+            value: MprisController.hasTrackLength(activePlayer) ? (activePlayer.position / MprisController.trackLength(activePlayer)) : 0
             implicitSize: 20
             colPrimary: Appearance.colors.colOnSecondaryContainer
             enableAnimation: false
