@@ -17,6 +17,12 @@ Scope {
         [RoundCorner.CornerEnum.BottomRight]: () => GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen
     })
 
+    function triggerCorner(corner) {
+        const action = screenCorners.actionForCorner[corner];
+        if (action)
+            action();
+    }
+
     component CornerPanelWindow: PanelWindow {
         id: cornerPanelWindow
         property var brightnessMonitor: Brightness.getMonitorForScreen(screen)
@@ -45,6 +51,13 @@ Scope {
 
         implicitWidth: cornerWidget.implicitWidth
         implicitHeight: cornerWidget.implicitHeight
+
+        Component.onCompleted: {
+            GlobalFocusGrab.addPersistent(cornerPanelWindow);
+        }
+        Component.onDestruction: {
+            GlobalFocusGrab.removePersistent(cornerPanelWindow);
+        }
 
         RoundCorner {
             id: cornerWidget
@@ -82,14 +95,14 @@ Scope {
                         const correctX = (cornerWidget.isRight && mouseArea.mouseX >= mouseArea.width - 2) || (cornerWidget.isLeft && mouseArea.mouseX <= 2);
                         const correctY = (cornerWidget.isTop && mouseArea.mouseY > verticalOffset || cornerWidget.isBottom && mouseArea.mouseY < mouseArea.height - verticalOffset);
                         if (correctX && correctY)
-                            screenCorners.actionForCorner[cornerPanelWindow.corner]();
+                            screenCorners.triggerCorner(cornerPanelWindow.corner);
                     }
                     onEntered: {
                         if (Config.options.sidebar.cornerOpen.clickless)
-                            screenCorners.actionForCorner[cornerPanelWindow.corner]();
+                            screenCorners.triggerCorner(cornerPanelWindow.corner);
                     }
                     onPressed: {
-                        screenCorners.actionForCorner[cornerPanelWindow.corner]();
+                        screenCorners.triggerCorner(cornerPanelWindow.corner);
                     }
                     onScrollDown: {
                         if (!Config.options.sidebar.cornerOpen.valueScroll)
