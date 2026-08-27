@@ -28,9 +28,9 @@ Variants {
         required property var modelData
 
         // Hide when fullscreen
-        property list<HyprlandWorkspace> workspacesForMonitor: Hyprland.workspaces.values.filter(workspace => workspace.monitor && workspace.monitor.name == monitor.name)
-        property var activeWorkspaceWithFullscreen: workspacesForMonitor.filter(workspace => ((workspace.toplevels.values.filter(window => window.wayland?.fullscreen)[0] != undefined) && workspace.active))[0]
-        visible: GlobalStates.screenLocked || (!(activeWorkspaceWithFullscreen != undefined)) || !Config?.options.background.hideWhenFullscreen
+        property var monitorData: HyprlandData.monitors.find(m => m.name === bgRoot.monitor?.name)
+        property bool fullscreen: HyprlandData.windowList.some(win => win.fullscreen === 2 && win.workspace.id === bgRoot.monitorData?.activeWorkspace?.id)
+        visible: GlobalStates.screenLocked || !fullscreen || !Config?.options.background.hideWhenFullscreen
 
         // Workspaces
         property HyprlandMonitor monitor: Hyprland.monitorFor(modelData)
@@ -135,7 +135,7 @@ Variants {
                 cache: false
                 smooth: false
 
-                property int workspaceIndex: (bgRoot.monitor.activeWorkspace?.id ?? 1) - 1
+                property int workspaceIndex: (bgRoot.monitor?.activeWorkspace?.id ?? 1) - 1
                 property real middleFraction: 0.5
                 property real fraction: {
                     // 0 - start of the picture
