@@ -8,7 +8,7 @@ Item {
     id: root
 
     required property MGlassBackdrop backdrop
-    property real radius: Looks.radius.large
+    property real radius: Looks.radiusFor(root.width, root.height)
     property color tint: Looks.glass.tint
 
     default property alias content: contentItem.data

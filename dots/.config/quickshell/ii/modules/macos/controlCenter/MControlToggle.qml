@@ -16,7 +16,6 @@ MGlass {
     readonly property color activeColor: lit ? Looks.accent : Looks.colors.quaternary
 
     tint: !wide && lit ? Looks.accent : Looks.glass.tint
-    radius: wide ? Math.min(Looks.radius.toggleWide, height / 2) : Math.min(width, height) / 2
     opacity: toggleModel.available ? 1 : 0.4
 
     Rectangle {

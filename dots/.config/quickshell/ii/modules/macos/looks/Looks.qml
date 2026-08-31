@@ -91,14 +91,21 @@ Singleton {
         readonly property int small: 6
         readonly property int normal: 10
         readonly property int large: 16
-        readonly property var settings: Config.options?.macos.radius ?? null
-        readonly property int toggleWide: settings?.toggleWide ?? 31
-        readonly property int card: settings?.card ?? 20
-        readonly property int slider: settings?.slider ?? 22
-        readonly property int media: settings?.media ?? 40
+        readonly property int base: 50
+        readonly property real scale: -0.00115
+        readonly property real shortSideFactor: 0.4
+        readonly property int maximum: 55
         readonly property int huge: 26
         readonly property int dock: Config.options?.macos.dock.radius ?? 28
         readonly property int window: 12
+    }
+
+    function radiusFor(width: real, height: real): real {
+        const w = Math.max(1, width);
+        const h = Math.max(1, height);
+        const shortSide = Math.min(w, h);
+        const grown = Math.max(radius.base + radius.scale * w * h, radius.shortSideFactor * shortSide);
+        return Math.max(0, Math.min(grown, radius.maximum, shortSide / 2));
     }
 
     property QtObject sizes: QtObject {

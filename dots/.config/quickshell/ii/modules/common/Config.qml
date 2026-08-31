@@ -561,12 +561,6 @@ Singleton {
                     property real shadowSpread: 10
                     property int bevelMode: 0
                 }
-                property JsonObject radius: JsonObject {
-                    property int toggleWide: 31
-                    property int media: 40
-                    property int slider: 22
-                    property int card: 20
-                }
                 property JsonObject controlCenter: JsonObject {
                     property list<string> controls: ["network", "media", "bluetooth", "screenSnip", "colorPicker", "mic", "darkMode", "volume", "brightness"]
                 }

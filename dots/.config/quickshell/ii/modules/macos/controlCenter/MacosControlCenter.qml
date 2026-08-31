@@ -109,7 +109,7 @@ PanelWindow {
     }
 
     mask: Region {
-        item: root.open ? panelArea : null
+        item: root.open ? grid : null
     }
 
     Component {
@@ -241,6 +241,7 @@ PanelWindow {
             visible: root.open
 
             GridLayout {
+                id: grid
                 anchors {
                     left: parent.left
                     right: parent.right

@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Wayland
 import Quickshell.Widgets
 import qs.services
 import qs.modules.macos.looks
@@ -11,6 +12,26 @@ MGlass {
 
     required property var notif
     property int maximumBodyLines: 3
+
+    signal activated
+    signal dismissed
+
+    function focusSender(): bool {
+        const wanted = (root.notif.appName ?? "").toLowerCase();
+        if (wanted.length === 0)
+            return false;
+        for (const toplevel of ToplevelManager.toplevels.values) {
+            const appId = (toplevel.appId ?? "").toLowerCase();
+            if (appId.length === 0)
+                continue;
+            const entryName = (DesktopEntries.heuristicLookup(toplevel.appId)?.name ?? "").toLowerCase();
+            if (appId === wanted || appId.endsWith(`.${wanted}`) || appId.includes(wanted) || wanted.includes(appId) || entryName === wanted) {
+                toplevel.activate();
+                return true;
+            }
+        }
+        return false;
+    }
 
     readonly property string stamp: {
         const now = new Date();
@@ -23,7 +44,6 @@ MGlass {
         return `${days} days ago`;
     }
 
-    radius: Looks.radius.card
     implicitHeight: Math.max(64, textColumn.implicitHeight + 26)
 
     ClippingRectangle {
@@ -93,6 +113,11 @@ MGlass {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
         cursorShape: Qt.PointingHandCursor
-        onClicked: Notifications.discardNotification(root.notif.notificationId)
+        onClicked: event => {
+            if (event.button === Qt.MiddleButton)
+                root.dismissed();
+            else
+                root.activated();
+        }
     }
 }

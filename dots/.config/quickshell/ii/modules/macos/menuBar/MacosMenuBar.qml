@@ -133,7 +133,6 @@ Scope {
             MacosNotificationCenter {
                 screenData: screenScope.modelData
                 open: screenScope.notificationCenterOpen
-                onRequestClose: screenScope.notificationCenterOpen = false
             }
 
         }

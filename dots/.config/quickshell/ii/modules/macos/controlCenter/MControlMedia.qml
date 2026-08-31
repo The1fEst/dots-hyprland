@@ -11,7 +11,6 @@ MGlass {
 
     readonly property var player: MprisController.activePlayer
 
-    radius: Looks.radius.media
 
     ClippingRectangle {
         id: art

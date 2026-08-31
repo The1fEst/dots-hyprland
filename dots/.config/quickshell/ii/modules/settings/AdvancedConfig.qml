@@ -304,59 +304,6 @@ ContentPage {
         }
 
         ContentSubsection {
-            title: Translation.tr("Corner radius")
-
-            ConfigSlider {
-                text: Translation.tr("Wide toggle")
-                buttonIcon: "rounded_corner"
-                usePercentTooltip: false
-                from: 0
-                to: 40
-                stopIndicatorValues: [31]
-                value: Config.options.macos.radius.toggleWide
-                onMoved: newValue => {
-                    Config.options.macos.radius.toggleWide = Math.round(newValue);
-                }
-            }
-            ConfigSlider {
-                text: Translation.tr("Media tile")
-                buttonIcon: "rounded_corner"
-                usePercentTooltip: false
-                from: 0
-                to: 64
-                stopIndicatorValues: [40]
-                value: Config.options.macos.radius.media
-                onMoved: newValue => {
-                    Config.options.macos.radius.media = Math.round(newValue);
-                }
-            }
-            ConfigSlider {
-                text: Translation.tr("Slider tile")
-                buttonIcon: "rounded_corner"
-                usePercentTooltip: false
-                from: 0
-                to: 40
-                stopIndicatorValues: [22]
-                value: Config.options.macos.radius.slider
-                onMoved: newValue => {
-                    Config.options.macos.radius.slider = Math.round(newValue);
-                }
-            }
-            ConfigSlider {
-                text: Translation.tr("Notification card")
-                buttonIcon: "rounded_corner"
-                usePercentTooltip: false
-                from: 0
-                to: 48
-                stopIndicatorValues: [20]
-                value: Config.options.macos.radius.card
-                onMoved: newValue => {
-                    Config.options.macos.radius.card = Math.round(newValue);
-                }
-            }
-        }
-
-        ContentSubsection {
             title: Translation.tr("Control centre")
             tooltip: Translation.tr("Comma-separated, in display order. Available: bluetooth, brightness, colorPicker, darkMode, idleInhibitor, media, mic, network, nightLight, screenSnip, volume")
 

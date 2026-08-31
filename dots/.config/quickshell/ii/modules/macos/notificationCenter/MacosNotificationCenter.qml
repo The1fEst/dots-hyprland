@@ -14,8 +14,6 @@ PanelWindow {
     required property var screenData
     property bool open: false
 
-    signal requestClose
-
     readonly property real sideMargin: 12
 
     screen: screenData
@@ -32,7 +30,7 @@ PanelWindow {
     }
 
     mask: Region {
-        item: root.open ? contentRoot : null
+        item: root.open ? contentColumn : null
     }
 
     Item {
@@ -53,8 +51,11 @@ PanelWindow {
             visible: root.open
 
             ColumnLayout {
+                id: contentColumn
                 anchors {
-                    fill: parent
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
                     margins: root.sideMargin
                 }
                 spacing: 10
@@ -74,36 +75,26 @@ PanelWindow {
                         Layout.fillWidth: true
                     }
 
-                    MGlass {
+                    MHeaderButton {
                         backdrop: backdrop
-                        implicitWidth: 22
-                        implicitHeight: 22
-                        radius: 11
-
-                        MText {
-                            anchors.centerIn: parent
-                            text: "×"
-                            font.pixelSize: Looks.font.size.normal
-                            color: Looks.colors.secondary
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: root.requestClose()
-                        }
+                        iconName: "close"
+                        label: "Clear All"
+                        showLabel: hovered
+                        onClicked: Notifications.discardAllNotifications()
                     }
                 }
 
                 Repeater {
-                    model: Notifications.list
+                    model: Notifications.appNameList
 
-                    MNotificationCard {
-                        required property var modelData
+                    MNotificationGroup {
+                        required property string modelData
 
                         Layout.fillWidth: true
+                        Layout.preferredHeight: implicitHeight
                         backdrop: backdrop
-                        notif: modelData
+                        panelOpen: root.open
+                        group: Notifications.groupsByAppName[modelData]
                     }
                 }
 
@@ -111,7 +102,6 @@ PanelWindow {
                     Layout.fillWidth: true
                     Layout.preferredHeight: calendarWidget.implicitHeight + 32
                     backdrop: backdrop
-                    radius: Looks.radius.media
 
                     ColumnLayout {
                         anchors {
@@ -156,10 +146,6 @@ PanelWindow {
                             margins: 16
                         }
                     }
-                }
-
-                Item {
-                    Layout.fillHeight: true
                 }
             }
         }

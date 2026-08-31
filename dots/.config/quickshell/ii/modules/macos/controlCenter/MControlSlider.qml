@@ -18,7 +18,6 @@ MGlass {
 
     signal moved(real newValue)
 
-    radius: Looks.radius.slider
 
     MouseArea {
         id: hoverArea

@@ -68,6 +68,11 @@ Scope {
                         Layout.fillWidth: true
                         backdrop: backdrop
                         notif: modelData
+                        onActivated: {
+                            focusSender();
+                            Notifications.timeoutNotification(modelData.notificationId);
+                        }
+                        onDismissed: Notifications.timeoutNotification(modelData.notificationId)
 
                         opacity: 0
                         x: 40
