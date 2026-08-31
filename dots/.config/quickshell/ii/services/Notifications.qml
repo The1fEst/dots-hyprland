@@ -25,6 +25,8 @@ Singleton {
             "text": action.text,
         })) ?? []
         property bool popup: false
+        property bool hasInlineReply: notification?.hasInlineReply ?? false
+        property string inlineReplyPlaceholder: notification?.inlineReplyPlaceholder ?? ""
         property bool isTransient: notification?.hints.transient ?? false
         property string appIcon: notification?.appIcon ?? ""
         property string appName: notification?.appName ?? ""
@@ -158,6 +160,7 @@ Singleton {
         bodyMarkupSupported: true
         bodySupported: true
         imageSupported: true
+        inlineReplySupported: true
         keepOnReload: false
         persistenceSupported: true
 
@@ -250,6 +253,17 @@ Singleton {
         } 
         else {
             console.log("Notification not found in server: " + id)
+        }
+        root.discardNotification(id);
+    }
+
+    function sendInlineReply(id, text) {
+        const notifServerIndex = notifServer.trackedNotifications.values.findIndex((notif) => notif.id + root.idOffset === id);
+        if (notifServerIndex !== -1) {
+            notifServer.trackedNotifications.values[notifServerIndex].sendInlineReply(text);
+        }
+        else {
+            console.log("[Notifications] Cannot reply, notification not found in server: " + id)
         }
         root.discardNotification(id);
     }

@@ -26,7 +26,9 @@ PanelWindow {
     exclusiveZone: 0
     implicitWidth: 380
     WlrLayershell.namespace: "quickshell:macosNotificationCenter"
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+    // On demand rather than none: replying to a notification needs the keyboard, and the
+    // compositor only hands it over once the panel is clicked.
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
     anchors {
         top: true
         right: true

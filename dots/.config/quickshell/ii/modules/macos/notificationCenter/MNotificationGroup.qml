@@ -51,9 +51,10 @@ Item {
             if (root.items.length > 1)
                 root.expanded = true;
             else
-                focusSender();
+                open();
         }
         onDismissed: Notifications.discardNotification(notif.notificationId)
+        onClosed: Notifications.discardNotification(notif.notificationId)
     }
 
     Column {
@@ -116,8 +117,9 @@ Item {
                 width: column.width
                 backdrop: root.backdrop
                 notif: root.items[root.items.length - 1 - index]
-                onActivated: focusSender()
+                onActivated: open()
                 onDismissed: Notifications.discardNotification(notif.notificationId)
+                onClosed: Notifications.discardNotification(notif.notificationId)
             }
         }
     }
