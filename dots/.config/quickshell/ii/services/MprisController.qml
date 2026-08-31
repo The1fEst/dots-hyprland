@@ -19,6 +19,23 @@ Singleton {
 	property list<MprisPlayer> players: Mpris.players.values;
 	property MprisPlayer trackedPlayer: null;
 	property MprisPlayer activePlayer: trackedPlayer ?? Mpris.players.values[0] ?? null;
+	// playerctld mirrors whichever player is active, so it always duplicates another entry.
+	readonly property list<MprisPlayer> visiblePlayers: {
+		const result = [];
+		for (const player of Mpris.players.values) {
+			if (!player.dbusName.includes("playerctld")) result.push(player);
+		}
+		return result;
+	}
+	// trackedPlayer follows the last playback state change, including pauses, so it can
+	// point at a silent player while another one plays.
+	readonly property MprisPlayer currentPlayer: {
+		for (const player of root.visiblePlayers) {
+			if (player.isPlaying) return player;
+		}
+		if (root.visiblePlayers.indexOf(root.activePlayer) !== -1) return root.activePlayer;
+		return root.visiblePlayers[0] ?? null;
+	}
 	signal trackChanged(reverse: bool);
 
 	property bool __reverse: false;

@@ -7,6 +7,7 @@ import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.macos.items
 import qs.modules.macos.looks
 import qs.modules.macos.controlCenter
 import qs.modules.macos.notificationCenter
@@ -23,6 +24,20 @@ Scope {
 
             property bool notificationCenterOpen: false
             property bool controlCenterOpen: false
+            property bool editMode: false
+            property string expanded: ""
+
+            onControlCenterOpenChanged: {
+                if (!controlCenterOpen) {
+                    editMode = false;
+                    expanded = "";
+                }
+            }
+
+            onEditModeChanged: {
+                if (editMode)
+                    expanded = "";
+            }
 
             PanelWindow {
                 id: barWindow
@@ -37,6 +52,15 @@ Scope {
                     top: true
                     left: true
                     right: true
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onPressed: {
+                        screenScope.controlCenterOpen = false;
+                        screenScope.notificationCenterOpen = false;
+                    }
                 }
 
                 Row {
@@ -78,21 +102,20 @@ Scope {
                     }
                     spacing: Looks.sizes.menuBarItemSpacing
 
-                    MMenuBarTray {}
-
-                    MMenuBarItem {
-                        visible: Battery.available
-                        MText {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: `${Math.round(Battery.percentage * 100)}%`
-                            color: Looks.colors.primary
-                            font.pixelSize: Looks.font.size.small
-                        }
-                        MaterialSymbol {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: Battery.isCharging ? "battery_charging_full" : "battery_full"
-                            iconSize: 18
-                            color: Battery.isLowAndNotCharging ? Looks.colors.red : Looks.colors.primary
+                    MMenuBarItems {
+                        editMode: screenScope.editMode
+                        dragOriginX: screenScope.modelData.x
+                        dragOriginY: screenScope.modelData.y
+                        screenName: screenScope.modelData.name
+                        activeItem: screenScope.controlCenterOpen ? screenScope.expanded : ""
+                        onExpandRequested: id => {
+                            if (screenScope.controlCenterOpen && screenScope.expanded === id) {
+                                screenScope.controlCenterOpen = false;
+                                return;
+                            }
+                            screenScope.notificationCenterOpen = false;
+                            screenScope.controlCenterOpen = true;
+                            screenScope.expanded = id;
                         }
                     }
 
@@ -123,11 +146,17 @@ Scope {
                         }
                     }
                 }
+
             }
 
             MacosControlCenter {
                 screenData: screenScope.modelData
                 open: screenScope.controlCenterOpen
+                editMode: screenScope.editMode
+                expanded: screenScope.expanded
+                onEditRequested: screenScope.editMode = !screenScope.editMode
+                onExpandRequested: id => screenScope.expanded = id
+                onCollapseRequested: screenScope.expanded = ""
             }
 
             MacosNotificationCenter {

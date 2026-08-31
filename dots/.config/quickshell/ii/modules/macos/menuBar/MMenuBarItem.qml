@@ -8,6 +8,7 @@ Item {
     property real minWidth: Looks.sizes.menuBarItemMinWidth
     property bool interactive: true
     property bool active: false
+    property bool shown: true
     readonly property bool highlighted: root.active || (root.interactive && mouseArea.pressed)
 
     signal clicked(var event)
@@ -16,6 +17,7 @@ Item {
 
     implicitWidth: Math.max(minWidth, contentItem.implicitWidth + horizontalPadding * 2)
     implicitHeight: Looks.sizes.menuBarHeight
+    visible: root.shown
 
     Rectangle {
         anchors {

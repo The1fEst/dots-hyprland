@@ -562,7 +562,11 @@ Singleton {
                     property int bevelMode: 0
                 }
                 property JsonObject controlCenter: JsonObject {
-                    property list<string> controls: ["network", "media", "bluetooth", "screenSnip", "colorPicker", "mic", "darkMode", "volume", "brightness"]
+                    property list<string> controls: ["wifi", "media", "bluetooth", "screenSnip", "colorPicker", "mic", "darkMode", "volume", "brightness"]
+                    property list<string> sizes: [] // "<widget id>:<small|normal|large>"
+                }
+                property JsonObject menuBar: JsonObject {
+                    property list<string> items: ["tray", "battery"]
                 }
                 property JsonObject dock: JsonObject {
                     property int iconSize: 57

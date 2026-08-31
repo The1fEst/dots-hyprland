@@ -34,9 +34,8 @@ Singleton {
 
     property string networkName: ""
     property int networkStrength
-    property string materialSymbol: root.ethernet
-        ? "lan"
-        : (root.wifiEnabled && root.wifiStatus === "connected")
+    property string materialSymbol: root.ethernet ? "lan" : root.wifiSymbol
+    property string wifiSymbol: (root.wifiEnabled && root.wifiStatus === "connected")
             ? (
                 (root.active?.strength ?? 0) > 83 ? "signal_wifi_4_bar" :
                 (root.active?.strength ?? 0) > 67 ? "network_wifi" :

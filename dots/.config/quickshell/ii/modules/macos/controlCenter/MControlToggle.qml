@@ -9,7 +9,7 @@ MGlass {
     id: root
 
     required property QtObject toggleModel
-    property bool wide: false
+    property bool wide: root.width >= root.height * 1.6
     property string settingsCommand: ""
 
     readonly property bool lit: toggleModel.toggled

@@ -18,6 +18,8 @@ MGlass {
 
     signal moved(real newValue)
 
+    readonly property bool compact: root.width < root.height * 1.6
+    readonly property real inset: root.width > 200 ? 20 : 14
 
     MouseArea {
         id: hoverArea
@@ -30,10 +32,10 @@ MGlass {
 
     MaterialSymbol {
         id: chevron
-        visible: root.settingsCommand.length > 0
+        visible: root.settingsCommand.length > 0 && !root.compact
         anchors {
             right: parent.right
-            rightMargin: 20
+            rightMargin: root.inset
             verticalCenter: caption.verticalCenter
         }
         text: "chevron_right"
@@ -51,9 +53,10 @@ MGlass {
 
     MText {
         id: caption
+        visible: !root.compact
         anchors {
             left: parent.left
-            leftMargin: 20
+            leftMargin: root.inset
             top: parent.top
             topMargin: 10
         }
@@ -64,22 +67,19 @@ MGlass {
 
     MaterialSymbol {
         id: leading
-        anchors {
-            left: parent.left
-            leftMargin: 20
-            bottom: parent.bottom
-            bottomMargin: 12
-        }
+        x: root.compact ? (root.width - width) / 2 : root.inset
+        y: root.compact ? (root.height - height) / 2 : root.height - height - 12
         text: root.leadingIcon
-        iconSize: 18
-        color: Looks.colors.secondary
+        iconSize: root.compact ? 22 : 18
+        color: root.compact ? Looks.colors.primary : Looks.colors.secondary
     }
 
     MaterialSymbol {
         id: trailing
+        visible: !root.compact
         anchors {
             right: parent.right
-            rightMargin: 20
+            rightMargin: root.inset
             bottom: parent.bottom
             bottomMargin: 12
         }
@@ -90,6 +90,7 @@ MGlass {
 
     Item {
         id: track
+        visible: !root.compact
         anchors {
             left: leading.right
             leftMargin: 10

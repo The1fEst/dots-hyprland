@@ -9,16 +9,23 @@ import qs.modules.macos.looks
 MGlass {
     id: root
 
-    readonly property var player: MprisController.activePlayer
+    readonly property var player: MprisController.currentPlayer
 
+    readonly property bool compact: root.width < 100
+    readonly property bool tall: root.height > 100
+
+    signal activated
+
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: root.activated()
+    }
 
     ClippingRectangle {
         id: art
-        anchors {
-            left: parent.left
-            top: parent.top
-            margins: 14
-        }
+        x: root.compact ? (root.width - width) / 2 : 14
+        y: root.tall ? 14 : (root.height - height) / 2
         width: 38
         height: 38
         radius: 8
@@ -42,13 +49,11 @@ MGlass {
     }
 
     Column {
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: art.bottom
-            margins: 14
-            topMargin: 8
-        }
+        id: info
+        visible: !root.compact
+        x: root.tall ? 14 : art.x + art.width + 12
+        y: root.tall ? art.y + art.height + 8 : (root.height - implicitHeight) / 2
+        width: root.width - x - 14
         spacing: 1
 
         MText {
@@ -70,6 +75,7 @@ MGlass {
     }
 
     Row {
+        visible: root.tall
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
@@ -95,19 +101,19 @@ MGlass {
 
         Control {
             text: "skip_previous"
-            enabled: MprisController.canGoPrevious
+            enabled: root.player?.canGoPrevious ?? false
             onActivated: root.player?.previous()
         }
 
         Control {
-            text: MprisController.isPlaying ? "pause" : "play_arrow"
-            enabled: MprisController.canTogglePlaying
+            text: root.player?.isPlaying ? "pause" : "play_arrow"
+            enabled: root.player?.canTogglePlaying ?? false
             onActivated: root.player?.togglePlaying()
         }
 
         Control {
             text: "skip_next"
-            enabled: MprisController.canGoNext
+            enabled: root.player?.canGoNext ?? false
             onActivated: root.player?.next()
         }
     }
