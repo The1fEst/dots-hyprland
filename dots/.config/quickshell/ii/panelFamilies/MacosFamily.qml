@@ -6,13 +6,13 @@ import qs.modules.macos.background
 import qs.modules.macos.dock
 import qs.modules.macos.menuBar
 import qs.modules.macos.notificationPopup
+import qs.modules.macos.spotlight
 
 import qs.modules.ii.cheatsheet
 import qs.modules.ii.lock
 import qs.modules.ii.mediaControls
 import qs.modules.ii.onScreenDisplay
 import qs.modules.ii.onScreenKeyboard
-import qs.modules.ii.overview
 import qs.modules.ii.polkit
 import qs.modules.ii.regionSelector
 import qs.modules.ii.sessionScreen
@@ -30,7 +30,7 @@ Scope {
     PanelLoader { component: MacosNotificationPopup {} }
     PanelLoader { component: OnScreenDisplay {} }
     PanelLoader { component: OnScreenKeyboard {} }
-    PanelLoader { component: Overview {} }
+    PanelLoader { component: MacosSpotlight {} }
     PanelLoader { component: Polkit {} }
     PanelLoader { component: RegionSelector {} }
     PanelLoader { component: SessionScreen {} }
