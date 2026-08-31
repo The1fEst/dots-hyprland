@@ -58,38 +58,53 @@ Row {
         }
 
         const localX = MDrag.position.x - root.dragOriginX;
-        const rowPoint = root.mapFromItem(null, localX, localY);
 
         // Over its own slot the item keeps the place it already has, so a grab or a
         // small wobble never reshuffles the bar.
         for (const slot of root.children) {
             if (slot.modelData !== MDrag.itemId)
                 continue;
-            if (rowPoint.x >= slot.x && rowPoint.x < slot.x + slot.width)
+            const left = slot.mapToItem(null, 0, 0).x;
+            if (localX >= left && localX < left + slot.width)
                 return;
         }
 
-        MDrag.setTarget("menuBar", root.insertionIndex(rowPoint.x));
+        MDrag.setTarget("menuBar", root.insertionIndex(localX));
     }
 
-    // Measured against the slots that keep their place, so the preview stays put
-    // once the cursor does.
-    function insertionIndex(x: real): int {
+    // In window coordinates, not row coordinates: the row is anchored to the right, so
+    // showing the dragged item moves the row's own origin and a cursor measured against
+    // it would jump by the item's width.
+    function insertionIndex(windowX: real): int {
+        const shown = {};
         const slots = [];
         for (const slot of root.children) {
-            if ((slot.itemIndex ?? -1) < 0 || !slot.visible || slot.modelData === MDrag.itemId)
+            if ((slot.itemIndex ?? -1) < 0)
                 continue;
-            slots.push(slot);
+            shown[slot.modelData] = slot.visible;
+            if (slot.visible && slot.modelData !== MDrag.itemId)
+                slots.push(slot);
         }
         slots.sort((first, second) => first.x - second.x);
 
-        let index = 0;
+        let passed = 0;
         for (const slot of slots) {
-            if (x < slot.x + slot.width / 2)
+            if (windowX < slot.mapToItem(null, 0, 0).x + slot.width / 2)
                 break;
-            index++;
+            passed++;
         }
-        return index;
+
+        // An entry with nothing to show, a battery on a desktop say, still holds a place
+        // in the list, so the number of slots the cursor passed is not a list index.
+        const rest = root.items.filter(id => id !== MDrag.itemId);
+        let position = 0;
+        let seen = 0;
+        while (position < rest.length && seen < passed) {
+            if (shown[rest[position]] !== false)
+                seen++;
+            position++;
+        }
+        return position;
     }
 
     spacing: Looks.sizes.menuBarItemSpacing
