@@ -16,6 +16,10 @@ PanelWindow {
 
     readonly property real sideMargin: 12
 
+    // Whatever the header and the calendar leave over: notifications scroll rather than
+    // running off the bottom of the screen.
+    readonly property real maxListHeight: Math.max(0, root.height - headerRow.height - calendarCard.height - root.sideMargin * 2 - contentColumn.spacing * 2)
+
     screen: screenData
     visible: open
     color: "transparent"
@@ -61,6 +65,7 @@ PanelWindow {
                 spacing: 10
 
                 RowLayout {
+                    id: headerRow
                     Layout.fillWidth: true
                     Layout.bottomMargin: 2
 
@@ -84,21 +89,60 @@ PanelWindow {
                     }
                 }
 
-                Repeater {
-                    model: Notifications.appNameList
+                Flickable {
+                    id: notificationScroll
 
-                    MNotificationGroup {
-                        required property string modelData
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: Math.min(notificationList.implicitHeight, root.maxListHeight)
+                    contentWidth: width
+                    contentHeight: notificationList.implicitHeight
+                    clip: true
+                    boundsBehavior: Flickable.StopAtBounds
+                    interactive: contentHeight > height
 
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: implicitHeight
-                        backdrop: backdrop
-                        panelOpen: root.open
-                        group: Notifications.groupsByAppName[modelData]
+                    Column {
+                        id: notificationList
+                        width: notificationScroll.width
+                        spacing: 10
+
+                        Repeater {
+                            model: Notifications.appNameList
+
+                            MNotificationGroup {
+                                required property string modelData
+
+                                width: notificationList.width
+                                backdrop: backdrop
+                                panelOpen: root.open
+                                group: Notifications.groupsByAppName[modelData]
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        anchors {
+                            right: parent.right
+                            rightMargin: 2
+                        }
+                        visible: notificationScroll.interactive
+                        width: 4
+                        radius: width / 2
+                        color: Looks.colors.tertiary
+                        opacity: notificationScroll.moving ? 1 : 0
+                        y: notificationScroll.contentY + notificationScroll.height * (notificationScroll.contentY / notificationScroll.contentHeight)
+                        height: notificationScroll.height * (notificationScroll.height / notificationScroll.contentHeight)
+
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: 200
+                                easing.type: Easing.OutCubic
+                            }
+                        }
                     }
                 }
 
                 MGlass {
+                    id: calendarCard
                     Layout.fillWidth: true
                     Layout.preferredHeight: calendarWidget.implicitHeight + 32
                     backdrop: backdrop
