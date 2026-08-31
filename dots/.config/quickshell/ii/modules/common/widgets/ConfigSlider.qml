@@ -19,6 +19,8 @@ RowLayout {
     property real to: slider.to
     property real textWidth: 120
 
+    signal moved(real newValue)
+
     RowLayout {
         id: row
         spacing: 10
@@ -43,5 +45,6 @@ RowLayout {
         value: root.value
         from: root.from
         to: root.to
+        onMoved: root.moved(slider.value)
     }
 }

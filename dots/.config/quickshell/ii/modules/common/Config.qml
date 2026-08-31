@@ -78,7 +78,7 @@ Singleton {
         JsonAdapter {
             id: configOptionsJsonAdapter
 
-            property string panelFamily: "ii" // "ii", "waffle"
+            property string panelFamily: "ii" // "ii", "waffle", "macos"
 
             property JsonObject policies: JsonObject {}
 
@@ -130,6 +130,7 @@ Singleton {
             property JsonObject apps: JsonObject {
                 property string bluetooth: "kcmshell6 kcm_bluetooth"
                 property string changePassword: "kitty -1 --hold=yes fish -i -c 'passwd'"
+                property string display: "nwg-displays"
                 property string network: "kcmshell6 kcm_networkmanagement"
                 property string manageUser: "kcmshell6 kcm_users"
                 property string networkEthernet: "kcmshell6 kcm_networkmanagement"
@@ -539,6 +540,44 @@ Singleton {
                 }
                 property JsonObject calendar: JsonObject {
                     property bool force2CharDayOfWeek: true
+                }
+            }
+
+            property JsonObject macos: JsonObject {
+                property JsonObject glass: JsonObject {
+                    property real tintOpacity: 0
+                    property real blur: 50
+                    property real refraction: 1
+                    property real chroma: 0
+                    property real edgeHighlight: 0
+                    property real specular: 0.2
+                    property real fresnel: 0
+                    property real distortion: 0
+                    property real zRadius: 2.6
+                    property real opacity: 1
+                    property real saturation: 0
+                    property real brightness: 0
+                    property real shadowOpacity: 0.3
+                    property real shadowSpread: 10
+                    property int bevelMode: 0
+                }
+                property JsonObject radius: JsonObject {
+                    property int toggleWide: 31
+                    property int media: 40
+                    property int slider: 22
+                    property int card: 20
+                }
+                property JsonObject controlCenter: JsonObject {
+                    property list<string> controls: ["network", "media", "bluetooth", "screenSnip", "colorPicker", "mic", "darkMode", "volume", "brightness"]
+                }
+                property JsonObject dock: JsonObject {
+                    property int iconSize: 57
+                    property int iconSpacing: 17
+                    property int iconRadius: 13
+                    property int paddingH: 16
+                    property int paddingTop: 16
+                    property int radius: 28
+                    property int bottomMargin: 6
                 }
             }
         }

@@ -31,6 +31,11 @@ ContentPage {
                         displayName: Translation.tr("Waffle"),
                         icon: "grid_view",
                         value: "waffle"
+                    },
+                    {
+                        displayName: Translation.tr("macOS"),
+                        icon: "water_drop",
+                        value: "macos"
                     }
                 ]
             }
@@ -40,6 +45,7 @@ ContentPage {
     ContentSection {
         icon: "grid_view"
         title: Translation.tr("Waffle panel")
+        visible: Config.options.panelFamily === "waffle"
 
         ConfigRow {
             uniform: true
@@ -110,6 +116,345 @@ ContentPage {
                 checked: Config.options.waffles.tweaks.smootherSearchBar
                 onCheckedChanged: {
                     Config.options.waffles.tweaks.smootherSearchBar = checked;
+                }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "water_drop"
+        title: Translation.tr("macOS panel")
+        visible: Config.options.panelFamily === "macos"
+
+        ContentSubsection {
+            title: Translation.tr("Liquid glass")
+            tooltip: Translation.tr("Panels refract the wallpaper plus a live capture of the windows they cover. Drag the sample to move it around.")
+
+            Loader {
+                Layout.fillWidth: true
+                Layout.preferredHeight: item?.implicitHeight ?? 0
+                source: Qt.resolvedUrl("../macos/looks/MGlassPreview.qml")
+            }
+
+            ConfigSlider {
+                text: Translation.tr("Tint")
+                buttonIcon: "opacity"
+                from: 0
+                to: 100
+                stopIndicatorValues: [40]
+                value: Config.options.macos.glass.tintOpacity * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.tintOpacity = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Blur")
+                buttonIcon: "blur_on"
+                usePercentTooltip: false
+                from: 0
+                to: 96
+                stopIndicatorValues: [48]
+                value: Config.options.macos.glass.blur
+                onMoved: newValue => {
+                    Config.options.macos.glass.blur = newValue;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Refraction")
+                buttonIcon: "line_curve"
+                from: 0
+                to: 100
+                stopIndicatorValues: [24]
+                value: Config.options.macos.glass.refraction * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.refraction = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Chromatic aberration")
+                buttonIcon: "gradient"
+                from: 0
+                to: 100
+                value: Config.options.macos.glass.chroma * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.chroma = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Edge highlight")
+                buttonIcon: "border_style"
+                from: 0
+                to: 100
+                value: Config.options.macos.glass.edgeHighlight * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.edgeHighlight = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Specular")
+                buttonIcon: "wb_sunny"
+                from: 0
+                to: 100
+                stopIndicatorValues: [21]
+                value: Config.options.macos.glass.specular * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.specular = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Fresnel")
+                buttonIcon: "deblur"
+                from: 0
+                to: 100
+                stopIndicatorValues: [84]
+                value: Config.options.macos.glass.fresnel * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.fresnel = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Distortion")
+                buttonIcon: "waves"
+                from: 0
+                to: 100
+                stopIndicatorValues: [3]
+                value: Config.options.macos.glass.distortion * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.distortion = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Z-radius")
+                buttonIcon: "rounded_corner"
+                usePercentTooltip: false
+                from: 1
+                to: 60
+                stopIndicatorValues: [4]
+                value: Config.options.macos.glass.zRadius
+                onMoved: newValue => {
+                    Config.options.macos.glass.zRadius = newValue;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Opacity")
+                buttonIcon: "opacity"
+                from: 0
+                to: 100
+                stopIndicatorValues: [100]
+                value: Config.options.macos.glass.opacity * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.opacity = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Saturation")
+                buttonIcon: "palette"
+                usePercentTooltip: false
+                from: -100
+                to: 100
+                stopIndicatorValues: [0]
+                value: Config.options.macos.glass.saturation * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.saturation = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Brightness")
+                buttonIcon: "brightness_6"
+                usePercentTooltip: false
+                from: -100
+                to: 100
+                stopIndicatorValues: [0]
+                value: Config.options.macos.glass.brightness * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.brightness = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Shadow opacity")
+                buttonIcon: "shadow"
+                from: 0
+                to: 100
+                stopIndicatorValues: [30]
+                value: Config.options.macos.glass.shadowOpacity * 100
+                onMoved: newValue => {
+                    Config.options.macos.glass.shadowOpacity = newValue / 100;
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Shadow spread")
+                buttonIcon: "blur_linear"
+                usePercentTooltip: false
+                from: 0
+                to: 60
+                stopIndicatorValues: [10]
+                value: Config.options.macos.glass.shadowSpread
+                onMoved: newValue => {
+                    Config.options.macos.glass.shadowSpread = newValue;
+                }
+            }
+            ConfigSwitch {
+                buttonIcon: "dome"
+                text: Translation.tr("Dome bevel")
+                checked: Config.options.macos.glass.bevelMode === 1
+                onCheckedChanged: {
+                    Config.options.macos.glass.bevelMode = checked ? 1 : 0;
+                }
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Corner radius")
+
+            ConfigSlider {
+                text: Translation.tr("Wide toggle")
+                buttonIcon: "rounded_corner"
+                usePercentTooltip: false
+                from: 0
+                to: 40
+                stopIndicatorValues: [31]
+                value: Config.options.macos.radius.toggleWide
+                onMoved: newValue => {
+                    Config.options.macos.radius.toggleWide = Math.round(newValue);
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Media tile")
+                buttonIcon: "rounded_corner"
+                usePercentTooltip: false
+                from: 0
+                to: 64
+                stopIndicatorValues: [40]
+                value: Config.options.macos.radius.media
+                onMoved: newValue => {
+                    Config.options.macos.radius.media = Math.round(newValue);
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Slider tile")
+                buttonIcon: "rounded_corner"
+                usePercentTooltip: false
+                from: 0
+                to: 40
+                stopIndicatorValues: [22]
+                value: Config.options.macos.radius.slider
+                onMoved: newValue => {
+                    Config.options.macos.radius.slider = Math.round(newValue);
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Notification card")
+                buttonIcon: "rounded_corner"
+                usePercentTooltip: false
+                from: 0
+                to: 48
+                stopIndicatorValues: [20]
+                value: Config.options.macos.radius.card
+                onMoved: newValue => {
+                    Config.options.macos.radius.card = Math.round(newValue);
+                }
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Control centre")
+            tooltip: Translation.tr("Comma-separated, in display order. Available: bluetooth, brightness, colorPicker, darkMode, idleInhibitor, media, mic, network, nightLight, screenSnip, volume")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("e.g. network, media, bluetooth, volume")
+                text: (Config.options.macos.controlCenter.controls ?? []).join(", ")
+                onEditingFinished: {
+                    Config.options.macos.controlCenter.controls = StringUtils.splitList(text);
+                }
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Dock")
+
+            ConfigSlider {
+                text: Translation.tr("Icon size")
+                buttonIcon: "photo_size_select_large"
+                usePercentTooltip: false
+                from: 24
+                to: 96
+                stopIndicatorValues: [57]
+                value: Config.options.macos.dock.iconSize
+                onMoved: newValue => {
+                    Config.options.macos.dock.iconSize = Math.round(newValue);
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Icon spacing")
+                buttonIcon: "space_bar"
+                usePercentTooltip: false
+                from: 0
+                to: 40
+                stopIndicatorValues: [17]
+                value: Config.options.macos.dock.iconSpacing
+                onMoved: newValue => {
+                    Config.options.macos.dock.iconSpacing = Math.round(newValue);
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Icon radius")
+                buttonIcon: "rounded_corner"
+                usePercentTooltip: false
+                from: 0
+                to: 48
+                stopIndicatorValues: [13]
+                value: Config.options.macos.dock.iconRadius
+                onMoved: newValue => {
+                    Config.options.macos.dock.iconRadius = Math.round(newValue);
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Side padding")
+                buttonIcon: "width"
+                usePercentTooltip: false
+                from: 0
+                to: 40
+                stopIndicatorValues: [16]
+                value: Config.options.macos.dock.paddingH
+                onMoved: newValue => {
+                    Config.options.macos.dock.paddingH = Math.round(newValue);
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Top padding")
+                buttonIcon: "height"
+                usePercentTooltip: false
+                from: 0
+                to: 40
+                stopIndicatorValues: [16]
+                value: Config.options.macos.dock.paddingTop
+                onMoved: newValue => {
+                    Config.options.macos.dock.paddingTop = Math.round(newValue);
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Corner radius")
+                buttonIcon: "rounded_corner"
+                usePercentTooltip: false
+                from: 0
+                to: 48
+                stopIndicatorValues: [28]
+                value: Config.options.macos.dock.radius
+                onMoved: newValue => {
+                    Config.options.macos.dock.radius = Math.round(newValue);
+                }
+            }
+            ConfigSlider {
+                text: Translation.tr("Bottom margin")
+                buttonIcon: "vertical_align_bottom"
+                usePercentTooltip: false
+                from: 0
+                to: 40
+                stopIndicatorValues: [6]
+                value: Config.options.macos.dock.bottomMargin
+                onMoved: newValue => {
+                    Config.options.macos.dock.bottomMargin = Math.round(newValue);
                 }
             }
         }
