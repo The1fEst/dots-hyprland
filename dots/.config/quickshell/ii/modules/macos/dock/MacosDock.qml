@@ -224,7 +224,6 @@ Scope {
                     MGlass {
                         id: capsule
                         backdrop: dockBackdrop
-                        radius: Looks.radius.dock
                         anchors {
                             bottom: parent.bottom
                             horizontalCenter: parent.horizontalCenter

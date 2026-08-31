@@ -574,7 +574,6 @@ Singleton {
                     property int iconRadius: 13
                     property int paddingH: 16
                     property int paddingTop: 16
-                    property int radius: 28
                     property int bottomMargin: 6
                 }
             }

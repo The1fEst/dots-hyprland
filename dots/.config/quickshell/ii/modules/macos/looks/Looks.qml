@@ -96,7 +96,6 @@ Singleton {
         readonly property real shortSideFactor: 0.4
         readonly property int maximum: 55
         readonly property int huge: 26
-        readonly property int dock: Config.options?.macos.dock.radius ?? 28
         readonly property int window: 12
     }
 

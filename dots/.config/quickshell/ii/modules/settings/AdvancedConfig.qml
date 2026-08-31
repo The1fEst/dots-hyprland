@@ -381,18 +381,6 @@ ContentPage {
                 }
             }
             ConfigSlider {
-                text: Translation.tr("Corner radius")
-                buttonIcon: "rounded_corner"
-                usePercentTooltip: false
-                from: 0
-                to: 48
-                stopIndicatorValues: [28]
-                value: Config.options.macos.dock.radius
-                onMoved: newValue => {
-                    Config.options.macos.dock.radius = Math.round(newValue);
-                }
-            }
-            ConfigSlider {
                 text: Translation.tr("Bottom margin")
                 buttonIcon: "vertical_align_bottom"
                 usePercentTooltip: false

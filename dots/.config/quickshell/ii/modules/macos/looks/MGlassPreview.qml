@@ -11,7 +11,7 @@ Item {
 
     property real glassWidth: Math.min(260, width * 0.45)
     property real glassHeight: 96
-    property real glassRadius: Looks.radius.dock
+    property real glassRadius: Looks.radiusFor(root.glassWidth, root.glassHeight)
 
     Layout.fillWidth: true
     implicitHeight: 220
