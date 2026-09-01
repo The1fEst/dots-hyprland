@@ -40,11 +40,16 @@ Scope {
             property bool controlCenterOpen: false
             property bool editMode: false
             property string expanded: ""
+            // A detail opened from its menu bar item is its own panel: the control
+            // centre behind it was never asked for, so going back closes instead of
+            // uncovering it.
+            property bool detailOnly: false
 
             onControlCenterOpenChanged: {
                 if (!controlCenterOpen) {
                     editMode = false;
                     expanded = "";
+                    detailOnly = false;
                 }
             }
 
@@ -144,15 +149,21 @@ Scope {
                             root.appleMenuScreen = "";
                             screenScope.notificationCenterOpen = false;
                             screenScope.controlCenterOpen = true;
+                            screenScope.detailOnly = true;
                             screenScope.expanded = id;
                         }
                     }
 
                     MMenuBarItem {
-                        active: screenScope.controlCenterOpen
+                        active: screenScope.controlCenterOpen && !screenScope.detailOnly
                         onClicked: {
                             root.appleMenuScreen = "";
                             screenScope.notificationCenterOpen = false;
+                            if (screenScope.detailOnly) {
+                                screenScope.detailOnly = false;
+                                screenScope.expanded = "";
+                                return;
+                            }
                             screenScope.controlCenterOpen = !screenScope.controlCenterOpen;
                         }
                         MaterialSymbol {
@@ -193,7 +204,13 @@ Scope {
                 expanded: screenScope.expanded
                 onEditRequested: screenScope.editMode = !screenScope.editMode
                 onExpandRequested: id => screenScope.expanded = id
-                onCollapseRequested: screenScope.expanded = ""
+                onCollapseRequested: {
+                    if (screenScope.detailOnly) {
+                        screenScope.controlCenterOpen = false;
+                        return;
+                    }
+                    screenScope.expanded = "";
+                }
             }
 
             MacosNotificationCenter {
