@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Wayland
 import qs
 import qs.services
@@ -15,6 +16,18 @@ import qs.modules.macos.notificationCenter
 Scope {
     id: root
 
+    property string appleMenuScreen: ""
+
+    GlobalShortcut {
+        name: "sessionToggle"
+        description: "Toggles the Apple menu on press"
+
+        onPressed: {
+            const name = Hyprland.focusedMonitor?.name ?? "";
+            root.appleMenuScreen = root.appleMenuScreen === name ? "" : name;
+        }
+    }
+
     Variants {
         model: Quickshell.screens
 
@@ -22,6 +35,7 @@ Scope {
             id: screenScope
             required property var modelData
 
+            readonly property bool appleMenuOpen: root.appleMenuScreen === screenScope.modelData.name
             property bool notificationCenterOpen: false
             property bool controlCenterOpen: false
             property bool editMode: false
@@ -58,6 +72,7 @@ Scope {
                     anchors.fill: parent
                     acceptedButtons: Qt.LeftButton | Qt.RightButton
                     onPressed: {
+                        root.appleMenuScreen = "";
                         screenScope.controlCenterOpen = false;
                         screenScope.notificationCenterOpen = false;
                     }
@@ -72,7 +87,20 @@ Scope {
                     }
                     spacing: Looks.sizes.menuBarItemSpacing
 
-                    MMenuBarWorkspaces {}
+                    MMenuBarItem {
+                        active: screenScope.appleMenuOpen
+                        onClicked: {
+                            screenScope.controlCenterOpen = false;
+                            screenScope.notificationCenterOpen = false;
+                            root.appleMenuScreen = screenScope.appleMenuOpen ? "" : screenScope.modelData.name;
+                        }
+                        MText {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: ""
+                            font.pixelSize: 17
+                            color: Looks.colors.primary
+                        }
+                    }
 
                     MMenuBarItem {
                         MText {
@@ -113,6 +141,7 @@ Scope {
                                 screenScope.controlCenterOpen = false;
                                 return;
                             }
+                            root.appleMenuScreen = "";
                             screenScope.notificationCenterOpen = false;
                             screenScope.controlCenterOpen = true;
                             screenScope.expanded = id;
@@ -122,6 +151,7 @@ Scope {
                     MMenuBarItem {
                         active: screenScope.controlCenterOpen
                         onClicked: {
+                            root.appleMenuScreen = "";
                             screenScope.notificationCenterOpen = false;
                             screenScope.controlCenterOpen = !screenScope.controlCenterOpen;
                         }
@@ -136,6 +166,7 @@ Scope {
                     MMenuBarItem {
                         active: screenScope.notificationCenterOpen
                         onClicked: {
+                            root.appleMenuScreen = "";
                             screenScope.controlCenterOpen = false;
                             screenScope.notificationCenterOpen = !screenScope.notificationCenterOpen;
                         }
@@ -147,6 +178,12 @@ Scope {
                     }
                 }
 
+            }
+
+            MacosAppleMenu {
+                screenData: screenScope.modelData
+                open: screenScope.appleMenuOpen
+                onDismissed: root.appleMenuScreen = ""
             }
 
             MacosControlCenter {

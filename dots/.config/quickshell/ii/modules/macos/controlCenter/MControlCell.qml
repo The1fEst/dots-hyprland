@@ -29,10 +29,6 @@ Item {
         Config.options.macos.controlCenter.controls = MItems.withToggled(Config.options.macos.controlCenter.controls, root.itemId);
     }
 
-    function toggleMenuBar() {
-        Config.options.macos.menuBar.items = MItems.withToggled(Config.options.macos.menuBar.items, root.itemId);
-    }
-
     Loader {
         anchors.fill: parent
         active: root.content !== null
@@ -89,10 +85,7 @@ Item {
                 MDrag.drop();
                 return;
             }
-            if (root.info?.controlCenter)
-                root.toggleControlCenter();
-            else
-                root.toggleMenuBar();
+            root.toggleControlCenter();
         }
 
         onCanceled: {

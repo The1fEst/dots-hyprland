@@ -35,7 +35,7 @@ MGlass {
 
     visible: root.opened
     z: 50
-    radius: 12
+    radius: Looks.radius.huge
     implicitWidth: 148
     implicitHeight: rows.implicitHeight + 12
 

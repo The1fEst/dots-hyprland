@@ -566,7 +566,7 @@ Singleton {
                     property list<string> sizes: [] // "<widget id>:<small|normal|large>"
                 }
                 property JsonObject menuBar: JsonObject {
-                    property list<string> items: ["tray", "battery"]
+                    property list<string> items: ["spaces", "tray", "battery"]
                 }
                 property JsonObject dock: JsonObject {
                     property int iconSize: 57

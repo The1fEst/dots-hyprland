@@ -18,6 +18,12 @@ Item {
 
     function componentFor(id: string): Component {
         switch (id) {
+        case "spaces":
+            return spacesControl;
+        case "tray":
+            return trayControl;
+        case "battery":
+            return batteryControl;
         case "wifi":
             return wifiControl;
         case "wired":
@@ -56,6 +62,28 @@ Item {
             return idleInhibitorControl;
         }
         return null;
+    }
+
+    Component {
+        id: spacesControl
+        MControlSpaces {
+            backdrop: root.backdrop
+            screenData: root.screenData
+        }
+    }
+
+    Component {
+        id: trayControl
+        MControlTray {
+            backdrop: root.backdrop
+        }
+    }
+
+    Component {
+        id: batteryControl
+        MControlBattery {
+            backdrop: root.backdrop
+        }
     }
 
     Component {

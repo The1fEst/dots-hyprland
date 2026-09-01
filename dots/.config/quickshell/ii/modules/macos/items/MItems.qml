@@ -9,167 +9,135 @@ Singleton {
 
     readonly property list<var> all: [
         {
+            id: "spaces",
+            name: Translation.tr("Spaces"),
+            icon: "grid_view",
+            defaultSize: "large",
+            large: [4, 1]
+        },
+        {
             id: "wifi",
             name: Translation.tr("Wi-Fi"),
             icon: "wifi",
-            defaultSize: "normal",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "normal"
         },
         {
             id: "wired",
             name: Translation.tr("Ethernet"),
             icon: "lan",
-            defaultSize: "normal",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "normal"
         },
         {
             id: "bluetooth",
             name: Translation.tr("Bluetooth"),
             icon: "bluetooth",
-            defaultSize: "normal",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "normal"
         },
         {
             id: "media",
             name: Translation.tr("Now Playing"),
             icon: "music_note",
             defaultSize: "large",
-            large: [2, 2],
-            menuBar: true,
-            controlCenter: true
+            large: [2, 2]
         },
         {
             id: "volume",
             name: Translation.tr("Sound"),
             icon: "volume_up",
             defaultSize: "large",
-            large: [4, 1],
-            menuBar: true,
-            controlCenter: true
+            large: [4, 1]
         },
         {
             id: "brightness",
             name: Translation.tr("Display"),
             icon: "brightness_high",
             defaultSize: "large",
-            large: [4, 1],
-            menuBar: true,
-            controlCenter: true
+            large: [4, 1]
         },
         {
             id: "darkMode",
             name: Translation.tr("Dark Mode"),
             icon: "contrast",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "nightLight",
             name: Translation.tr("Night Light"),
             icon: "bedtime",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "mic",
             name: Translation.tr("Microphone"),
             icon: "mic",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "screenSnip",
             name: Translation.tr("Screen snip"),
             icon: "screenshot_region",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "colorPicker",
             name: Translation.tr("Color picker"),
             icon: "colorize",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "idleInhibitor",
             name: Translation.tr("Keep awake"),
             icon: "coffee",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "wireGuard",
             name: Translation.tr("WireGuard"),
             icon: "vpn_key",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "cloudflareWarp",
             name: Translation.tr("Cloudflare WARP"),
             icon: "cloud_lock",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "easyEffects",
             name: Translation.tr("EasyEffects"),
             icon: "graphic_eq",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "powerProfile",
             name: Translation.tr("Power Profile"),
             icon: "airwave",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "notifications",
             name: Translation.tr("Notifications"),
             icon: "notifications_active",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "onScreenKeyboard",
             name: Translation.tr("Virtual Keyboard"),
             icon: "keyboard",
-            defaultSize: "small",
-            menuBar: true,
-            controlCenter: true
+            defaultSize: "small"
         },
         {
             id: "battery",
             name: Translation.tr("Battery"),
             icon: "battery_full",
-            defaultSize: "normal",
-            menuBar: true,
-            controlCenter: false
+            defaultSize: "normal"
         },
         {
             id: "tray",
             name: Translation.tr("Tray"),
             icon: "widgets",
-            defaultSize: "normal",
-            menuBar: true,
-            controlCenter: false
+            defaultSize: "large",
+            large: [4, 1]
         }
     ]
 

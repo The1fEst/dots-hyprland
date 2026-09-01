@@ -76,7 +76,7 @@ PanelWindow {
         const localY = MDrag.position.y - root.dragOriginY;
 
         const gridPoint = grid.mapFromItem(null, localX, localY);
-        if ((MItems.info(MDrag.itemId)?.controlCenter ?? false) && gridPoint.x >= 0 && gridPoint.y >= 0 && gridPoint.x <= grid.width && gridPoint.y <= grid.height) {
+        if (gridPoint.x >= 0 && gridPoint.y >= 0 && gridPoint.x <= grid.width && gridPoint.y <= grid.height) {
             // Over its own slot the item keeps the place it already has, so a grab or a
             // small wobble never reshuffles the grid.
             for (const cell of grid.children) {

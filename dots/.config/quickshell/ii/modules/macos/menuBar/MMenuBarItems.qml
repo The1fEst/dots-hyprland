@@ -52,7 +52,7 @@ Row {
             return;
 
         const localY = MDrag.position.y - root.dragOriginY;
-        if (!root.editMode || !(MItems.info(MDrag.itemId)?.menuBar ?? false) || localY < 0 || localY > Looks.sizes.menuBarHeight) {
+        if (!root.editMode || localY < 0 || localY > Looks.sizes.menuBarHeight) {
             MDrag.releaseTarget("menuBar");
             return;
         }
@@ -111,6 +111,8 @@ Row {
 
     function componentFor(id: string): Component {
         switch (id) {
+        case "spaces":
+            return spacesItem;
         case "tray":
             return trayItem;
         case "battery":
@@ -153,6 +155,11 @@ Row {
             return idleInhibitorItem;
         }
         return null;
+    }
+
+    Component {
+        id: spacesItem
+        MMenuBarWorkspaces {}
     }
 
     Component {
