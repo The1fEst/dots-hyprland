@@ -6,17 +6,14 @@ import qs.modules.macos.background
 import qs.modules.macos.dock
 import qs.modules.macos.menuBar
 import qs.modules.macos.notificationPopup
+import qs.modules.macos.osd
+import qs.modules.macos.polkit
 import qs.modules.macos.spotlight
 
 import qs.modules.ii.cheatsheet
 import qs.modules.ii.lock
-import qs.modules.ii.mediaControls
-import qs.modules.ii.onScreenDisplay
 import qs.modules.ii.onScreenKeyboard
-import qs.modules.ii.polkit
 import qs.modules.ii.regionSelector
-import qs.modules.ii.sessionScreen
-import qs.modules.ii.sidebarRight
 import qs.modules.ii.wallpaperSelector
 
 Scope {
@@ -26,14 +23,11 @@ Scope {
 
     PanelLoader { component: Cheatsheet {} }
     PanelLoader { component: Lock {} }
-    PanelLoader { component: MediaControls {} }
     PanelLoader { component: MacosNotificationPopup {} }
-    PanelLoader { component: OnScreenDisplay {} }
+    PanelLoader { component: MacosOsd {} }
     PanelLoader { component: OnScreenKeyboard {} }
     PanelLoader { component: MacosSpotlight {} }
-    PanelLoader { component: Polkit {} }
+    PanelLoader { component: MacosPolkit {} }
     PanelLoader { component: RegionSelector {} }
-    PanelLoader { component: SessionScreen {} }
-    PanelLoader { component: SidebarRight {} }
     PanelLoader { component: WallpaperSelector {} }
 }
