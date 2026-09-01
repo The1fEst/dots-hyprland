@@ -20,15 +20,21 @@ Singleton {
         RecordWithSound
     }
 
-    function getCommand(x, y, width, height, screenshotPath, action, saveDir = "") {
+    function getCommand(x, y, width, height, screenshotPath, action, saveDir = "", shadow = false, radius = 0) {
         // Set command for action
         const rx = Math.round(x);
         const ry = Math.round(y);
         const rw = Math.round(width);
         const rh = Math.round(height);
+        // Corners and shadow both need somewhere to be transparent, so a shot carrying
+        // either leaves as a PNG.
+        const rr = Math.round(radius);
+        const cornerFilter = ` \\( +clone -alpha extract -draw "fill black polygon 0,0 0,${rr} ${rr},0 fill white circle ${rr},${rr} ${rr},0" \\( +clone -flip \\) -compose Multiply -composite \\( +clone -flop \\) -compose Multiply -composite \\) -alpha off -compose CopyOpacity -composite -compose Over`
+        const shadowFilter = ` \\( +clone -background black -shadow 75x28+0+22 \\) +swap -background none -layers merge +repage`
+        const transparent = rr > 0 || shadow
         const cropBase = `magick ${StringUtils.shellSingleQuoteEscape(screenshotPath)} `
-            + `-crop ${rw}x${rh}+${rx}+${ry} +repage`
-        const cropToStdout = `${cropBase} -`
+            + `-crop ${rw}x${rh}+${rx}+${ry} +repage${rr > 0 ? cornerFilter : ""}${shadow ? shadowFilter : ""}`
+        const cropToStdout = `${cropBase} ${transparent ? "png:-" : "-"}`
         const cropInPlace = `${cropBase} '${StringUtils.shellSingleQuoteEscape(screenshotPath)}'`
         const cleanup = `rm '${StringUtils.shellSingleQuoteEscape(screenshotPath)}'`
         const slurpRegion = `${rx},${ry} ${rw}x${rh}`

@@ -376,6 +376,7 @@ Singleton {
             }
 
             property JsonObject regionSelector: JsonObject {
+                property bool showPointer: false
                 property JsonObject targetRegions: JsonObject {
                     property bool windows: true
                     property bool layers: false

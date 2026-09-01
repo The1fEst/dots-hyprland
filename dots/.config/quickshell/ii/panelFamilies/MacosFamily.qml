@@ -8,12 +8,12 @@ import qs.modules.macos.menuBar
 import qs.modules.macos.notificationPopup
 import qs.modules.macos.osd
 import qs.modules.macos.polkit
+import qs.modules.macos.screenshot
 import qs.modules.macos.spotlight
 
 import qs.modules.ii.cheatsheet
 import qs.modules.ii.lock
 import qs.modules.ii.onScreenKeyboard
-import qs.modules.ii.regionSelector
 import qs.modules.ii.wallpaperSelector
 
 Scope {
@@ -28,6 +28,6 @@ Scope {
     PanelLoader { component: OnScreenKeyboard {} }
     PanelLoader { component: MacosSpotlight {} }
     PanelLoader { component: MacosPolkit {} }
-    PanelLoader { component: RegionSelector {} }
+    PanelLoader { component: MacosRegionSelector {} }
     PanelLoader { component: WallpaperSelector {} }
 }
