@@ -47,6 +47,7 @@ Item {
             if (x + w <= left || x >= right || y + h <= top || y >= bottom)
                 continue;
             found.push({
+                address: client.address,
                 toplevel: toplevel,
                 x: x,
                 y: y,
@@ -79,7 +80,12 @@ Item {
         }
 
         Repeater {
-            model: root.coveredWindows
+            // Keyed by address: every focus change rebuilds the list, and rebuilding the
+            // captures with it is what makes the glass blink.
+            model: ScriptModel {
+                values: root.coveredWindows
+                objectProp: "address"
+            }
 
             ScreencopyView {
                 required property var modelData

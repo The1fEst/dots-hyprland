@@ -75,7 +75,6 @@ PanelWindow {
 
     MGlassBackdrop {
         id: backdrop
-        anchors.fill: parent
         screenY: Looks.sizes.menuBarHeight
         panelWidth: root.width
         panelHeight: root.height

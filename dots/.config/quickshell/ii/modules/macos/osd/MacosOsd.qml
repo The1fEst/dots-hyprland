@@ -127,7 +127,6 @@ Scope {
 
         MGlassBackdrop {
             id: backdrop
-            anchors.fill: parent
             screenX: ((win.screen?.width ?? 0) - win.width) / 2
             screenY: (win.screen?.height ?? 0) - win.height - win.margins.bottom
             panelWidth: win.width

@@ -54,7 +54,6 @@ Item {
 
     MGlassBackdrop {
         id: backdrop
-        anchors.fill: parent
         panelWidth: root.width
         panelHeight: root.height
     }

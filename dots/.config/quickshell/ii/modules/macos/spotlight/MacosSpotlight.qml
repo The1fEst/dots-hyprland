@@ -128,7 +128,7 @@ Scope {
 
         MGlassBackdrop {
             id: backdrop
-            anchors.fill: parent
+            screenY: Looks.sizes.menuBarHeight
             panelWidth: win.width
             panelHeight: win.height
             captureWindows: win.visible
