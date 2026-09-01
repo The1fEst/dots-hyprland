@@ -111,6 +111,8 @@ Row {
 
     function componentFor(id: string): Component {
         switch (id) {
+        case "keyboardLayout":
+            return keyboardLayoutItem;
         case "spaces":
             return spacesItem;
         case "tray":
@@ -155,6 +157,23 @@ Row {
             return idleInhibitorItem;
         }
         return null;
+    }
+
+    Component {
+        id: keyboardLayoutItem
+        MMenuBarItem {
+            minWidth: 34
+            horizontalPadding: 5
+            shown: HyprlandXkb.layoutCodes.length > 1
+            onClicked: Quickshell.execDetached(["hyprctl", "switchxkblayout", "all", "next"])
+
+            MText {
+                anchors.verticalCenter: parent.verticalCenter
+                text: HyprlandXkb.currentLayoutCode.toUpperCase()
+                emphasized: true
+                color: Looks.colors.primary
+            }
+        }
     }
 
     Component {

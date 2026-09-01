@@ -16,6 +16,12 @@ Singleton {
             large: [4, 1]
         },
         {
+            id: "keyboardLayout",
+            name: Translation.tr("Keyboard Layout"),
+            icon: "language",
+            defaultSize: "normal"
+        },
+        {
             id: "wifi",
             name: Translation.tr("Wi-Fi"),
             icon: "wifi",

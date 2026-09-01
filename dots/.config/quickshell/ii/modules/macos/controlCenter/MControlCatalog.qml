@@ -18,6 +18,8 @@ Item {
 
     function componentFor(id: string): Component {
         switch (id) {
+        case "keyboardLayout":
+            return keyboardLayoutControl;
         case "spaces":
             return spacesControl;
         case "tray":
@@ -62,6 +64,13 @@ Item {
             return idleInhibitorControl;
         }
         return null;
+    }
+
+    Component {
+        id: keyboardLayoutControl
+        MControlKeyboardLayout {
+            backdrop: root.backdrop
+        }
     }
 
     Component {
