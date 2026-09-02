@@ -271,20 +271,6 @@ Scope {
     }
 
     GlobalShortcut {
-        name: "overviewWorkspacesClose"
-        description: "Closes search on press"
-
-        onPressed: GlobalStates.overviewOpen = false
-    }
-
-    GlobalShortcut {
-        name: "overviewWorkspacesToggle"
-        description: "Toggles search on press"
-
-        onPressed: GlobalStates.overviewOpen = !GlobalStates.overviewOpen
-    }
-
-    GlobalShortcut {
         name: "searchToggleRelease"
         description: "Toggles search on release"
 

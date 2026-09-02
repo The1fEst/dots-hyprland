@@ -12,6 +12,7 @@ Singleton {
     property bool barOpen: true
     property bool sidebarRightOpen: false
     property bool mediaControlsOpen: false
+    property bool missionControlOpen: false
     property bool osdBrightnessOpen: false
     property bool osdVolumeOpen: false
     property bool oskOpen: false

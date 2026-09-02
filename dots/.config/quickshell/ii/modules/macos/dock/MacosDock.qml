@@ -26,13 +26,14 @@ Scope {
             readonly property real iconSpacing: Looks.sizes.dockIconSpacing
             readonly property real separatorWidth: Looks.sizes.dockSeparatorWidth
             readonly property real indicatorArea: Looks.sizes.dockIndicatorGap + Looks.sizes.dockIndicatorSize + Looks.sizes.dockIndicatorBottom
-            readonly property real capsuleHeight: Looks.sizes.dockPaddingTop + base + indicatorArea
+            readonly property real capsuleHeight: Looks.sizes.dockCapsuleHeight
             readonly property real liftRoom: maxSize - base
             readonly property real bottomMargin: Looks.sizes.dockBottomMargin
 
             readonly property bool hoverToReveal: Config.options?.dock.hoverToReveal ?? false
             readonly property real hoverRegionHeight: Config.options?.dock.hoverRegionHeight ?? 2
-            readonly property bool reveal: root.pinned || (hoverToReveal && dockMouseArea.containsMouse) || dockPreview.shown || !(ToplevelManager.activeToplevel?.activated ?? false)
+            // Mission Control shows the dock whatever the auto-hide would otherwise do.
+            readonly property bool reveal: root.pinned || GlobalStates.missionControlOpen || (hoverToReveal && dockMouseArea.containsMouse) || dockPreview.shown || !(ToplevelManager.activeToplevel?.activated ?? false)
 
             readonly property list<var> apps: TaskbarApps.apps
 
@@ -167,6 +168,10 @@ Scope {
             color: "transparent"
             exclusiveZone: root.pinned ? capsuleHeight + bottomMargin : 0
             WlrLayershell.namespace: "quickshell:macosDock"
+
+            // Mission Control covers the whole screen from the layer above this one, and
+            // macOS keeps the dock on top of it.
+            WlrLayershell.layer: GlobalStates.missionControlOpen ? WlrLayer.Overlay : WlrLayer.Top
             anchors {
                 bottom: true
                 left: true
@@ -189,6 +194,11 @@ Scope {
                 screenY: (dockWindow.screen?.height ?? 0) - dockWindow.height
                 panelWidth: dockWindow.width
                 panelHeight: dockWindow.height
+
+                // Mission Control lifts the windows off the desktop and leaves the
+                // wallpaper bare; refracting the windows that are no longer there would
+                // show a desktop that is not on screen.
+                captureWindows: !GlobalStates.missionControlOpen
             }
 
             MouseArea {

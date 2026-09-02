@@ -125,6 +125,10 @@ Singleton {
         readonly property int dockIndicatorSize: 4
         readonly property int dockIndicatorBottom: 4
         readonly property int dockBottomMargin: dockSettings?.bottomMargin ?? 6
+        readonly property int dockCapsuleHeight: dockPaddingTop + dockIconSize + dockIndicatorGap + dockIndicatorSize + dockIndicatorBottom
+
+        // What the dock covers when it is out: anything laid out behind it has to stop here.
+        readonly property int dockReservedHeight: dockCapsuleHeight + dockBottomMargin
         readonly property int shadowMargin: 40
     }
 

@@ -7,6 +7,7 @@ import qs.modules.macos.dock
 import qs.modules.macos.keyboard
 import qs.modules.macos.lock
 import qs.modules.macos.menuBar
+import qs.modules.macos.missionControl
 import qs.modules.macos.notificationPopup
 import qs.modules.macos.osd
 import qs.modules.macos.polkit
@@ -26,6 +27,7 @@ Scope {
     PanelLoader { component: MacosNotificationPopup {} }
     PanelLoader { component: MacosOsd {} }
     PanelLoader { component: MacosOnScreenKeyboard {} }
+    PanelLoader { component: MacosMissionControl {} }
     PanelLoader { component: MacosSpotlight {} }
     PanelLoader { component: MacosPolkit {} }
     PanelLoader { component: MacosRegionSelector {} }
