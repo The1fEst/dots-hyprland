@@ -21,6 +21,7 @@ Item {
     required property bool current
 
     signal activated
+    signal windowDropped(string address)
 
     readonly property real logicalWidth: Math.max(1, (monitorData?.width ?? 1920) / (monitorData?.scale ?? 1))
     readonly property real logicalHeight: Math.max(1, (monitorData?.height ?? 1080) / (monitorData?.scale ?? 1))
@@ -58,6 +59,7 @@ Item {
                 required property var modelData
 
                 toplevel: ToplevelManager.toplevels.values.find(t => HyprlandData.clientForToplevel(t)?.address === modelData.address) ?? null
+                address: modelData.address
                 sourceWidth: modelData.size[0]
                 sourceHeight: modelData.size[1]
                 interactive: false
@@ -69,18 +71,32 @@ Item {
         }
     }
 
+    // Fills the whole card, label included, so the drop target is the desktop's column in
+    // the strip rather than just the thumbnail.
+    DropArea {
+        id: dropTarget
+        anchors.fill: parent
+        keys: ["macosMissionWindow"]
+
+        onDropped: drop => {
+            root.windowDropped(drop.source.address);
+            drop.accept(Qt.MoveAction);
+        }
+    }
+
     // macOS stands the selection ring off the thumbnail rather than drawing it on the
     // edge, which is what makes the current desktop sit proud of the others.
     Rectangle {
-        readonly property real outset: root.current ? Math.round(root.thumbHeight * 0.06) : 0
+        readonly property bool lit: root.current || dropTarget.containsDrag
+        readonly property real outset: lit ? Math.round(root.thumbHeight * 0.06) : 0
 
         anchors.fill: card
         anchors.margins: -outset
         color: "transparent"
         radius: card.radius + outset
         antialiasing: true
-        border.width: root.current ? 3 : 1
-        border.color: root.current ? Looks.accent : Looks.colors.glassBorder
+        border.width: lit ? 3 : 1
+        border.color: lit ? Looks.accent : Looks.colors.glassBorder
     }
 
     MText {

@@ -160,6 +160,12 @@ Item {
         GlobalStates.missionControlOpen = false;
     }
 
+    // Named window rather than the focused one, and without following it: dropping a
+    // window on a desktop sends it there, it does not take you along.
+    function moveWindow(address: string, workspaceId: int): void {
+        Quickshell.execDetached(["hyprctl", "dispatch", `hl.dsp.window.move({ workspace = ${workspaceId}, window = "address:${address}", follow = false })`]);
+    }
+
     function focusWorkspace(id: int): void {
         Quickshell.execDetached(["hyprctl", "dispatch", `hl.dsp.focus({workspace=${id}})`]);
         GlobalStates.missionControlOpen = false;
@@ -268,6 +274,7 @@ Item {
                     labelSize: root.labelSize
                     current: modelData.id === root.activeWorkspace
                     onActivated: root.focusWorkspace(modelData.id)
+                    onWindowDropped: address => root.moveWindow(address, modelData.id)
                 }
             }
         }
@@ -283,6 +290,8 @@ Item {
             required property var modelData
 
             toplevel: ToplevelManager.toplevels.values.find(t => HyprlandData.clientForToplevel(t)?.address === modelData.address) ?? null
+            address: modelData.address
+            dragHeight: root.thumbHeight
             sourceWidth: modelData.sourceWidth
             sourceHeight: modelData.sourceHeight
             x: modelData.x
