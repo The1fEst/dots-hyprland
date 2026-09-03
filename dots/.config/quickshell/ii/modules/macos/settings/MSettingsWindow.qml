@@ -192,6 +192,54 @@ Item {
         }
         color: root.paneColor
 
+        Canvas {
+            id: band
+
+            readonly property real notchCentre: page.item?.notchCentre ?? 0
+
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+            }
+            height: page.item?.bandHeight ?? 0
+            visible: band.height > 0
+
+            onNotchCentreChanged: band.requestPaint()
+
+            onPaint: {
+                const context = getContext("2d");
+                context.reset();
+
+                const tail = Looks.settings.displayThumbTail;
+                const centre = band.notchCentre;
+                const edge = height - 0.5;
+
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(width, 0);
+                context.lineTo(width, edge);
+                context.lineTo(centre + tail, edge);
+                context.lineTo(centre, edge - tail);
+                context.lineTo(centre - tail, edge);
+                context.lineTo(0, edge);
+                context.closePath();
+
+                context.fillStyle = Looks.surfaces.header;
+                context.fill();
+
+                context.strokeStyle = Looks.surfaces.headerRule;
+                context.lineWidth = 1;
+                context.beginPath();
+                context.moveTo(0, edge);
+                context.lineTo(centre - tail, edge);
+                context.lineTo(centre, edge - tail);
+                context.lineTo(centre + tail, edge);
+                context.lineTo(width, edge);
+                context.stroke();
+            }
+        }
+
         Item {
             id: header
             anchors {
@@ -290,6 +338,7 @@ Item {
                 spacing: Looks.settings.formGap
 
                 Loader {
+                    id: page
                     width: parent.width
                     source: MSettingsNav.currentPage ? Qt.resolvedUrl(MSettingsNav.currentPage.pane) : ""
                 }

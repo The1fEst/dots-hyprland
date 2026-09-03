@@ -15,7 +15,10 @@ Popup {
 
     signal activated(var entry)
 
-    padding: 5
+    leftPadding: Looks.metrics.menu.highlightInset
+    rightPadding: Looks.metrics.menu.highlightInset
+    topPadding: Looks.metrics.menu.padding
+    bottomPadding: Looks.metrics.menu.padding
     width: root.menuWidth
     modal: true
     dim: false
@@ -43,12 +46,12 @@ Popup {
                 readonly property bool separator: row.modelData.separator ?? false
 
                 width: parent.width
-                implicitHeight: row.separator ? 11 : Looks.metrics.menu.rowHeightLarge
+                implicitHeight: row.separator ? Looks.metrics.menu.separatorRowHeight : Looks.metrics.menu.rowHeightLarge
 
                 Rectangle {
                     anchors.fill: parent
                     visible: !row.separator && hover.containsMouse
-                    radius: Looks.radius.small
+                    radius: Looks.metrics.menu.highlightRadius
                     color: Looks.accent
                     antialiasing: true
                 }
@@ -58,12 +61,12 @@ Popup {
                         left: parent.left
                         right: parent.right
                         verticalCenter: parent.verticalCenter
-                        leftMargin: 9
-                        rightMargin: 9
+                        leftMargin: Looks.metrics.menu.highlightInset
+                        rightMargin: Looks.metrics.menu.highlightInset
                     }
                     visible: row.separator
-                    height: 1
-                    color: Looks.colors.divider
+                    height: Looks.metrics.menu.separatorHeight
+                    color: Looks.colors.quaternary
                 }
 
                 MSymbol {

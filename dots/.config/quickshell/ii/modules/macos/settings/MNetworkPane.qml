@@ -153,7 +153,6 @@ Column {
             separator: false
 
             MPopupButton {
-                controlHeight: Looks.control.small
                 current: Config.options.macos.network.askToJoin
                 options: [
                     {

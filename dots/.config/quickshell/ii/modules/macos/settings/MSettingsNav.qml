@@ -25,6 +25,13 @@ Singleton {
             icon: "bluetooth",
             tint: "#3e8df7",
             pane: "MBluetoothPane.qml"
+        },
+        {
+            group: 1,
+            name: qsTr("Displays"),
+            icon: "sun.max",
+            tint: "#3e8df7",
+            pane: "MDisplayPane.qml"
         }
     ]
 

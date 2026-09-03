@@ -41,7 +41,6 @@ MSheet {
 
         MPopupButton {
             id: security
-            controlHeight: Looks.control.small
             value: qsTr("WPA2/WPA3 Personal")
         }
     }

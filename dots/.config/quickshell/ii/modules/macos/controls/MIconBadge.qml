@@ -11,8 +11,7 @@ Item {
     property real badgeSize: 20
     property real badgeRadius: 5
 
-    // Every badge macOS draws sets its glyph to half the square, sidebar and pane alike.
-    property real symbolSize: root.badgeSize / 2
+    property real symbolBox: root.badgeSize * Looks.settings.badgeGlyphRatio
 
     implicitWidth: root.badgeSize
     implicitHeight: root.badgeSize
@@ -59,7 +58,8 @@ Item {
     MSymbol {
         anchors.centerIn: parent
         symbol: root.symbol
-        symbolSize: root.symbolSize
+        fitWidth: root.symbolBox
+        fitHeight: root.symbolBox
         color: "#ffffff"
     }
 }

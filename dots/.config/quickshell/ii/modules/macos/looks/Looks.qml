@@ -148,6 +148,9 @@ Singleton {
         readonly property color buttonBordered: "#14000000"
         readonly property color buttonBorderedPressed: "#29000000"
 
+        readonly property color header: "#eeeef0"
+        readonly property color headerRule: "#d8d8da"
+
         // Opaque, not a wash: the hairline has to stay legible over whichever segment
         // fill it happens to divide, including an accent-filled selected one.
         readonly property color segmentSeparator: "#e6e6e6"
@@ -179,6 +182,9 @@ Singleton {
         readonly property color buttonBordered: "#12ffffff"
         readonly property color buttonBorderedPressed: "#29ffffff"
         readonly property color segmentSeparator: "#262626"
+
+        readonly property color header: "#2c2c2e"
+        readonly property color headerRule: "#3b3b3d"
     }
 
     property QtObject radius: QtObject {
@@ -262,7 +268,7 @@ Singleton {
         // Kit "Arrow Buttons/*": the circle a borderless pop-up puts its chevron in. It
         // sits 4 further from a row edge than a push button does — bezel, not margin.
         readonly property int popupValueGap: 10
-        readonly property int popupTrailingInset: 4
+        readonly property int popupTrailingInset: 2
 
         function switchMetrics(height: int): var {
             return switchLadder[String(height)] ?? switchLadder["24"];
@@ -320,7 +326,8 @@ Singleton {
         // icon sits this far inside it and the sidebar inset is added on top.
         readonly property int sidebarRowInset: 9
         readonly property int sidebarIconSlot: 20
-        readonly property int sidebarIconRadius: 5
+        readonly property int sidebarIconRadius: 6
+        readonly property real badgeGlyphRatio: 0.7
         readonly property int sidebarIconGap: 8
 
         readonly property int sidebarSelectionRadius: 8
@@ -374,6 +381,19 @@ Singleton {
         readonly property int sheetFooterGap: 21
         readonly property int sheetFooterHeight: 63
         readonly property int sheetButtonWidth: 64
+
+        readonly property int displayThumbWidth: 116
+        readonly property int displayPickerSpacing: 24
+        readonly property int displayPickerLabelGap: 8
+        readonly property int displayPickerGap: 22
+        readonly property int displayListRowHeight: 24
+        readonly property int displayListInset: 20
+        readonly property int displayThumbTail: 9
+        readonly property int displayThumbBezel: 3
+        readonly property int displayHeaderHeight: 158
+        readonly property int displayHeaderTopGap: 51
+        readonly property int arrangeWidth: 560
+        readonly property int arrangeFieldHeight: 240
     }
 
     // Per-component metrics off the kit's remaining pages. Grouped rather than flattened
@@ -384,7 +404,10 @@ Singleton {
             readonly property int rowHeight: 22
             readonly property int rowHeightLarge: 24
             readonly property int highlightRadius: 8
+            readonly property int highlightInset: 5
+            readonly property int padding: 6
             readonly property int separatorHeight: 1
+            readonly property int separatorRowHeight: 11
 
             // Each modifier in a shortcut cluster occupies a fixed cell, so ⌘⇧A and ⌥A
             // line their letters up down the right edge of the menu.
