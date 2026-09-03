@@ -18,7 +18,7 @@ Rectangle {
     implicitHeight: Looks.settings.sidebarRowHeight
     radius: Looks.settings.sidebarSelectionRadius
     antialiasing: true
-    color: root.current ? Looks.accent : hover.containsMouse ? Looks.colors.hover : "transparent"
+    color: root.current ? Looks.accent : "transparent"
 
     MIconBadge {
         id: badge
@@ -47,9 +47,7 @@ Rectangle {
     }
 
     MouseArea {
-        id: hover
         anchors.fill: parent
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         onClicked: root.clicked()
     }
