@@ -183,6 +183,7 @@ Popup {
                 controlHeight: Looks.control.large
                 minimumWidth: Looks.settings.sheetButtonWidth
                 label: qsTr("Done")
+                prominent: true
                 onClicked: root.close()
             }
         }

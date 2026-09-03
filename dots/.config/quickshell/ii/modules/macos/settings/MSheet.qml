@@ -78,6 +78,7 @@ Popup {
                     controlHeight: Looks.control.large
                     minimumWidth: Looks.settings.sheetButtonWidth
                     label: root.confirmLabel
+                    prominent: true
                     opacity: root.confirmEnabled ? 1 : 0.4
                     onClicked: {
                         if (!root.confirmEnabled)
