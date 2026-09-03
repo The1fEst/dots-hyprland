@@ -18,6 +18,13 @@ Singleton {
             icon: "wifi",
             tint: "#3e8df7",
             pane: "MNetworkPane.qml"
+        },
+        {
+            group: 0,
+            name: qsTr("Bluetooth"),
+            icon: "bluetooth",
+            tint: "#3e8df7",
+            pane: "MBluetoothPane.qml"
         }
     ]
 

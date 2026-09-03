@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import qs.modules.macos.controls
 import qs.modules.macos.looks
 
 // The inset rounded box macOS groups settings rows into.
@@ -9,16 +10,33 @@ Column {
 
     property string title: ""
 
+    property bool busy: false
+
     default property alias rows: content.data
 
     spacing: 6
 
-    MText {
-        x: Looks.settings.formRowInset
+    Item {
+        width: parent.width
         visible: root.title.length > 0
-        text: root.title
-        emphasized: true
-        color: Looks.colors.primary
+        height: heading.implicitHeight
+
+        MText {
+            id: heading
+            x: Looks.settings.formRowInset
+            text: root.title
+            emphasized: true
+            color: Looks.colors.primary
+        }
+
+        MSpinner {
+            anchors {
+                right: parent.right
+                rightMargin: Looks.settings.formRowInset
+                verticalCenter: heading.verticalCenter
+            }
+            running: root.busy
+        }
     }
 
     Rectangle {

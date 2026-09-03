@@ -15,17 +15,20 @@ Item {
     property real symbolSize: 14
     property color color: Looks.colors.primary
 
+    property real fitWidth: 0
+    property real fitHeight: 0
+
+    readonly property real aspect: metrics.implicitWidth / Math.max(1, metrics.implicitHeight)
+    readonly property real inkHeight: root.fitWidth > 0 && root.fitHeight > 0 ? Math.min(root.fitHeight, root.fitWidth / Math.max(0.01, root.aspect)) : root.symbolSize
+
     readonly property url source: root.symbol.length === 0 ? "" : Quickshell.shellPath(`assets/sfsymbols/${root.symbol}.png`)
 
-    // Rounded to even because every control that holds a glyph is an even number of points
-    // across, and centring an odd box in an even one lands the glyph on a half pixel,
-    // which the rasteriser resolves by nudging it a whole pixel to one side.
-    function even(value: real): real {
+    function roundedToEven(value: real): real {
         return Math.max(2, Math.round(value / 2) * 2);
     }
 
-    implicitHeight: root.even(root.symbolSize)
-    implicitWidth: root.even(root.symbolSize * (metrics.implicitWidth / Math.max(1, metrics.implicitHeight)))
+    implicitHeight: root.roundedToEven(root.inkHeight)
+    implicitWidth: root.roundedToEven(root.inkHeight * root.aspect)
 
     Image {
         id: metrics

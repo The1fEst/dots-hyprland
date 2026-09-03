@@ -28,16 +28,16 @@ Item {
     property color iconTint: Looks.colors.gray
     property bool chevron: false
 
+    property string glyph: ""
+    property real glyphSize: Looks.settings.formRowGlyphHeight
+    property string note: ""
+    property string placeholder: ""
+
     property bool separator: true
 
-    // A row that stands for a choice draws its own tick, and reserves the column for it on
-    // every row of the list so the unticked ones line up with the ticked one.
     property bool selectable: false
     property bool selected: false
 
-    // Rows that only reveal a control under the pointer read this rather than each of them
-    // laying its own mouse area over the row. A handler rather than the mouse area below,
-    // which a control in the trailing slot would take the hover away from.
     readonly property alias hovered: pointerWatch.hovered
 
     default property alias control: controlSlot.data
@@ -49,22 +49,21 @@ Item {
     // from the edge than a row trailing a button does.
     property real controlInset: Looks.settings.formRowInset
 
-    // The label block sits in the middle of the row: padding only sets the floor, and a
-    // row that stays at its minimum height would otherwise carry its single line high.
-    readonly property real contentHeight: Math.max(labels.height, badge.visible ? badge.height : 0)
-    readonly property real contentTop: Math.round((root.height - root.contentHeight) / 2)
+    readonly property real contentHeight: root.note.length > 0 ? note.height : Math.max(labels.height, badge.visible ? badge.height : 0, glyphSlot.visible ? glyphSlot.height : 0)
+    readonly property real labelsTop: Math.round((root.height - labels.height) / 2)
 
-    // Trailing controls line up with the label, not with the row: a row whose detail wraps
-    // to three lines still shows its switch beside the heading.
-    readonly property real headCenter: root.contentTop + Looks.font.style.body.lineHeight / 2
+    function headY(control: real): real {
+        const block = Math.max(labels.height, Looks.font.style.body.lineHeight);
+        return root.labelsTop + (Math.min(block, control) - control) / 2;
+    }
 
     implicitWidth: parent?.width ?? 0
-    implicitHeight: Math.max(Looks.settings.formRowHeight, root.padding * 2 + root.contentHeight)
+    implicitHeight: root.placeholder.length > 0 ? Looks.settings.formRowPlaceholderHeight : Math.max(Looks.settings.formRowHeight, root.padding * 2 + root.contentHeight)
 
     MIconBadge {
         id: badge
         x: root.inset
-        y: root.contentTop
+        y: root.labelsTop
         visible: root.icon.length > 0
         tint: root.iconTint
         symbol: root.icon
@@ -72,10 +71,58 @@ Item {
         badgeRadius: Looks.settings.formRowIconRadius
     }
 
+    Item {
+        id: glyphSlot
+        x: root.inset
+        y: Math.round((root.height - height) / 2)
+        visible: root.glyph.length > 0
+        width: Looks.settings.formRowGlyphSlot
+        height: root.glyphSize
+
+        MSymbol {
+            anchors.centerIn: parent
+            symbol: root.glyph
+            fitWidth: parent.width
+            fitHeight: root.glyphSize
+            color: Looks.colors.primary
+        }
+    }
+
+    MText {
+        anchors.centerIn: parent
+        visible: root.placeholder.length > 0
+        text: root.placeholder
+        color: Looks.colors.secondary
+    }
+
+    MText {
+        id: note
+        anchors {
+            left: parent.left
+            right: parent.right
+            leftMargin: root.inset
+            rightMargin: root.inset
+            verticalCenter: parent.verticalCenter
+        }
+        visible: root.note.length > 0
+        text: root.note
+        lineHeight: Looks.font.style.body.lineHeight
+        lineHeightMode: Text.FixedHeight
+        wrapMode: Text.WordWrap
+        color: Looks.colors.secondary
+    }
+
     Column {
         id: labels
-        x: badge.visible ? badge.x + badge.width + Looks.settings.formRowIconGap : root.inset
-        y: root.contentTop
+        visible: root.note.length === 0 && root.placeholder.length === 0
+        x: {
+            if (badge.visible)
+                return badge.x + badge.width + Looks.settings.formRowIconGap;
+            if (glyphSlot.visible)
+                return glyphSlot.x + glyphSlot.width + Looks.settings.formRowGlyphGap;
+            return root.inset;
+        }
+        y: root.labelsTop
         width: Math.max(0, root.width - x - controlSlot.width - root.inset - Looks.settings.formRowIconGap)
         spacing: Looks.settings.formRowLabelGap
 
@@ -160,7 +207,7 @@ Item {
     MSymbol {
         anchors.right: parent.right
         anchors.rightMargin: root.inset
-        y: root.headCenter - height / 2
+        y: root.headY(height)
         visible: root.chevron
         symbol: "chevron.right"
         symbolSize: 12
@@ -170,7 +217,7 @@ Item {
     MText {
         anchors.right: parent.right
         anchors.rightMargin: root.inset
-        y: root.headCenter - height / 2
+        y: root.headY(height)
         visible: root.value.length > 0
         text: root.value
         color: Looks.colors.secondary
@@ -180,7 +227,7 @@ Item {
         id: controlSlot
         anchors.right: parent.right
         anchors.rightMargin: root.controlInset
-        y: root.headCenter - height / 2
+        y: root.headY(height)
         implicitWidth: childrenRect.width
         implicitHeight: childrenRect.height
         width: implicitWidth

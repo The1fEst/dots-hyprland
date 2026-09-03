@@ -194,6 +194,7 @@ Column {
         controlInset: Looks.settings.formRowControlInset
 
         Row {
+            height: Looks.control.regular
             spacing: 12
 
             MPushButton {

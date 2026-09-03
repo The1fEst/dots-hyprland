@@ -354,6 +354,10 @@ Singleton {
         readonly property int formRowIconSize: 26
         readonly property int formRowIconRadius: 6
         readonly property int formRowIconGap: 12
+        readonly property int formRowGlyphSlot: 28
+        readonly property int formRowGlyphGap: 11
+        readonly property int formRowGlyphHeight: 30
+        readonly property int formRowPlaceholderHeight: 33
 
         // A list of choices reserves the tick column on every row, so the unticked ones
         // line up with the ticked one instead of sliding left.
@@ -363,6 +367,7 @@ Singleton {
         // A glyph acting as a control carries its own bezel, so a row trailing one stops
         // further from the edge than one trailing a push button.
         readonly property int formRowControlInset: 22
+        readonly property int formRowGlyphInset: 12
 
         readonly property int sheetWidth: 400
         readonly property int sheetPadding: 20
