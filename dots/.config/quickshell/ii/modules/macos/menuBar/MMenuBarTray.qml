@@ -23,6 +23,8 @@ Row {
             horizontalPadding: 5
 
             onClicked: event => {
+                if (!trayItem.modelData)
+                    return;
                 if (event.button === Qt.RightButton && trayItem.modelData.hasMenu) {
                     menuAnchor.anchor.rect = Qt.rect(trayItem.QsWindow.mapFromItem(trayItem, 0, 0).x, Looks.sizes.menuBarHeight, trayItem.width, 1);
                     menuAnchor.open();
@@ -33,14 +35,14 @@ Row {
 
             IconImage {
                 anchors.verticalCenter: parent.verticalCenter
-                source: trayItem.modelData.icon
+                source: trayItem.modelData?.icon ?? ""
                 implicitSize: 18
                 smooth: true
             }
 
             QsMenuAnchor {
                 id: menuAnchor
-                menu: trayItem.modelData.menu
+                menu: trayItem.modelData?.menu ?? null
                 anchor.window: trayItem.QsWindow.window
             }
         }

@@ -8,6 +8,7 @@ import qs.modules.macos.keyboard
 import qs.modules.macos.lock
 import qs.modules.macos.menuBar
 import qs.modules.macos.missionControl
+import qs.modules.macos.network
 import qs.modules.macos.notificationPopup
 import qs.modules.macos.osd
 import qs.modules.macos.polkit
@@ -18,6 +19,8 @@ import qs.modules.ii.cheatsheet
 import qs.modules.ii.wallpaperSelector
 
 Scope {
+    MNetworkPrompt {}
+
     PanelLoader { component: MacosBackground {} }
     PanelLoader { component: MacosMenuBar {} }
     PanelLoader { component: MacosDock {} }

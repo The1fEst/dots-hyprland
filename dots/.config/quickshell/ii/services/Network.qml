@@ -19,6 +19,18 @@ Singleton {
 
     property bool wifiEnabled: false
     property bool wifiScanning: false
+
+    // `nmcli radio wifi on` returns while the device is still unavailable, and a scan
+    // asked for then comes back with nothing, so switching Wi-Fi on defers its scan until
+    // NetworkManager reports the device up.
+    property bool wifiScanPending: false
+    onWifiStatusChanged: {
+        if (root.wifiScanPending && root.wifiStatus !== "disabled") {
+            root.wifiScanPending = false;
+            root.rescanWifi();
+        }
+    }
+
     property bool wifiConnecting: connectProc.running
     property WifiAccessPoint wifiConnectTarget
     readonly property list<WifiAccessPoint> wifiNetworks: []
@@ -55,6 +67,7 @@ Singleton {
     // Control
     function enableWifi(enabled = true): void {
         const cmd = enabled ? "on" : "off";
+        root.wifiScanPending = enabled;
         enableWifiProc.exec(["nmcli", "radio", "wifi", cmd]);
     }
 
@@ -67,9 +80,21 @@ Singleton {
         rescanProcess.running = true;
     }
 
-    function connectToWifiNetwork(accessPoint: WifiAccessPoint): void {
+    function connectToWifiNetwork(accessPoint: WifiAccessPoint, password = ""): void {
         accessPoint.askingPassword = false;
         root.wifiConnectTarget = accessPoint;
+        if (password.length > 0) {
+            connectProc.exec({
+                environment: {
+                    LANG: "C",
+                    LC_ALL: "C",
+                    SSID: accessPoint.ssid,
+                    PASSWORD: password
+                },
+                command: ["bash", "-c", 'nmcli dev wifi connect "$SSID" password "$PASSWORD"']
+            });
+            return;
+        }
         // We use this instead of `nmcli connection up SSID` because this also creates a connection profile
         connectProc.exec(["nmcli", "dev", "wifi", "connect", accessPoint.ssid])
 
@@ -77,6 +102,42 @@ Singleton {
 
     function disconnectWifiNetwork(): void {
         if (active) disconnectProc.exec(["nmcli", "connection", "down", active.ssid]);
+    }
+
+    function connectToHiddenNetwork(ssid: string, password: string, security: string): void {
+        hiddenConnectProc.exec({
+            environment: {
+                SSID: ssid,
+                PASSWORD: password
+            },
+            command: password.length > 0 ? ["bash", "-c", 'nmcli dev wifi connect "$SSID" password "$PASSWORD" hidden yes'] : ["bash", "-c", 'nmcli dev wifi connect "$SSID" hidden yes']
+        });
+    }
+
+    function forgetWifiNetwork(ssid: string): void {
+        forgetProc.exec(["nmcli", "connection", "delete", ssid]);
+    }
+
+    function setWifiAutoconnect(ssid: string, enabled: bool): void {
+        autoconnectProc.exec(["nmcli", "connection", "modify", ssid, "connection.autoconnect", enabled ? "yes" : "no"]);
+    }
+
+    function copyWifiPassword(ssid: string): void {
+        copyPasswordProc.exec({
+            environment: {
+                SSID: ssid
+            },
+            command: ["bash", "-c", 'nmcli -s -g 802-11-wireless-security.psk connection show "$SSID" | tr -d "\\n" | wl-copy']
+        });
+    }
+
+    // Known networks are the ones NetworkManager holds a profile for, which is not the
+    // same as the ones currently in range.
+    property list<string> savedWifiNetworks: []
+    property var wifiAutoconnect: ({})
+
+    function isSavedWifiNetwork(ssid: string): bool {
+        return root.savedWifiNetworks.includes(ssid);
     }
 
     function changePassword(network: WifiAccessPoint, password: string, username = ""): void {
@@ -93,6 +154,50 @@ Singleton {
 
     Process {
         id: enableWifiProc
+    }
+
+    Process {
+        id: forgetProc
+        onExited: root.update()
+    }
+
+    Process {
+        id: hiddenConnectProc
+        onExited: root.update()
+    }
+
+    Process {
+        id: autoconnectProc
+        onExited: savedWifiProc.running = true
+    }
+
+    Process {
+        id: copyPasswordProc
+    }
+
+    Process {
+        id: savedWifiProc
+        running: true
+        command: ["nmcli", "-t", "-f", "NAME,TYPE,AUTOCONNECT", "connection", "show"]
+        environment: ({
+            LANG: "C",
+            LC_ALL: "C"
+        })
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const saved = [];
+                const autoJoin = {};
+                for (const line of text.trim().split("\n")) {
+                    const parts = line.split(":");
+                    if (parts.length < 3 || parts[1] !== "802-11-wireless")
+                        continue;
+                    saved.push(parts[0]);
+                    autoJoin[parts[0]] = parts[2] === "yes";
+                }
+                root.savedWifiNetworks = saved;
+                root.wifiAutoconnect = autoJoin;
+            }
+        }
     }
 
     Process {
@@ -153,6 +258,7 @@ Singleton {
         wifiStatusProcess.running = true
         updateNetworkName.running = true;
         updateNetworkStrength.running = true;
+        savedWifiProc.running = true;
     }
 
     Process {

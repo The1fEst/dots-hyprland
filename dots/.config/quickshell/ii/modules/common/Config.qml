@@ -569,6 +569,9 @@ Singleton {
                 property JsonObject menuBar: JsonObject {
                     property list<string> items: ["spaces", "tray", "battery"]
                 }
+                property JsonObject network: JsonObject {
+                    property string askToJoin: "notify" // "off", "notify", "ask"
+                }
                 property JsonObject dock: JsonObject {
                     property int iconSize: 57
                     property int iconSpacing: 17

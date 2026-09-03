@@ -21,6 +21,10 @@ PanelWindow {
     readonly property list<var> entries: [
         {
             label: "System Settings…",
+            run: () => Quickshell.execDetached(["qs", "-p", Quickshell.shellPath("macosSettings.qml")])
+        },
+        {
+            label: "Shell Settings…",
             run: () => Quickshell.execDetached(["qs", "-p", Quickshell.shellPath("settings.qml")])
         },
         {
