@@ -251,6 +251,9 @@ Item {
 
             Rectangle {
                 id: navGroup
+
+                property int hoveredStep: -1
+
                 x: Looks.settings.toolbarInset
                 anchors.verticalCenter: parent.verticalCenter
                 width: Looks.control.toolbarGroupInset * 2 + Looks.control.toolbarButtonLarge * 2 + Looks.control.toolbarGroupGap
@@ -263,6 +266,7 @@ Item {
 
                 Rectangle {
                     anchors.centerIn: parent
+                    visible: navGroup.hoveredStep < 0
                     width: 1
                     height: Looks.control.toolbarSeparatorHeight
                     color: Looks.colors.tertiary
@@ -280,23 +284,46 @@ Item {
                         }
                     ]
 
-                    MSymbol {
+                    Rectangle {
+                        id: navButton
+
                         required property var modelData
                         required property int index
 
-                        readonly property bool available: MSettingsNav.canStep(modelData.delta)
+                        readonly property bool available: MSettingsNav.canStep(navButton.modelData.delta)
 
-                        x: Looks.control.toolbarGroupInset + index * (Looks.control.toolbarButtonLarge + Looks.control.toolbarGroupGap) + (Looks.control.toolbarButtonLarge - width) / 2
+                        onAvailableChanged: {
+                            if (!navButton.available && navGroup.hoveredStep === navButton.index)
+                                navGroup.hoveredStep = -1;
+                        }
+
+                        x: Looks.control.toolbarGroupInset + navButton.index * (Looks.control.toolbarButtonLarge + Looks.control.toolbarGroupGap)
                         anchors.verticalCenter: parent.verticalCenter
-                        symbol: modelData.icon
-                        symbolSize: Looks.control.toolbarGlyphSizeLarge
-                        color: available ? Looks.colors.primary : Looks.colors.tertiary
+                        width: Looks.control.toolbarButtonLarge
+                        height: Looks.control.toolbarButtonLarge
+                        radius: height / 2
+                        antialiasing: true
+                        color: navGroup.hoveredStep !== navButton.index ? "transparent" : step.pressed ? Looks.surfaces.buttonBorderedPressed : Looks.colors.hover
+
+                        MSymbol {
+                            anchors.centerIn: parent
+                            symbol: navButton.modelData.icon
+                            symbolSize: Looks.control.toolbarGlyphSizeLarge
+                            color: navButton.available ? Looks.colors.primary : Looks.colors.tertiary
+                        }
 
                         MouseArea {
+                            id: step
                             anchors.fill: parent
-                            enabled: parent.available
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: MSettingsNav.step(parent.modelData.delta)
+                            enabled: navButton.available
+                            hoverEnabled: true
+                            cursorShape: navButton.available ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            onEntered: navGroup.hoveredStep = navButton.index
+                            onExited: {
+                                if (navGroup.hoveredStep === navButton.index)
+                                    navGroup.hoveredStep = -1;
+                            }
+                            onClicked: MSettingsNav.step(navButton.modelData.delta)
                         }
                     }
                 }

@@ -52,5 +52,6 @@ Item {
         source: glyph
         sourceColor: "black"
         colorizationColor: root.color
+        opacity: root.color.a
     }
 }
