@@ -77,7 +77,7 @@ MGlass {
         anchors.centerIn: parent
         visible: !root.isBackspace && !root.isEnter
         text: Ydotool.shiftMode === 2 ? (root.keyData.labelCaps ?? root.keyData.labelShift ?? root.label) : Ydotool.shiftMode === 1 ? (root.keyData.labelShift ?? root.label) : root.label
-        font.pixelSize: root.shape === "fn" ? Looks.font.size.small : Looks.font.size.large
+        font.pixelSize: root.shape === "fn" ? Looks.font.style.subheadline.size : Looks.font.style.title3.size
         color: root.lit ? "#ffffff" : Looks.colors.primary
     }
 

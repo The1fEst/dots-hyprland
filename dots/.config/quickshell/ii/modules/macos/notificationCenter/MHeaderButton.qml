@@ -8,7 +8,7 @@ MGlass {
     id: root
 
     property string label: ""
-    property string iconName: "close"
+    property string symbol: MSymbols.close
     property bool showLabel: false
 
     signal clicked
@@ -26,12 +26,11 @@ MGlass {
         }
     }
 
-    MaterialSymbol {
-        anchors.fill: parent
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        text: root.iconName
-        iconSize: 14
+    MSymbol {
+        anchors.centerIn: parent
+        symbol: root.symbol
+        width: Looks.control.glyph.tick
+        height: Looks.control.glyph.tick
         color: Looks.colors.secondary
         opacity: root.showLabel ? 0 : 1
 
@@ -46,7 +45,7 @@ MGlass {
         id: labelText
         anchors.centerIn: parent
         text: root.label
-        font.pixelSize: Looks.font.size.small
+        font.pixelSize: Looks.font.style.subheadline.size
         color: Looks.colors.secondary
         opacity: root.showLabel ? 1 : 0
 

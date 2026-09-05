@@ -102,7 +102,7 @@ Scope {
                         MText {
                             anchors.verticalCenter: parent.verticalCenter
                             text: ""
-                            font.pixelSize: 17
+                            font.pixelSize: 16
                             color: Looks.colors.primary
                         }
                     }
@@ -120,6 +120,7 @@ Scope {
                                 const leaf = appId.split(".").pop();
                                 return leaf.charAt(0).toUpperCase() + leaf.slice(1);
                             }
+                            textStyle: Looks.font.style.headline
                             emphasized: true
                             color: Looks.colors.primary
                         }
@@ -166,10 +167,10 @@ Scope {
                             }
                             screenScope.controlCenterOpen = !screenScope.controlCenterOpen;
                         }
-                        MaterialSymbol {
+                        MSymbol {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "tune"
-                            iconSize: 18
+                            symbol: MSymbols.controlCentre
+                            height: Looks.control.glyph.menuBar
                             color: Looks.colors.primary
                         }
                     }
@@ -184,6 +185,7 @@ Scope {
                         MText {
                             anchors.verticalCenter: parent.verticalCenter
                             text: `${DateTime.longDate}  ${DateTime.time}`
+                            emphasized: true
                             color: Looks.colors.primary
                         }
                     }

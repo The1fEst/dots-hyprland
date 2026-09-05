@@ -74,8 +74,7 @@ Item {
                     verticalCenter: parent.verticalCenter
                 }
                 text: root.group.appName
-                font.pixelSize: Looks.font.size.medium
-                emphasized: true
+                textStyle: Looks.font.style.headline
                 color: Looks.colors.primary
             }
 
@@ -88,7 +87,7 @@ Item {
 
                 MHeaderButton {
                     backdrop: root.backdrop
-                    iconName: "expand_less"
+                    symbol: MSymbols.collapse
                     label: "Show less"
                     showLabel: !clearButton.hovered
                     onClicked: root.expanded = false
@@ -97,7 +96,7 @@ Item {
                 MHeaderButton {
                     id: clearButton
                     backdrop: root.backdrop
-                    iconName: "close"
+                    symbol: MSymbols.close
                     label: "Clear"
                     showLabel: hovered
                     onClicked: {

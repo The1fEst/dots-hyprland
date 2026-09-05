@@ -17,17 +17,17 @@ MGlass {
 
     implicitHeight: header.height + playerList.implicitHeight + 30
 
-    component TransportButton: MaterialSymbol {
-        property bool enabled: true
+    component TransportButton: MSymbol {
+        property bool usable: true
 
         signal activated
 
-        color: enabled ? Looks.colors.primary : Looks.colors.tertiary
+        color: usable ? Looks.colors.primary : Looks.colors.tertiary
 
         MouseArea {
             anchors.fill: parent
             anchors.margins: -8
-            enabled: parent.enabled
+            enabled: parent.usable
             cursorShape: Qt.PointingHandCursor
             onClicked: parent.activated()
         }
@@ -72,11 +72,11 @@ MGlass {
                 visible: status === Image.Ready
             }
 
-            MaterialSymbol {
+            MSymbol {
                 anchors.centerIn: parent
                 visible: !(block.player?.trackArtUrl ?? "")
-                text: "music_note"
-                iconSize: 26
+                symbol: MSymbols.music
+                height: Looks.control.glyph.artwork
                 color: Looks.colors.secondary
             }
         }
@@ -95,7 +95,7 @@ MGlass {
                 text: block.player?.trackTitle ?? ""
                 emphasized: true
                 elide: Text.ElideRight
-                font.pixelSize: Looks.font.size.large
+                font.pixelSize: Looks.font.style.title3.size
                 color: Looks.colors.primary
             }
 
@@ -111,7 +111,7 @@ MGlass {
                 width: parent.width
                 text: block.player?.identity ?? ""
                 elide: Text.ElideRight
-                font.pixelSize: Looks.font.size.small
+                font.pixelSize: Looks.font.style.subheadline.size
                 color: Looks.colors.tertiary
             }
         }
@@ -200,7 +200,7 @@ MGlass {
             }
             visible: block.length > 0
             text: StringUtils.friendlyTimeForSeconds(block.position)
-            font.pixelSize: Looks.font.size.small
+            font.pixelSize: Looks.font.style.subheadline.size
             color: Looks.colors.tertiary
         }
 
@@ -212,7 +212,7 @@ MGlass {
             }
             visible: block.length > 0
             text: `-${StringUtils.friendlyTimeForSeconds(Math.max(0, block.length - block.position))}`
-            font.pixelSize: Looks.font.size.small
+            font.pixelSize: Looks.font.style.subheadline.size
             color: Looks.colors.tertiary
         }
 
@@ -226,25 +226,28 @@ MGlass {
 
             TransportButton {
                 anchors.verticalCenter: parent.verticalCenter
-                text: "skip_previous"
-                iconSize: 24
-                enabled: block.player?.canGoPrevious ?? false
+                symbol: MSymbols.previous
+                width: Looks.control.glyph.tileCompact
+                height: Looks.control.glyph.tileCompact
+                usable: block.player?.canGoPrevious ?? false
                 onActivated: block.player?.previous()
             }
 
             TransportButton {
                 anchors.verticalCenter: parent.verticalCenter
-                text: block.player?.isPlaying ? "pause" : "play_arrow"
-                iconSize: 32
-                enabled: block.player?.canTogglePlaying ?? false
+                symbol: block.player?.isPlaying ? MSymbols.pause : MSymbols.play
+                width: Looks.control.glyph.transport
+                height: Looks.control.glyph.transport
+                usable: block.player?.canTogglePlaying ?? false
                 onActivated: block.player?.togglePlaying()
             }
 
             TransportButton {
                 anchors.verticalCenter: parent.verticalCenter
-                text: "skip_next"
-                iconSize: 24
-                enabled: block.player?.canGoNext ?? false
+                symbol: MSymbols.next
+                width: Looks.control.glyph.tileCompact
+                height: Looks.control.glyph.tileCompact
+                usable: block.player?.canGoNext ?? false
                 onActivated: block.player?.next()
             }
         }
@@ -261,15 +264,15 @@ MGlass {
         cursorShape: Qt.PointingHandCursor
         onClicked: root.closed()
 
-        MaterialSymbol {
+        MSymbol {
             id: back
             anchors {
                 left: parent.left
                 leftMargin: 12
                 verticalCenter: parent.verticalCenter
             }
-            text: "chevron_left"
-            iconSize: 20
+            symbol: MSymbols.chevronLeft
+            height: Looks.control.toolbarGlyphSizeLarge
             color: Looks.colors.secondary
         }
 

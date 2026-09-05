@@ -9,6 +9,7 @@ MMenuBarItem {
     id: root
 
     required property QtObject toggleModel
+    required property string symbol
     property string settingsCommand: ""
 
     minWidth: 30
@@ -25,10 +26,11 @@ MMenuBarItem {
             root.toggleModel.mainAction();
     }
 
-    MaterialSymbol {
+    MSymbol {
         anchors.verticalCenter: parent.verticalCenter
-        text: root.toggleModel.icon
-        iconSize: 18
+        symbol: root.symbol
+        width: Looks.control.glyph.menuBar
+        height: Looks.control.glyph.menuBar
         color: Looks.colors.primary
     }
 }

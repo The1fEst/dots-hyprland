@@ -73,7 +73,7 @@ PanelWindow {
 
                     MText {
                         text: "Notification Center"
-                        font.pixelSize: Looks.font.size.title
+                        textStyle: Looks.font.style.title2
                         emphasized: true
                         color: Looks.colors.primary
                     }
@@ -84,7 +84,7 @@ PanelWindow {
 
                     MHeaderButton {
                         backdrop: backdrop
-                        iconName: "close"
+                        symbol: MSymbols.close
                         label: "Clear All"
                         showLabel: hovered
                         onClicked: Notifications.discardAllNotifications()
@@ -161,7 +161,7 @@ PanelWindow {
 
                         MText {
                             text: Qt.locale().toString(new Date(), "dddd").toUpperCase()
-                            font.pixelSize: Looks.font.size.small
+                            font.pixelSize: Looks.font.style.subheadline.size
                             emphasized: true
                             color: Looks.colors.red
                         }
@@ -179,7 +179,7 @@ PanelWindow {
 
                         MText {
                             text: "No Events Today"
-                            font.pixelSize: Looks.font.size.small
+                            font.pixelSize: Looks.font.style.subheadline.size
                             color: Looks.colors.secondary
                         }
                     }

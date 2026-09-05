@@ -66,7 +66,7 @@ Item {
         MSymbol {
             anchors.centerIn: parent
             symbol: "chevron.up.chevron.down"
-            symbolSize: root.arrowHeight * 0.52
+            height: root.arrowHeight * 0.52
             color: Looks.colors.primary
         }
     }

@@ -205,7 +205,7 @@ Scope {
                 id: protectionLabel
                 anchors.centerIn: parent
                 text: root.protectionMessage
-                font.pixelSize: Looks.font.size.medium
+                font.pixelSize: Looks.font.style.body.size
                 emphasized: true
                 color: "#ffffff"
             }

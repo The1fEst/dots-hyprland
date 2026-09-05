@@ -9,13 +9,16 @@ MGlass {
     id: root
 
     required property QtObject toggleModel
+    required property string symbol
     property bool wide: root.width >= root.height * 1.6
     property string settingsCommand: ""
 
     readonly property bool lit: toggleModel.toggled
-    readonly property color activeColor: lit ? Looks.accent : Looks.colors.quaternary
 
-    tint: !wide && lit ? Looks.accent : Looks.glass.tint
+    readonly property color badgeColor: lit ? "#ffffff" : Looks.colors.tertiary
+    readonly property color glyphColor: lit ? Looks.accent : Looks.colors.primary
+
+    tint: !wide && lit ? root.badgeColor : Looks.glass.tint
     opacity: toggleModel.available ? 1 : 0.4
 
     Rectangle {
@@ -29,27 +32,28 @@ MGlass {
         width: 32
         height: 32
         radius: width / 2
-        color: root.activeColor
+        color: root.badgeColor
         antialiasing: true
     }
 
-    MaterialSymbol {
+    MSymbol {
         anchors.centerIn: root.wide ? badge : parent
-        text: root.toggleModel.icon
-        iconSize: root.wide ? 18 : 22
-        color: root.wide ? (root.lit ? "#ffffff" : Looks.colors.primary) : (root.lit ? "#ffffff" : Looks.colors.primary)
+        symbol: root.symbol
+        width: root.wide ? Looks.control.glyph.tileWide : Looks.control.glyph.tileCompact
+        height: root.wide ? Looks.control.glyph.tileWide : Looks.control.glyph.tileCompact
+        color: root.glyphColor
     }
 
-    MaterialSymbol {
+    MSymbol {
         id: chevron
         visible: root.wide && root.settingsCommand.length > 0
         anchors {
             right: parent.right
-            rightMargin: 8
+            rightMargin: 14
             verticalCenter: parent.verticalCenter
         }
-        text: "chevron_right"
-        iconSize: 18
+        symbol: MSymbols.chevronRight
+        height: Looks.control.glyph.chevron
         color: Looks.colors.secondary
         opacity: hoverArea.containsMouse ? 1 : 0
 
@@ -67,7 +71,7 @@ MGlass {
             left: badge.right
             leftMargin: 12
             right: chevron.visible ? chevron.left : parent.right
-            rightMargin: 0
+            rightMargin: chevron.visible ? 8 : 14
             verticalCenter: parent.verticalCenter
         }
         spacing: 1
@@ -77,7 +81,7 @@ MGlass {
             text: root.toggleModel.name
             emphasized: true
             elide: Text.ElideRight
-            font.pixelSize: Looks.font.size.normal
+            font.pixelSize: Looks.font.style.body.size
             color: Looks.colors.primary
         }
 
@@ -85,8 +89,10 @@ MGlass {
             width: parent.width
             visible: root.toggleModel.hasStatusText && text.length > 0
             text: root.toggleModel.statusText
+            wrapMode: Text.WordWrap
+            maximumLineCount: 2
             elide: Text.ElideRight
-            font.pixelSize: Looks.font.size.normal
+            font.pixelSize: Looks.font.style.body.size
             color: Looks.colors.secondary
         }
     }

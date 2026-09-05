@@ -1,6 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
+import Quickshell.Services.UPower
 import qs.services
 import qs.modules.common
 import qs.modules.common.models.quickToggles
@@ -100,9 +102,8 @@ Item {
         MControlToggle {
             backdrop: root.backdrop
             settingsCommand: Config.options.apps.network
-            toggleModel: WifiToggle {
-                icon: "wifi"
-            }
+            symbol: MSymbols.wifi
+            toggleModel: WifiToggle {}
         }
     }
 
@@ -111,9 +112,8 @@ Item {
         MControlToggle {
             backdrop: root.backdrop
             settingsCommand: Config.options.apps.networkEthernet
-            toggleModel: EthernetToggle {
-                icon: "lan"
-            }
+            symbol: MSymbols.wired
+            toggleModel: EthernetToggle {}
         }
     }
 
@@ -121,6 +121,7 @@ Item {
         id: wireGuardControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.vpn
             toggleModel: WireGuardToggle {}
         }
     }
@@ -129,6 +130,7 @@ Item {
         id: cloudflareWarpControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.secureTunnel
             toggleModel: CloudflareWarpToggle {}
         }
     }
@@ -137,6 +139,7 @@ Item {
         id: easyEffectsControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.audioEffects
             toggleModel: EasyEffectsToggle {}
         }
     }
@@ -145,6 +148,7 @@ Item {
         id: powerProfileControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.powerProfileNow
             toggleModel: PowerProfilesToggle {}
         }
     }
@@ -153,6 +157,7 @@ Item {
         id: notificationsControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.notifications
             toggleModel: NotificationToggle {}
         }
     }
@@ -161,6 +166,7 @@ Item {
         id: onScreenKeyboardControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.keyboard
             toggleModel: OnScreenKeyboardToggle {}
         }
     }
@@ -170,6 +176,7 @@ Item {
         MControlToggle {
             backdrop: root.backdrop
             settingsCommand: Config.options.apps.bluetooth
+            symbol: MSymbols.bluetooth
             toggleModel: BluetoothToggle {
                 statusText: BluetoothStatus.enabled ? Translation.tr("On") : Translation.tr("Off")
             }
@@ -180,6 +187,7 @@ Item {
         id: darkModeControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.darkMode
             toggleModel: DarkModeToggle {}
         }
     }
@@ -188,6 +196,7 @@ Item {
         id: nightLightControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.nightLight
             toggleModel: NightLightToggle {}
         }
     }
@@ -196,6 +205,7 @@ Item {
         id: screenSnipControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.screenSnip
             toggleModel: ScreenSnipToggle {}
         }
     }
@@ -204,6 +214,7 @@ Item {
         id: colorPickerControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.colourPicker
             toggleModel: ColorPickerToggle {}
         }
     }
@@ -212,6 +223,7 @@ Item {
         id: micControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.microphone
             toggleModel: MicToggle {}
         }
     }
@@ -220,6 +232,7 @@ Item {
         id: idleInhibitorControl
         MControlToggle {
             backdrop: root.backdrop
+            symbol: MSymbols.idleInhibitor
             toggleModel: IdleInhibitorToggle {}
         }
     }
@@ -238,8 +251,8 @@ Item {
             backdrop: root.backdrop
             label: "Sound"
             settingsCommand: Config.options.apps.volumeMixer
-            leadingIcon: "volume_mute"
-            trailingIcon: "volume_up"
+            leadingIcon: MSymbols.volumeLow
+            trailingIcon: MSymbols.volume
             maximum: 1
             value: Audio.sink?.audio.volume ?? 0
             onMoved: newValue => {
@@ -255,8 +268,8 @@ Item {
             backdrop: root.backdrop
             label: "Display"
             settingsCommand: Config.options.apps.display
-            leadingIcon: "brightness_low"
-            trailingIcon: "brightness_high"
+            leadingIcon: MSymbols.brightnessLow
+            trailingIcon: MSymbols.brightness
             maximum: 1
             value: Brightness.getMonitorForScreen(root.screenData)?.brightness ?? 0
             onMoved: newValue => Brightness.getMonitorForScreen(root.screenData)?.setBrightness(newValue)

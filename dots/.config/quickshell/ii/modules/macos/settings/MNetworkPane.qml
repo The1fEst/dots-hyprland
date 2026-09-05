@@ -207,14 +207,14 @@ Column {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: networkRow.network.isSecure
                 symbol: "lock.fill"
-                symbolSize: 13
+                height: Looks.control.glyph.pill
                 color: Looks.colors.primary
             }
 
             MSymbol {
                 anchors.verticalCenter: parent.verticalCenter
                 symbol: "wifi"
-                symbolSize: 11
+                height: Looks.control.glyph.tick
                 // macOS fades the glyph rather than dropping arcs off it as the signal
                 // weakens, and the flat symbol art has no arcs to drop.
                 opacity: 0.4 + 0.6 * Math.min(1, networkRow.network.strength / 80)
@@ -224,7 +224,7 @@ Column {
             MSymbol {
                 anchors.verticalCenter: parent.verticalCenter
                 symbol: "ellipsis.circle"
-                symbolSize: 17
+                height: Looks.control.glyph.rowTrailing
                 color: Looks.colors.secondary
                 visible: networkRow.known
 

@@ -195,14 +195,15 @@ Row {
             MText {
                 anchors.verticalCenter: parent.verticalCenter
                 text: `${Math.round(Battery.percentage * 100)}%`
+                emphasized: true
                 color: Looks.colors.primary
-                font.pixelSize: Looks.font.size.small
             }
 
-            MaterialSymbol {
+            MSymbol {
                 anchors.verticalCenter: parent.verticalCenter
-                text: Battery.isCharging ? "battery_charging_full" : "battery_full"
-                iconSize: 18
+                symbol: MSymbols.batteryNow
+                width: 22
+                height: Looks.control.glyph.menuBar
                 color: Battery.isLowAndNotCharging ? Looks.colors.red : Looks.colors.primary
             }
         }
@@ -212,6 +213,7 @@ Row {
         id: wifiItem
         MMenuBarStatus {
             settingsCommand: Config.options.apps.network
+            symbol: MSymbols.wifiNow
             toggleModel: WifiToggle {}
         }
     }
@@ -220,6 +222,7 @@ Row {
         id: wiredItem
         MMenuBarStatus {
             settingsCommand: Config.options.apps.networkEthernet
+            symbol: MSymbols.wired
             toggleModel: EthernetToggle {}
         }
     }
@@ -227,6 +230,7 @@ Row {
     Component {
         id: wireGuardItem
         MMenuBarStatus {
+            symbol: MSymbols.vpn
             toggleModel: WireGuardToggle {}
         }
     }
@@ -234,6 +238,7 @@ Row {
     Component {
         id: cloudflareWarpItem
         MMenuBarStatus {
+            symbol: MSymbols.secureTunnel
             toggleModel: CloudflareWarpToggle {}
         }
     }
@@ -241,6 +246,7 @@ Row {
     Component {
         id: easyEffectsItem
         MMenuBarStatus {
+            symbol: MSymbols.audioEffects
             toggleModel: EasyEffectsToggle {}
         }
     }
@@ -248,6 +254,7 @@ Row {
     Component {
         id: powerProfileItem
         MMenuBarStatus {
+            symbol: MSymbols.powerProfileNow
             toggleModel: PowerProfilesToggle {}
         }
     }
@@ -255,6 +262,7 @@ Row {
     Component {
         id: notificationsItem
         MMenuBarStatus {
+            symbol: MSymbols.notificationsNow
             toggleModel: NotificationToggle {}
         }
     }
@@ -262,6 +270,7 @@ Row {
     Component {
         id: onScreenKeyboardItem
         MMenuBarStatus {
+            symbol: MSymbols.keyboardNow
             toggleModel: OnScreenKeyboardToggle {}
         }
     }
@@ -270,6 +279,7 @@ Row {
         id: bluetoothItem
         MMenuBarStatus {
             settingsCommand: Config.options.apps.bluetooth
+            symbol: MSymbols.bluetooth
             toggleModel: BluetoothToggle {}
         }
     }
@@ -278,6 +288,7 @@ Row {
         id: volumeItem
         MMenuBarStatus {
             settingsCommand: Config.options.apps.volumeMixer
+            symbol: MSymbols.volumeNow
             toggleModel: AudioToggle {}
         }
     }
@@ -286,6 +297,7 @@ Row {
         id: micItem
         MMenuBarStatus {
             settingsCommand: Config.options.apps.volumeMixer
+            symbol: MSymbols.microphoneNow
             toggleModel: MicToggle {}
         }
     }
@@ -293,6 +305,7 @@ Row {
     Component {
         id: darkModeItem
         MMenuBarStatus {
+            symbol: MSymbols.darkMode
             toggleModel: DarkModeToggle {}
         }
     }
@@ -300,6 +313,7 @@ Row {
     Component {
         id: nightLightItem
         MMenuBarStatus {
+            symbol: MSymbols.nightLightNow
             toggleModel: NightLightToggle {}
         }
     }
@@ -307,6 +321,7 @@ Row {
     Component {
         id: screenSnipItem
         MMenuBarStatus {
+            symbol: MSymbols.screenSnip
             toggleModel: ScreenSnipToggle {}
         }
     }
@@ -314,6 +329,7 @@ Row {
     Component {
         id: colorPickerItem
         MMenuBarStatus {
+            symbol: MSymbols.colourPicker
             toggleModel: ColorPickerToggle {}
         }
     }
@@ -321,6 +337,7 @@ Row {
     Component {
         id: idleInhibitorItem
         MMenuBarStatus {
+            symbol: MSymbols.idleInhibitor
             toggleModel: IdleInhibitorToggle {}
         }
     }
@@ -332,10 +349,10 @@ Row {
             horizontalPadding: 5
             onClicked: Quickshell.execDetached(["bash", "-c", Config.options.apps.display])
 
-            MaterialSymbol {
+            MSymbol {
                 anchors.verticalCenter: parent.verticalCenter
-                text: "brightness_high"
-                iconSize: 18
+                symbol: MSymbols.brightness
+                height: Looks.control.glyph.menuBar
                 color: Looks.colors.primary
             }
         }
@@ -350,10 +367,11 @@ Row {
             active: root.activeItem === "media"
             onClicked: root.expandRequested("media")
 
-            MaterialSymbol {
+            MSymbol {
                 anchors.verticalCenter: parent.verticalCenter
-                text: MprisController.currentPlayer?.isPlaying ? "graphic_eq" : "pause"
-                iconSize: 18
+                symbol: MSymbols.nowPlaying
+                width: Looks.control.glyph.menuBar
+                height: Looks.control.glyph.menuBar
                 color: Looks.colors.primary
             }
         }

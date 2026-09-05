@@ -29,7 +29,7 @@ Item {
     MText {
         id: monthLabel
         text: root.locale.standaloneMonthName(root.month, Locale.LongFormat).toUpperCase()
-        font.pixelSize: Looks.font.size.small
+        font.pixelSize: Looks.font.style.subheadline.size
         emphasized: true
         color: Looks.colors.red
     }
@@ -48,7 +48,7 @@ Item {
                 width: root.cellSize
                 horizontalAlignment: Text.AlignHCenter
                 text: root.locale.dayName((root.firstWeekday + index) % 7, Locale.NarrowFormat)
-                font.pixelSize: Looks.font.size.tiny
+                font.pixelSize: Looks.font.style.footnote.size
                 color: Looks.colors.secondary
             }
         }
@@ -85,7 +85,7 @@ Item {
                     visible: parent.day > 0
                     anchors.centerIn: parent
                     text: parent.day
-                    font.pixelSize: Looks.font.size.small
+                    font.pixelSize: Looks.font.style.subheadline.size
                     color: parent.isToday ? "#ffffff" : Looks.colors.primary
                 }
             }

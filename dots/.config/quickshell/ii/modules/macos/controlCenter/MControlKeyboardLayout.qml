@@ -15,10 +15,10 @@ MGlass {
         anchors.centerIn: parent
         spacing: 8
 
-        MaterialSymbol {
+        MSymbol {
             anchors.verticalCenter: parent.verticalCenter
-            text: "language"
-            iconSize: 22
+            symbol: MSymbols.language
+            height: Looks.control.glyph.tile
             color: Looks.colors.primary
         }
 
@@ -26,7 +26,7 @@ MGlass {
             anchors.verticalCenter: parent.verticalCenter
             visible: root.code.length > 0
             text: root.code
-            font.pixelSize: Looks.font.size.large
+            font.pixelSize: Looks.font.style.title3.size
             emphasized: true
             color: Looks.colors.primary
         }

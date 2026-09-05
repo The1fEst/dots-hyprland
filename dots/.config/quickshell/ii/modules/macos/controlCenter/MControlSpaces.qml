@@ -29,7 +29,7 @@ MGlass {
         visible: root.compact
         anchors.centerIn: parent
         text: workspaces.activeWorkspace
-        font.pixelSize: Looks.font.size.title
+        textStyle: Looks.font.style.title2
         emphasized: true
         color: Looks.colors.primary
     }

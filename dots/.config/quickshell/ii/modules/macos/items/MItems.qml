@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import qs.services
+import qs.modules.macos.looks
 
 Singleton {
     id: root
@@ -11,137 +12,137 @@ Singleton {
         {
             id: "spaces",
             name: Translation.tr("Spaces"),
-            icon: "grid_view",
+            symbol: MSymbols.spaces,
             defaultSize: "large",
             large: [4, 1]
         },
         {
             id: "keyboardLayout",
             name: Translation.tr("Keyboard Layout"),
-            icon: "language",
+            symbol: MSymbols.language,
             defaultSize: "normal"
         },
         {
             id: "wifi",
             name: Translation.tr("Wi-Fi"),
-            icon: "wifi",
+            symbol: MSymbols.wifi,
             defaultSize: "normal"
         },
         {
             id: "wired",
             name: Translation.tr("Ethernet"),
-            icon: "lan",
+            symbol: MSymbols.wired,
             defaultSize: "normal"
         },
         {
             id: "bluetooth",
             name: Translation.tr("Bluetooth"),
-            icon: "bluetooth",
+            symbol: MSymbols.bluetooth,
             defaultSize: "normal"
         },
         {
             id: "media",
             name: Translation.tr("Now Playing"),
-            icon: "music_note",
+            symbol: MSymbols.music,
             defaultSize: "large",
             large: [2, 2]
         },
         {
             id: "volume",
             name: Translation.tr("Sound"),
-            icon: "volume_up",
+            symbol: MSymbols.volume,
             defaultSize: "large",
             large: [4, 1]
         },
         {
             id: "brightness",
             name: Translation.tr("Display"),
-            icon: "brightness_high",
+            symbol: MSymbols.brightness,
             defaultSize: "large",
             large: [4, 1]
         },
         {
             id: "darkMode",
             name: Translation.tr("Dark Mode"),
-            icon: "contrast",
+            symbol: MSymbols.darkMode,
             defaultSize: "small"
         },
         {
             id: "nightLight",
             name: Translation.tr("Night Light"),
-            icon: "bedtime",
+            symbol: MSymbols.nightLight,
             defaultSize: "small"
         },
         {
             id: "mic",
             name: Translation.tr("Microphone"),
-            icon: "mic",
+            symbol: MSymbols.microphone,
             defaultSize: "small"
         },
         {
             id: "screenSnip",
             name: Translation.tr("Screen snip"),
-            icon: "screenshot_region",
+            symbol: MSymbols.screenSnip,
             defaultSize: "small"
         },
         {
             id: "colorPicker",
             name: Translation.tr("Color picker"),
-            icon: "colorize",
+            symbol: MSymbols.colourPicker,
             defaultSize: "small"
         },
         {
             id: "idleInhibitor",
             name: Translation.tr("Keep awake"),
-            icon: "coffee",
+            symbol: MSymbols.idleInhibitor,
             defaultSize: "small"
         },
         {
             id: "wireGuard",
             name: Translation.tr("WireGuard"),
-            icon: "vpn_key",
+            symbol: MSymbols.vpn,
             defaultSize: "small"
         },
         {
             id: "cloudflareWarp",
             name: Translation.tr("Cloudflare WARP"),
-            icon: "cloud_lock",
+            symbol: MSymbols.secureTunnel,
             defaultSize: "small"
         },
         {
             id: "easyEffects",
             name: Translation.tr("EasyEffects"),
-            icon: "graphic_eq",
+            symbol: MSymbols.audioEffects,
             defaultSize: "small"
         },
         {
             id: "powerProfile",
             name: Translation.tr("Power Profile"),
-            icon: "airwave",
+            symbol: MSymbols.powerBalanced,
             defaultSize: "small"
         },
         {
             id: "notifications",
             name: Translation.tr("Notifications"),
-            icon: "notifications_active",
+            symbol: MSymbols.notifications,
             defaultSize: "small"
         },
         {
             id: "onScreenKeyboard",
             name: Translation.tr("Virtual Keyboard"),
-            icon: "keyboard",
+            symbol: MSymbols.keyboard,
             defaultSize: "small"
         },
         {
             id: "battery",
             name: Translation.tr("Battery"),
-            icon: "battery_full",
+            symbol: MSymbols.battery,
             defaultSize: "normal"
         },
         {
             id: "tray",
             name: Translation.tr("Tray"),
-            icon: "widgets",
+            symbol: MSymbols.tray,
             defaultSize: "large",
             large: [4, 1]
         }

@@ -42,7 +42,7 @@ Row {
             MText {
                 anchors.verticalCenter: parent.verticalCenter
                 text: workspaceItem.index + 1
-                font.pixelSize: Looks.font.size.small
+                font.pixelSize: Looks.font.style.subheadline.size
                 color: workspaceItem.active ? Looks.colors.primary : workspaces.occupied[workspaceItem.index] ? Looks.colors.secondary : Looks.colors.tertiary
             }
         }

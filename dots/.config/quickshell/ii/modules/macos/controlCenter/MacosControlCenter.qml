@@ -347,30 +347,14 @@ PanelWindow {
                     anchors.horizontalCenter: parent.horizontalCenter
                     backdrop: backdrop
                     radius: height / 2
-                    implicitWidth: pillLabel.implicitWidth + 45
+                    implicitWidth: pillLabel.implicitWidth + 30
                     implicitHeight: 28
-
-                    MaterialSymbol {
-                        id: pillIcon
-                        anchors {
-                            left: parent.left
-                            leftMargin: 12
-                            verticalCenter: parent.verticalCenter
-                        }
-                        text: root.editMode ? "check" : "edit"
-                        iconSize: 15
-                        color: Looks.colors.secondary
-                    }
 
                     MText {
                         id: pillLabel
-                        anchors {
-                            left: pillIcon.right
-                            leftMargin: 6
-                            verticalCenter: parent.verticalCenter
-                        }
+                        anchors.centerIn: parent
                         text: root.editMode ? Translation.tr("Done") : Translation.tr("Edit Widgets")
-                        font.pixelSize: Looks.font.size.small
+                        font.pixelSize: Looks.font.style.subheadline.size
                         color: Looks.colors.secondary
                     }
 

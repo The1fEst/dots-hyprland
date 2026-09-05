@@ -39,11 +39,11 @@ MGlass {
             visible: status === Image.Ready
         }
 
-        MaterialSymbol {
+        MSymbol {
             anchors.centerIn: parent
             visible: !root.player
-            text: "music_note"
-            iconSize: 20
+            symbol: MSymbols.music
+            height: Looks.control.glyph.tileWide
             color: Looks.colors.secondary
         }
     }
@@ -61,7 +61,7 @@ MGlass {
             text: root.player?.trackTitle ?? "Not Playing"
             emphasized: true
             elide: Text.ElideRight
-            font.pixelSize: Looks.font.size.normal
+            font.pixelSize: Looks.font.style.body.size
             color: Looks.colors.primary
         }
 
@@ -69,7 +69,7 @@ MGlass {
             width: parent.width
             text: root.player?.trackArtist ?? ""
             elide: Text.ElideRight
-            font.pixelSize: Looks.font.size.normal
+            font.pixelSize: Looks.font.style.body.size
             color: Looks.colors.secondary
         }
     }
@@ -83,37 +83,38 @@ MGlass {
         }
         spacing: 16
 
-        component Control: MaterialSymbol {
-            iconSize: 22
-            color: enabled ? Looks.colors.primary : Looks.colors.tertiary
+        component Control: MSymbol {
+            width: Looks.control.glyph.tile
+            height: Looks.control.glyph.tile
+            color: usable ? Looks.colors.primary : Looks.colors.tertiary
 
-            property bool enabled: true
+            property bool usable: true
             signal activated
 
             MouseArea {
                 anchors.fill: parent
                 anchors.margins: -6
-                enabled: parent.enabled
-                cursorShape: Qt.PointingHandCursor
+                enabled: parent.usable
+                cursorShape: parent.usable ? Qt.PointingHandCursor : Qt.ArrowCursor
                 onClicked: parent.activated()
             }
         }
 
         Control {
-            text: "skip_previous"
-            enabled: root.player?.canGoPrevious ?? false
+            symbol: MSymbols.previous
+            usable: root.player?.canGoPrevious ?? false
             onActivated: root.player?.previous()
         }
 
         Control {
-            text: root.player?.isPlaying ? "pause" : "play_arrow"
-            enabled: root.player?.canTogglePlaying ?? false
+            symbol: root.player?.isPlaying ? MSymbols.pause : MSymbols.play
+            usable: root.player?.canTogglePlaying ?? false
             onActivated: root.player?.togglePlaying()
         }
 
         Control {
-            text: "skip_next"
-            enabled: root.player?.canGoNext ?? false
+            symbol: MSymbols.next
+            usable: root.player?.canGoNext ?? false
             onActivated: root.player?.next()
         }
     }

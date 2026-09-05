@@ -15,7 +15,7 @@ Item {
 
     default property alias content: contentItem.data
 
-    implicitWidth: Math.max(minWidth, contentItem.implicitWidth + horizontalPadding * 2)
+    implicitWidth: Math.round(Math.max(minWidth, contentItem.implicitWidth + horizontalPadding * 2))
     implicitHeight: Looks.sizes.menuBarHeight
     visible: root.shown
 

@@ -11,7 +11,7 @@ MGlass {
 
     readonly property bool wide: root.width >= root.height * 1.6
 
-    MaterialSymbol {
+    MSymbol {
         id: icon
         anchors {
             left: root.wide ? parent.left : undefined
@@ -19,8 +19,9 @@ MGlass {
             horizontalCenter: root.wide ? undefined : parent.horizontalCenter
             verticalCenter: parent.verticalCenter
         }
-        text: root.info?.icon ?? ""
-        iconSize: 22
+        symbol: root.info?.symbol ?? ""
+        width: Looks.control.glyph.tile
+        height: Looks.control.glyph.tile
         color: Looks.colors.secondary
     }
 

@@ -8,7 +8,7 @@ Rectangle {
 
     property int controlHeight: Looks.control.regular
     property string symbol: ""
-    property real symbolSize: root.controlHeight * 0.5
+    property real symbolBox: root.controlHeight * 0.5
 
     signal clicked
 
@@ -21,7 +21,8 @@ Rectangle {
     MSymbol {
         anchors.centerIn: parent
         symbol: root.symbol
-        symbolSize: root.symbolSize
+        width: root.symbolBox
+        height: root.symbolBox
         color: Looks.colors.primary
     }
 

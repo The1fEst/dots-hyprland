@@ -119,7 +119,7 @@ Item {
             id: tokenLabel
             anchors.centerIn: parent
             text: root.modeLabel(root.mode)
-            font.pixelSize: Looks.font.size.normal
+            font.pixelSize: Looks.font.style.body.size
             emphasized: true
             color: "#ffffff"
         }

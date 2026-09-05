@@ -147,7 +147,7 @@ Item {
                 x: root.textInset
                 width: parent.width - root.textInset * 2
                 text: PolkitService.cleanMessage
-                font.pixelSize: Looks.font.size.large
+                font.pixelSize: Looks.font.style.title3.size
                 emphasized: true
                 color: Looks.colors.primary
                 wrapMode: Text.Wrap
@@ -164,7 +164,7 @@ Item {
                 x: root.textInset
                 width: parent.width - root.textInset * 2
                 text: Translation.tr("Enter your password to continue.")
-                font.pixelSize: Looks.font.size.medium
+                font.pixelSize: Looks.font.style.body.size
                 color: Looks.colors.primary
                 wrapMode: Text.Wrap
                 lineHeight: 20
@@ -192,7 +192,7 @@ Item {
                     }
                     verticalAlignment: Text.AlignVCenter
                     text: Quickshell.env("USER")
-                    font.pixelSize: Looks.font.size.large
+                    font.pixelSize: Looks.font.style.title3.size
                     color: Looks.colors.primary
                 }
             }
@@ -224,7 +224,7 @@ Item {
                     echoMode: root.hideResponse ? TextInput.Password : TextInput.Normal
                     passwordCharacter: "•"
                     font.family: Looks.font.text
-                    font.pixelSize: Looks.font.size.large
+                    font.pixelSize: Looks.font.style.title3.size
                     color: Looks.colors.primary
                     selectionColor: Looks.accent
                     selectedTextColor: "#ffffff"
@@ -242,7 +242,7 @@ Item {
                         verticalAlignment: Text.AlignVCenter
                         visible: input.text.length === 0
                         text: PolkitService.cleanPrompt
-                        font.pixelSize: Looks.font.size.large
+                        font.pixelSize: Looks.font.style.title3.size
                         color: Looks.colors.secondary
                     }
                 }
@@ -292,7 +292,7 @@ Item {
         MText {
             anchors.centerIn: parent
             text: button.label
-            font.pixelSize: Looks.font.size.large
+            font.pixelSize: Looks.font.style.title3.size
             emphasized: true
             color: button.primary ? "#ffffff" : Looks.colors.primary
         }

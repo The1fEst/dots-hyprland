@@ -118,7 +118,7 @@ MGlass {
             top: textColumn.top
         }
         text: root.stamp
-        font.pixelSize: Looks.font.size.small
+        textStyle: Looks.font.style.subheadline
         color: Looks.colors.secondary
         opacity: root.hovered ? 0 : 1
 
@@ -145,8 +145,7 @@ MGlass {
         MText {
             width: parent.width
             text: root.notif.summary.length > 0 ? root.notif.summary : root.notif.appName
-            font.pixelSize: Looks.font.size.medium
-            emphasized: true
+            textStyle: Looks.font.style.headline
             color: Looks.colors.primary
             elide: Text.ElideRight
         }
@@ -154,7 +153,6 @@ MGlass {
         MText {
             width: parent.width
             text: root.notif.body
-            font.pixelSize: Looks.font.size.medium
             color: Looks.colors.primary
             wrapMode: Text.Wrap
             maximumLineCount: root.maximumBodyLines
@@ -212,7 +210,7 @@ MGlass {
                 verticalCenter: parent.verticalCenter
             }
             font.family: Looks.font.text
-            font.pixelSize: Looks.font.size.medium
+            font.pixelSize: Looks.font.style.body.size
             color: Looks.colors.primary
             selectByMouse: true
             clip: true
@@ -227,7 +225,6 @@ MGlass {
                 verticalAlignment: Text.AlignVCenter
                 visible: replyInput.text.length === 0
                 text: root.notif.inlineReplyPlaceholder.length > 0 ? root.notif.inlineReplyPlaceholder : "Reply"
-                font.pixelSize: Looks.font.size.medium
                 color: Looks.colors.tertiary
             }
         }
@@ -245,12 +242,10 @@ MGlass {
             color: replyInput.text.length > 0 ? Looks.accent : Looks.colors.quaternary
             antialiasing: true
 
-            MaterialSymbol {
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: "arrow_upward"
-                iconSize: 15
+            MSymbol {
+                anchors.centerIn: parent
+                symbol: MSymbols.send
+                height: Looks.control.glyph.chevron
                 color: replyInput.text.length > 0 ? "#ffffff" : Looks.colors.tertiary
             }
 
@@ -285,12 +280,10 @@ MGlass {
             }
         }
 
-        MaterialSymbol {
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            text: "close"
-            iconSize: 13
+        MSymbol {
+            anchors.centerIn: parent
+            symbol: MSymbols.close
+            height: Looks.control.glyph.dismiss
             color: Looks.colors.primary
         }
 

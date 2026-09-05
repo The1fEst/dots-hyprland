@@ -60,14 +60,14 @@ MGlass {
                 radius: 8
                 color: rowArea.containsMouse ? Looks.colors.hover : "transparent"
 
-                MaterialSymbol {
+                MSymbol {
                     anchors {
                         left: parent.left
                         leftMargin: 8
                         verticalCenter: parent.verticalCenter
                     }
-                    text: "check"
-                    iconSize: 15
+                    symbol: MSymbols.checkmark
+                    height: Looks.control.glyph.tick
                     color: Looks.accent
                     opacity: root.current === row.modelData ? 1 : 0
                 }

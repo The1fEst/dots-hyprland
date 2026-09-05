@@ -181,7 +181,7 @@ Column {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: deviceRow.device.paired
                 symbol: "info.circle"
-                symbolSize: 17
+                height: Looks.control.glyph.rowTrailing
                 color: Looks.colors.secondary
 
                 MouseArea {

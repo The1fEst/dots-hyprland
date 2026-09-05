@@ -71,21 +71,15 @@ Item {
         badgeRadius: Looks.settings.formRowIconRadius
     }
 
-    Item {
+    MSymbol {
         id: glyphSlot
         x: root.inset
         y: Math.round((root.height - height) / 2)
         visible: root.glyph.length > 0
+        symbol: root.glyph
         width: Looks.settings.formRowGlyphSlot
         height: root.glyphSize
-
-        MSymbol {
-            anchors.centerIn: parent
-            symbol: root.glyph
-            fitWidth: parent.width
-            fitHeight: root.glyphSize
-            color: Looks.colors.primary
-        }
+        color: Looks.colors.primary
     }
 
     MText {
@@ -140,7 +134,7 @@ Item {
                     anchors.centerIn: parent
                     visible: root.selected
                     symbol: "checkmark"
-                    symbolSize: 11
+                    height: Looks.control.glyph.tick
                     color: Looks.colors.primary
                 }
             }
@@ -210,7 +204,7 @@ Item {
         y: root.headY(height)
         visible: root.chevron
         symbol: "chevron.right"
-        symbolSize: 12
+        height: Looks.control.glyph.chevron
         color: Looks.colors.tertiary
     }
 

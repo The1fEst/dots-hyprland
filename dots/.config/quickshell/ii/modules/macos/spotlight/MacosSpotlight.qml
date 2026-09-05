@@ -234,7 +234,7 @@ Scope {
                 visible: win.showResults && win.entries.length === 0
                 horizontalAlignment: Text.AlignHCenter
                 text: Translation.tr("No Results")
-                font.pixelSize: Looks.font.size.large
+                font.pixelSize: Looks.font.style.title3.size
                 color: Looks.colors.secondary
             }
         }

@@ -53,7 +53,7 @@ Item {
                         verticalCenter: parent.verticalCenter
                     }
                     symbol: "magnifyingglass"
-                    symbolSize: 12.5
+                    height: 12.5
                     color: Looks.colors.secondary
                 }
 
@@ -112,7 +112,7 @@ Item {
                         anchors.centerIn: parent
                         visible: avatarImage.status !== Image.Ready
                         symbol: "person"
-                        symbolSize: 19
+                        height: Looks.control.glyph.avatar
                         color: Looks.colors.secondary
                     }
                 }
@@ -308,7 +308,7 @@ Item {
                         MSymbol {
                             anchors.centerIn: parent
                             symbol: navButton.modelData.icon
-                            symbolSize: Looks.control.toolbarGlyphSizeLarge
+                            height: Looks.control.toolbarGlyphSizeLarge
                             color: navButton.available ? Looks.colors.primary : Looks.colors.tertiary
                         }
 

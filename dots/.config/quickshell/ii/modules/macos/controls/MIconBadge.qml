@@ -58,8 +58,8 @@ Item {
     MSymbol {
         anchors.centerIn: parent
         symbol: root.symbol
-        fitWidth: root.symbolBox
-        fitHeight: root.symbolBox
+        width: root.symbolBox
+        height: root.symbolBox
         color: "#ffffff"
     }
 }

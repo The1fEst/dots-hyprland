@@ -98,7 +98,7 @@ Item {
             verticalCenter: parent.verticalCenter
         }
         text: root.isImage ? (root.imageSize ? `${root.imageSize[1]} × ${root.imageSize[2]} image` : "Image") : (root.entry?.name ?? "")
-        font.pixelSize: Looks.font.size.medium
+        font.pixelSize: Looks.font.style.body.size
         font.family: !root.isImage && root.entry?.fontType === LauncherSearchResult.FontType.Monospace ? Looks.font.mono : Looks.font.text
         color: root.foreground
         elide: Text.ElideRight
@@ -113,7 +113,7 @@ Item {
         }
         visible: root.selected && text.length > 0
         text: root.entry?.verb ?? ""
-        font.pixelSize: Looks.font.size.small
+        font.pixelSize: Looks.font.style.subheadline.size
         color: "#b3ffffff"
     }
 

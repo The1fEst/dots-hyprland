@@ -14,10 +14,11 @@ MGlass {
         anchors.centerIn: parent
         spacing: 8
 
-        MaterialSymbol {
+        MSymbol {
             anchors.verticalCenter: parent.verticalCenter
-            text: Battery.available ? (Battery.isCharging ? "battery_charging_full" : "battery_full") : "battery_unknown"
-            iconSize: 24
+            symbol: Battery.available ? (Battery.isCharging ? MSymbols.batteryCharging : MSymbols.battery) : MSymbols.batteryUnknown
+            width: 24
+            height: Looks.control.glyph.tileWide
             color: root.accent
         }
 
@@ -25,7 +26,7 @@ MGlass {
             anchors.verticalCenter: parent.verticalCenter
             visible: Battery.available
             text: `${Math.round(Battery.percentage * 100)}%`
-            font.pixelSize: Looks.font.size.large
+            font.pixelSize: Looks.font.style.title3.size
             emphasized: true
             color: root.accent
         }

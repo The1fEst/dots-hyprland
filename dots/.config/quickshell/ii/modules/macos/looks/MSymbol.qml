@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell
 import qs.modules.common.widgets
 
 Item {
@@ -9,39 +8,33 @@ Item {
 
     required property string symbol
 
-    property real symbolSize: 14
     property color color: Looks.colors.primary
 
-    property real fitWidth: 0
-    property real fitHeight: 0
+    readonly property real pixelRatio: Screen.devicePixelRatio
 
-    readonly property url source: root.symbol.length === 0 ? "" : Quickshell.shellPath(`assets/sfsymbols/${root.symbol}.png`)
+    implicitWidth: Math.round(root.height * MSymbolArt.aspectOf(root.symbol))
 
-    readonly property real aspect: metrics.implicitWidth / Math.max(1, metrics.implicitHeight)
-    readonly property real inkHeight: root.fitWidth > 0 && root.fitHeight > 0 ? Math.min(root.fitHeight, root.fitWidth / Math.max(0.01, root.aspect)) : root.symbolSize
+    readonly property var fit: MSymbolArt.largestFitting(root.symbol, root.width * root.pixelRatio, root.height * root.pixelRatio)
+    readonly property url source: MSymbolArt.artFor(root.symbol, root.width * root.pixelRatio, root.height * root.pixelRatio)
 
-    readonly property size drawnPixels: Qt.size(Math.max(1, Math.round(root.width * Screen.devicePixelRatio)), Math.max(1, Math.round(root.height * Screen.devicePixelRatio)))
+    readonly property real artWidth: (root.fit?.[0] ?? 1) / root.pixelRatio
+    readonly property real artHeight: (root.fit?.[1] ?? 1) / root.pixelRatio
 
-    function roundedToEven(value: real): real {
-        return Math.max(2, Math.round(value / 2) * 2);
-    }
+    readonly property real shrinkToFit: Math.min(1, root.height / root.artHeight, root.width / root.artWidth)
 
-    implicitHeight: root.roundedToEven(root.inkHeight)
-    implicitWidth: root.roundedToEven(root.inkHeight * root.aspect)
-
-    Image {
-        id: metrics
-        width: 0
-        height: 0
-        source: root.source
-        asynchronous: false
+    function centred(box: real, ink: real): real {
+        return Math.floor((box - ink) / 2);
     }
 
     Image {
         id: glyph
-        anchors.fill: parent
+
+        x: root.centred(root.width, width)
+        y: root.centred(root.height, height)
+        width: root.artWidth * root.shrinkToFit
+        height: root.artHeight * root.shrinkToFit
         source: root.source
-        sourceSize: root.drawnPixels
+        sourceSize: Qt.size(root.fit?.[0] ?? 1, root.fit?.[1] ?? 1)
         smooth: true
         visible: false
         layer.enabled: true

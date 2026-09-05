@@ -300,6 +300,22 @@ Singleton {
         readonly property int toolbarGlyphSize: 18
         readonly property int toolbarGlyphSizeLarge: 14
 
+        readonly property QtObject glyph: QtObject {
+            readonly property int dismiss: 10
+            readonly property int tick: 11
+            readonly property int chevron: 12
+            readonly property int pill: 13
+            readonly property int menuBar: 15
+            readonly property int tileWide: 16
+            readonly property int slider: 18
+            readonly property int rowTrailing: 17
+            readonly property int tile: 18
+            readonly property int avatar: 19
+            readonly property int tileCompact: 20
+            readonly property int artwork: 22
+            readonly property int transport: 26
+        }
+
         // Kit "Combo Boxes": the chevron box a pop-up shows beside an inline value. Its
         // radius ladder runs half a point under the control ladder at every size.
         readonly property int chevronBoxWidth: 24
@@ -486,19 +502,6 @@ Singleton {
         readonly property string text: "SF Pro"
         readonly property string mono: "SF Mono"
 
-        readonly property QtObject size: QtObject {
-            readonly property int tiny: 10
-            readonly property int small: 11
-            readonly property int normal: 13
-            readonly property int medium: 14
-            readonly property int large: 15
-            readonly property int title: 20
-        }
-
-        // The macOS built-in text styles. `emphasizedStyleName` is what the bold trait
-        // resolves to for that style, which is not a uniform step up — Headline goes to
-        // Heavy and Caption 1 only to Medium — so picking a face by hand drifts off it.
-        //
         // `tight` and `loose` are the leading traits: tight for a list row where height is
         // scarce, loose for a passage read across many lines. Below three lines, avoid
         // tight even where it fits.
@@ -516,8 +519,8 @@ Singleton {
             readonly property var callout: ({ size: 12, lineHeight: 15, tight: 13, loose: 17, styleName: "Regular", emphasizedStyleName: "Semibold" })
             readonly property var subheadline: ({ size: 11, lineHeight: 14, tight: 12, loose: 16, styleName: "Regular", emphasizedStyleName: "Semibold" })
             readonly property var footnote: ({ size: 10, lineHeight: 13, tight: 11, loose: 15, styleName: "Regular", emphasizedStyleName: "Semibold" })
-            readonly property var caption1: ({ size: 10, lineHeight: 13, tight: 11, loose: 15, styleName: "Regular", emphasizedStyleName: "Medium" })
-            readonly property var caption2: ({ size: 10, lineHeight: 13, tight: 11, loose: 15, styleName: "Medium", emphasizedStyleName: "Semibold" })
+            readonly property var caption1: ({ size: 10, lineHeight: 13, tight: 11, loose: 15, styleName: "Regular", emphasizedStyleName: "Semibold" })
+            readonly property var caption2: ({ size: 10, lineHeight: 13, tight: 11, loose: 15, styleName: "Regular", emphasizedStyleName: "Semibold" })
         }
 
         // Controls label themselves in Medium, not the Regular that body copy uses — every

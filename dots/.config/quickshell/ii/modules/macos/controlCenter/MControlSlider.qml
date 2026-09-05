@@ -30,7 +30,7 @@ MGlass {
         onClicked: Quickshell.execDetached(["bash", "-c", root.settingsCommand])
     }
 
-    MaterialSymbol {
+    MSymbol {
         id: chevron
         visible: root.settingsCommand.length > 0 && !root.compact
         anchors {
@@ -38,8 +38,8 @@ MGlass {
             rightMargin: root.inset
             verticalCenter: caption.verticalCenter
         }
-        text: "chevron_right"
-        iconSize: 18
+        symbol: MSymbols.chevronRight
+        height: Looks.control.glyph.chevron
         color: Looks.colors.secondary
         opacity: hoverArea.containsMouse ? 1 : 0
 
@@ -65,16 +65,16 @@ MGlass {
         color: Looks.colors.primary
     }
 
-    MaterialSymbol {
+    MSymbol {
         id: leading
         x: root.compact ? (root.width - width) / 2 : root.inset
         y: root.compact ? (root.height - height) / 2 : root.height - height - 12
-        text: root.leadingIcon
-        iconSize: root.compact ? 22 : 18
-        color: root.compact ? Looks.colors.primary : Looks.colors.secondary
+        symbol: root.leadingIcon
+        height: root.compact ? Looks.control.glyph.tileCompact : Looks.control.glyph.slider
+        color: Looks.colors.primary
     }
 
-    MaterialSymbol {
+    MSymbol {
         id: trailing
         visible: !root.compact
         anchors {
@@ -83,9 +83,9 @@ MGlass {
             bottom: parent.bottom
             bottomMargin: 12
         }
-        text: root.trailingIcon
-        iconSize: 18
-        color: Looks.colors.secondary
+        symbol: root.trailingIcon
+        height: Looks.control.glyph.slider
+        color: Looks.colors.primary
     }
 
     Item {

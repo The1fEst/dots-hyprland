@@ -77,7 +77,7 @@ Popup {
                     }
                     visible: row.modelData.checked ?? false
                     symbol: "checkmark"
-                    symbolSize: 11
+                    height: Looks.control.glyph.tick
                     color: hover.containsMouse ? "#ffffff" : Looks.colors.primary
                 }
 
