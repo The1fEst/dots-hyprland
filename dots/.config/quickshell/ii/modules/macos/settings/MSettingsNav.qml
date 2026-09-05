@@ -36,6 +36,13 @@ Singleton {
         },
         {
             group: 1,
+            name: qsTr("Appearance"),
+            icon: "circle.lefthalf.filled",
+            tint: "#8e8e93",
+            pane: "MAppearancePane.qml"
+        },
+        {
+            group: 1,
             name: qsTr("Displays"),
             icon: "sun.max.fill",
             tint: "#3e8df7",

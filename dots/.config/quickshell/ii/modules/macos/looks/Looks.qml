@@ -147,6 +147,7 @@ Singleton {
         // every pop-up and pull-down button starts from.
         readonly property color buttonBordered: "#14000000"
         readonly property color buttonBorderedPressed: "#29000000"
+        readonly property color buttonBorderedDisabled: "#0a000000"
 
         readonly property color header: "#eeeef0"
         readonly property color headerRule: "#d8d8da"
@@ -181,6 +182,7 @@ Singleton {
 
         readonly property color buttonBordered: "#12ffffff"
         readonly property color buttonBorderedPressed: "#29ffffff"
+        readonly property color buttonBorderedDisabled: "#0affffff"
         readonly property color segmentSeparator: "#262626"
 
         readonly property color header: "#2c2c2e"
@@ -259,6 +261,7 @@ Singleton {
         // 21pt in — the 5pt gap is measured from the box, not from the control bounds.
         readonly property int boxSize: 16
         readonly property int boxLabelGap: 5
+        readonly property int boxTick: 9
 
         // Kit "Buttons/*/Bordered": the label sits 16 in. A pop-up button pulls its own
         // label to 12 because the trailing chevron cell already carries the balance.
@@ -322,6 +325,18 @@ Singleton {
         readonly property int chevronBoxWidth: 24
         readonly property int chevronBoxHeight: 20
         readonly property real chevronBoxRadius: 4.5
+
+        readonly property var stepperLadder: ({
+            "16": ({ width: 13, separator: 9 }),
+            "20": ({ width: 17, separator: 11 }),
+            "24": ({ width: 20, separator: 14 }),
+            "28": ({ width: 23, separator: 15 }),
+            "36": ({ width: 30, separator: 20 })
+        })
+
+        function stepperMetrics(height: int): var {
+            return stepperLadder[String(height)] ?? stepperLadder["24"];
+        }
     }
 
     // Every rounded control in the kit lands on height/4 — the text field focus rings and

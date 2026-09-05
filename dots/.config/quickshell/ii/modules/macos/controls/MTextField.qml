@@ -10,6 +10,8 @@ FocusScope {
 
     property alias text: input.text
     property alias echoMode: input.echoMode
+    property alias validator: input.validator
+    property alias horizontalAlignment: input.horizontalAlignment
     property string placeholder: ""
     property real fieldWidth: 180
 

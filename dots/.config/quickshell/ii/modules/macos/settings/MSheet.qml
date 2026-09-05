@@ -14,6 +14,8 @@ Popup {
     property string cancelLabel: qsTr("Cancel")
     property bool confirmEnabled: true
 
+    property Component body: null
+
     default property alias rows: card.rows
 
     signal confirmed
@@ -37,7 +39,14 @@ Popup {
 
         MSettingsGroup {
             id: card
+            visible: root.body === null
             width: parent.width
+        }
+
+        Loader {
+            width: parent.width
+            active: root.body !== null
+            sourceComponent: root.body
         }
 
         Item {
