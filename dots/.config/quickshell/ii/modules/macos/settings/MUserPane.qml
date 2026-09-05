@@ -11,11 +11,16 @@ import qs.modules.macos.looks
 Column {
     id: root
 
+    readonly property int avatarSize: 110
+    readonly property real avatarGlyphRatio: 0.55
+    readonly property int nameGap: 14
+    readonly property int headerHeight: 180
+
     spacing: Looks.settings.formGap
 
     Item {
         width: parent.width
-        height: Looks.settings.accountHeaderHeight
+        height: root.headerHeight
 
         ClippingRectangle {
             id: avatar
@@ -23,7 +28,7 @@ Column {
                 horizontalCenter: parent.horizontalCenter
                 top: parent.top
             }
-            width: Looks.settings.accountAvatarSize
+            width: root.avatarSize
             height: width
             radius: width / 2
             color: Looks.colors.quaternary
@@ -41,7 +46,7 @@ Column {
                 anchors.centerIn: parent
                 visible: portrait.status !== Image.Ready
                 symbol: "person.fill"
-                height: parent.height * Looks.settings.accountGlyphRatio
+                height: parent.height * root.avatarGlyphRatio
                 color: Looks.colors.secondary
             }
         }
@@ -51,7 +56,7 @@ Column {
             anchors {
                 horizontalCenter: parent.horizontalCenter
                 top: avatar.bottom
-                topMargin: Looks.settings.accountNameGap
+                topMargin: root.nameGap
             }
             text: MAccount.displayName
             textStyle: Looks.font.style.title3

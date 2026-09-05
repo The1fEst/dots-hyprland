@@ -224,7 +224,7 @@ Item {
                 const context = getContext("2d");
                 context.reset();
 
-                const tail = Looks.settings.displayThumbTail;
+                const tail = page.item?.notchTail ?? 0;
                 const centre = band.notchCentre;
                 const edge = height - 0.5;
 

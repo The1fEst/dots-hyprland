@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell.Widgets
 import qs.modules.macos.controls
 import qs.modules.macos.looks
 
@@ -39,7 +40,7 @@ Column {
         }
     }
 
-    Rectangle {
+    ClippingRectangle {
         width: parent.width
         implicitHeight: content.implicitHeight
         radius: Looks.settings.formRadius

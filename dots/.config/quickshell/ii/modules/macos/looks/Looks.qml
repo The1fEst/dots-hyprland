@@ -308,6 +308,7 @@ Singleton {
             readonly property int menuBar: 15
             readonly property int tileWide: 16
             readonly property int slider: 18
+            readonly property int deviceRow: 14
             readonly property int rowTrailing: 17
             readonly property int tile: 18
             readonly property int avatar: 19
@@ -343,7 +344,6 @@ Singleton {
         readonly property int sidebarRowInset: 9
         readonly property int sidebarIconSlot: 20
         readonly property int sidebarIconRadius: 6
-        readonly property real badgeGlyphRatio: 0.7
         readonly property int sidebarIconGap: 8
 
         readonly property int sidebarSelectionRadius: 8
@@ -399,23 +399,7 @@ Singleton {
         readonly property int sheetFooterHeight: 63
         readonly property int sheetButtonWidth: 64
 
-        readonly property int displayThumbWidth: 116
-        readonly property int displayPickerSpacing: 24
-        readonly property int displayPickerLabelGap: 8
-        readonly property int displayPickerGap: 22
-        readonly property int displayListRowHeight: 24
-        readonly property int displayListInset: 20
-        readonly property int displayThumbTail: 9
-        readonly property int displayThumbBezel: 3
-        readonly property int displayHeaderHeight: 158
-        readonly property int displayHeaderTopGap: 51
 
-        readonly property int accountAvatarSize: 110
-        readonly property real accountGlyphRatio: 0.55
-        readonly property int accountNameGap: 14
-        readonly property int accountHeaderHeight: 180
-        readonly property int arrangeWidth: 560
-        readonly property int arrangeFieldHeight: 240
     }
 
     // Per-component metrics off the kit's remaining pages. Grouped rather than flattened

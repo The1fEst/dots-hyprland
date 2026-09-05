@@ -37,9 +37,16 @@ Singleton {
         {
             group: 1,
             name: qsTr("Displays"),
-            icon: "sun.max",
+            icon: "sun.max.fill",
             tint: "#3e8df7",
             pane: "MDisplayPane.qml"
+        },
+        {
+            group: 1,
+            name: qsTr("Sound"),
+            icon: "speaker.wave.3.fill",
+            tint: "#f7524a",
+            pane: "MSoundPane.qml"
         }
     ]
 

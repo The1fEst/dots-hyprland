@@ -91,7 +91,7 @@ Item {
 
     MMenu {
         id: menu
-        menuWidth: 170
+        minimumWidth: 170
         entries: root.options.map(option => ({
                     label: option.label,
                     checked: option.value === root.current,

@@ -69,6 +69,8 @@ Item {
         symbol: root.icon
         badgeSize: Looks.settings.formRowIconSize
         badgeRadius: Looks.settings.formRowIconRadius
+        glyphWidth: 18
+        glyphHeight: 16
     }
 
     MSymbol {

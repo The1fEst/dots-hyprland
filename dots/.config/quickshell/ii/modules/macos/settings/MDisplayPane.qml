@@ -189,18 +189,26 @@ Column {
 
     spacing: Looks.settings.formGap
 
-    readonly property int bandHeight: Looks.metrics.titlebar.height + Looks.settings.displayHeaderHeight
+    readonly property int headerHeight: 158
+    readonly property int headerTopGap: 51
+    readonly property int bandHeight: Looks.metrics.titlebar.height + root.headerHeight
     readonly property real notchCentre: header.notchCentre
+    readonly property int notchTail: 9
+
+    readonly property int thumbWidth: 116
+    readonly property int thumbBezel: 3
+    readonly property int pickerSpacing: 24
+    readonly property int pickerLabelGap: 8
 
     Item {
         id: header
 
         readonly property int selectedIndex: Math.max(0, root.monitors.findIndex(m => m.name === root.monitor?.name))
-        readonly property real notchCentre: picker.x + header.selectedIndex * (Looks.settings.displayThumbWidth + Looks.settings.displayPickerSpacing) + Looks.settings.displayThumbWidth / 2
+        readonly property real notchCentre: picker.x + header.selectedIndex * (root.thumbWidth + root.pickerSpacing) + root.thumbWidth / 2
 
         x: -Looks.settings.formInset
         width: parent.width + Looks.settings.formInset * 2
-        height: Looks.settings.displayHeaderHeight - Looks.settings.paneTopGap
+        height: root.headerHeight - Looks.settings.paneTopGap
         y: -Looks.settings.paneTopGap
 
         Row {
@@ -208,9 +216,9 @@ Column {
             anchors {
                 horizontalCenter: parent.horizontalCenter
                 top: parent.top
-                topMargin: Looks.settings.displayHeaderTopGap - Looks.settings.paneTopGap
+                topMargin: root.headerTopGap - Looks.settings.paneTopGap
             }
-            spacing: Looks.settings.displayPickerSpacing
+            spacing: root.pickerSpacing
 
             Repeater {
                 model: root.monitors
@@ -222,12 +230,12 @@ Column {
 
                     readonly property bool current: pick.modelData.name === root.monitor?.name
 
-                    width: Looks.settings.displayThumbWidth
-                    spacing: Looks.settings.displayPickerLabelGap
+                    width: root.thumbWidth
+                    spacing: root.pickerLabelGap
 
                     MDisplayThumb {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        width: Looks.settings.displayThumbWidth
+                        width: root.thumbWidth
                         height: Math.round(width * pick.modelData.height / Math.max(1, pick.modelData.width))
                     }
 
@@ -273,7 +281,7 @@ Column {
         Repeater {
             model: root.shownModes
 
-            MListRow {
+            MTableRow {
                 required property var modelData
                 required property int index
 
@@ -391,52 +399,11 @@ Column {
 
         StyledImage {
             anchors.fill: parent
-            anchors.margins: Looks.settings.displayThumbBezel
+            anchors.margins: root.thumbBezel
             source: root.wallpaper.length > 0 ? "file://" + root.wallpaper : ""
             fillMode: Image.PreserveAspectCrop
             sourceSize: Qt.size(thumb.width * 2, thumb.height * 2)
         }
     }
 
-    component MListRow: Rectangle {
-        id: listRow
-
-        property string label: ""
-        property bool selected: false
-        property bool separator: true
-
-        signal clicked
-
-        implicitWidth: parent?.width ?? 0
-        implicitHeight: Looks.settings.displayListRowHeight
-        color: listRow.selected ? Looks.colors.tertiary : "transparent"
-
-        MText {
-            anchors {
-                left: parent.left
-                leftMargin: Looks.settings.displayListInset
-                verticalCenter: parent.verticalCenter
-            }
-            text: listRow.label
-            color: Looks.colors.primary
-        }
-
-        Rectangle {
-            anchors {
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-                leftMargin: Looks.settings.displayListInset
-            }
-            visible: listRow.separator && !listRow.selected
-            height: 1
-            color: Looks.colors.divider
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            onClicked: listRow.clicked()
-        }
-    }
 }

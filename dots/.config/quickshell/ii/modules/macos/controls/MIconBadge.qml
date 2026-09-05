@@ -11,7 +11,8 @@ Item {
     property real badgeSize: 20
     property real badgeRadius: 5
 
-    property real symbolBox: root.badgeSize * Looks.settings.badgeGlyphRatio
+    property real glyphWidth: Math.round(root.badgeSize * 0.75)
+    property real glyphHeight: Math.round(root.badgeSize * 0.68)
 
     implicitWidth: root.badgeSize
     implicitHeight: root.badgeSize
@@ -56,10 +57,11 @@ Item {
     }
 
     MSymbol {
-        anchors.centerIn: parent
+        x: Math.round((root.width - width) / 2)
+        y: Math.round((root.height - height) / 2)
         symbol: root.symbol
-        width: root.symbolBox
-        height: root.symbolBox
+        width: root.glyphWidth
+        height: root.glyphHeight
         color: "#ffffff"
     }
 }

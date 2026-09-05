@@ -31,6 +31,8 @@ Rectangle {
         symbol: root.icon
         badgeSize: Looks.settings.sidebarIconSlot
         badgeRadius: Looks.settings.sidebarIconRadius
+        glyphWidth: 16
+        glyphHeight: 14
     }
 
     MText {

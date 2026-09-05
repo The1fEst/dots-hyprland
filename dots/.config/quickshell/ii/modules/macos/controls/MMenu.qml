@@ -11,7 +11,23 @@ Popup {
 
     // Each entry is { label, checked?, separator?, run? }.
     property list<var> entries: []
-    property real menuWidth: 200
+
+    property real minimumWidth: 200
+    property real maximumWidth: 420
+
+    readonly property real labelInset: 24 + 8
+    readonly property real labelsWidth: {
+        let widest = 0;
+        for (const entry of root.entries)
+            widest = Math.max(widest, measure.advanceWidth(entry.label ?? ""));
+        return widest;
+    }
+
+    FontMetrics {
+        id: measure
+        font.family: Looks.font.text
+        font.pixelSize: Looks.font.style.body.size
+    }
 
     signal activated(var entry)
 
@@ -19,7 +35,7 @@ Popup {
     rightPadding: Looks.metrics.menu.highlightInset
     topPadding: Looks.metrics.menu.padding
     bottomPadding: Looks.metrics.menu.padding
-    width: root.menuWidth
+    width: Math.min(root.maximumWidth, Math.max(root.minimumWidth, root.labelsWidth + root.labelInset + root.leftPadding + root.rightPadding))
     modal: true
     dim: false
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside

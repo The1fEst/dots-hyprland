@@ -36,7 +36,7 @@ Column {
 
         readonly property bool autoJoin: Network.wifiAutoconnect[root.menuTarget] ?? true
 
-        menuWidth: 190
+        minimumWidth: 190
         entries: [
             {
                 label: qsTr("Auto-Join"),

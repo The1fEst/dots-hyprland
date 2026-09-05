@@ -24,6 +24,7 @@ Popup {
     readonly property real originY: (field.height - root.spanHeight * root.zoom) / 2
 
     readonly property int snapDistance: 10
+    readonly property int fieldHeight: 240
 
     function snap(value: real, edges: list<real>, reach: real): real {
         let best = value;
@@ -38,7 +39,7 @@ Popup {
         return best;
     }
 
-    width: Looks.settings.arrangeWidth
+    width: 560
     padding: Looks.settings.sheetPadding
     modal: true
     dim: true
@@ -71,7 +72,7 @@ Popup {
 
         Item {
             width: parent.width
-            height: Looks.settings.arrangeFieldHeight
+            height: root.fieldHeight
 
             Rectangle {
                 id: field
