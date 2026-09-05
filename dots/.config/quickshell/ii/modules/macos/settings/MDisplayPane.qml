@@ -165,7 +165,7 @@ Column {
         const keyword = `${monitor.name},${mode},${position},${scale},transform,${transform},bitdepth,${bitdepth},cm,${cm}`;
 
         applyProc.exec(["hyprctl", "keyword", "monitor", keyword]);
-        persistProc.exec(["python3", Quickshell.shellPath("scripts/system/hypr-monitor.py"), Quickshell.env("HOME") + "/.config/hypr/monitors.lua", monitor.name].concat(settings));
+        persistProc.exec(["python3", Quickshell.shellPath("scripts/system/hypr-monitor.py"), Quickshell.env("HOME") + "/.config/hypr/settings.lua", monitor.name].concat(settings));
     }
 
     function apply(keys: var): void {

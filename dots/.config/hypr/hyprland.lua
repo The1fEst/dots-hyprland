@@ -18,6 +18,12 @@ require("hyprland.rules")
 require("hyprland.colors")
 require("hyprland.keybinds")
 
+-- What the settings app writes, between the defaults it overrides and the custom
+-- configurations that override it --
+if is_file_exists(HOME .. "/.config/hypr/settings.lua") then
+    require("settings")
+end
+
 -- Custom configurations --
 if is_file_exists(HOME .. "/.config/hypr/custom/execs.lua") then
     require("custom.execs")
