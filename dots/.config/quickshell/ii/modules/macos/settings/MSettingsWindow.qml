@@ -82,9 +82,22 @@ Item {
                 }
             }
 
-            Item {
+            Rectangle {
+                id: accountRow
+
+                readonly property int page: MSettingsNav.pages.findIndex(entry => entry.pane === "MUserPane.qml")
+
                 width: parent.width
-                height: Looks.settings.sidebarAvatarSize
+                height: Looks.settings.sidebarAccountRowHeight
+                radius: Looks.settings.sidebarSelectionRadius
+                antialiasing: true
+                color: MSettingsNav.currentIndex === accountRow.page ? Looks.accent : "transparent"
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: MSettingsNav.visit(accountRow.page)
+                }
 
                 ClippingRectangle {
                     id: avatar
@@ -102,8 +115,7 @@ Item {
                     StyledImage {
                         id: avatarImage
                         anchors.fill: parent
-                        source: Directories.userAvatarPathAccountsService
-                        fallbacks: [Directories.userAvatarPathRicersAndWeirdSystems, Directories.userAvatarPathRicersAndWeirdSystems2]
+                        source: MAccount.iconFile.length > 0 ? `file://${MAccount.iconFile}` : ""
                         sourceSize: Qt.size(76, 76)
                         fillMode: Image.PreserveAspectCrop
                     }
@@ -111,7 +123,7 @@ Item {
                     MSymbol {
                         anchors.centerIn: parent
                         visible: avatarImage.status !== Image.Ready
-                        symbol: "person"
+                        symbol: "person.fill"
                         height: Looks.control.glyph.avatar
                         color: Looks.colors.secondary
                     }
@@ -128,17 +140,18 @@ Item {
 
                     MText {
                         width: parent.width
-                        text: SystemInfo.username
+                        text: MAccount.displayName
                         elide: Text.ElideRight
                         emphasized: true
-                        color: Looks.colors.primary
+                        color: MSettingsNav.currentIndex === accountRow.page ? "#ffffff" : Looks.colors.primary
                     }
 
                     MText {
                         width: parent.width
                         text: SystemInfo.distroName
                         elide: Text.ElideRight
-                        color: Looks.colors.secondary
+                        color: MSettingsNav.currentIndex === accountRow.page ? "#ffffff" : Looks.colors.secondary
+                        opacity: MSettingsNav.currentIndex === accountRow.page ? 0.8 : 1
                     }
                 }
             }

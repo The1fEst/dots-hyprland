@@ -356,6 +356,7 @@ Singleton {
         readonly property int sidebarSearchTextGap: 8
         readonly property int sidebarUserGap: 13
         readonly property int sidebarAvatarSize: 38
+        readonly property int sidebarAccountRowHeight: 47
         readonly property int sidebarAvatarGap: 8
         readonly property int sidebarListGap: 17
 
@@ -408,6 +409,11 @@ Singleton {
         readonly property int displayThumbBezel: 3
         readonly property int displayHeaderHeight: 158
         readonly property int displayHeaderTopGap: 51
+
+        readonly property int accountAvatarSize: 110
+        readonly property real accountGlyphRatio: 0.55
+        readonly property int accountNameGap: 14
+        readonly property int accountHeaderHeight: 180
         readonly property int arrangeWidth: 560
         readonly property int arrangeFieldHeight: 240
     }

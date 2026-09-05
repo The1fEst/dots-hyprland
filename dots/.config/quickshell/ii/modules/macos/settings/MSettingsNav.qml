@@ -14,6 +14,14 @@ Singleton {
     readonly property list<var> pages: [
         {
             group: 0,
+            hidden: true,
+            name: qsTr("Account"),
+            icon: "person.fill",
+            tint: "#3e8df7",
+            pane: "MUserPane.qml"
+        },
+        {
+            group: 0,
             name: qsTr("Wi-Fi"),
             icon: "wifi",
             tint: "#3e8df7",
@@ -35,12 +43,12 @@ Singleton {
         }
     ]
 
-    property int currentIndex: 0
+    property int currentIndex: 1
     readonly property var currentPage: root.pages[root.currentIndex] ?? null
 
     // Selecting a page truncates whatever was ahead of it, the way going somewhere new
     // drops the forward history.
-    property list<int> history: [0]
+    property list<int> history: [root.currentIndex]
     property int historyAt: 0
 
     function canStep(delta: int): bool {

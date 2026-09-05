@@ -13,6 +13,8 @@ FocusScope {
     property string placeholder: ""
     property real fieldWidth: 180
 
+    signal committed(string text)
+
     implicitWidth: root.fieldWidth
     implicitHeight: Looks.font.style.body.lineHeight
 
@@ -21,6 +23,7 @@ FocusScope {
         anchors.fill: parent
         focus: true
         clip: true
+        onEditingFinished: root.committed(input.text)
         verticalAlignment: Text.AlignVCenter
         // The value grows back from the trailing edge, which is where the row's other
         // controls sit and where the caret rests before anything is typed.
