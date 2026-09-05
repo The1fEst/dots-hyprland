@@ -2,14 +2,20 @@
 """Set keys on one monitor block in a Hyprland lua monitor config.
 
 Usage: hypr-monitor.py <file> <output> key=value [key=value ...]
+       hypr-monitor.py --read <file>
 
 Only the named keys of the named output are touched. Every other key of that
 block, every other block and the layout of the file are left as they are, which
 is what keeps hand-written settings such as the HDR ones on a monitor intact.
 Values that look numeric are written bare, everything else quoted. An output
 with no block yet gets one appended.
+
+Reading gives back what each block asks for rather than what Hyprland ended up
+with, which is the difference between a colour profile of "auto" and the profile
+auto resolved to.
 """
 
+import json
 import re
 import sys
 
@@ -36,6 +42,20 @@ def output_of(block):
     return match.group(1) if match else None
 
 
+def keys_of(block):
+    pairs = re.findall(r'\n[ \t]*(\w+)[ \t]*=[ \t]*([^,\n]*)', block)
+    return {key: value.strip().strip('"') for key, value in pairs}
+
+
+def read(path):
+    try:
+        with open(path) as handle:
+            text = handle.read()
+    except FileNotFoundError:
+        text = ''
+    print(json.dumps({output_of(m.group(0)): keys_of(m.group(0)) for m in blocks(text) if output_of(m.group(0))}))
+
+
 def set_key(block, key, value):
     pattern = re.compile(r'(\n\s*%s\s*=\s*)([^,\n]*)(,?)' % re.escape(key))
     if pattern.search(block):
@@ -44,6 +64,10 @@ def set_key(block, key, value):
 
 
 def main():
+    if len(sys.argv) == 3 and sys.argv[1] == '--read':
+        read(sys.argv[2])
+        return 0
+
     if len(sys.argv) < 4:
         print(__doc__, file=sys.stderr)
         return 2

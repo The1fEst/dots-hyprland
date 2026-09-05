@@ -135,7 +135,9 @@ Column {
         }
     ]
 
-    readonly property string colorProfile: root.monitor?.colorManagementPreset ?? "srgb"
+    property var persisted: ({})
+
+    readonly property string colorProfile: root.persisted[root.monitor?.name ?? ""]?.cm ?? root.monitor?.colorManagementPreset ?? "srgb"
 
     function setColorProfile(profile: string): void {
         root.apply({
@@ -185,6 +187,17 @@ Column {
 
     Process {
         id: persistProc
+        onExited: readProc.running = true
+    }
+
+    Process {
+        id: readProc
+        running: true
+        command: ["python3", Quickshell.shellPath("scripts/system/hypr-monitor.py"), "--read", Quickshell.env("HOME") + "/.config/hypr/settings.lua"]
+
+        stdout: StdioCollector {
+            onStreamFinished: root.persisted = JSON.parse(this.text.length > 0 ? this.text : "{}")
+        }
     }
 
     spacing: Looks.settings.formGap
