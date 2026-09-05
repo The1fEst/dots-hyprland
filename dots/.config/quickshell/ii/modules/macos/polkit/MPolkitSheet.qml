@@ -6,6 +6,7 @@ import Quickshell.Widgets
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.macos.controls
 import qs.modules.macos.looks
 
 Item {
@@ -13,7 +14,13 @@ Item {
 
     readonly property bool hideResponse: !(PolkitService.flow?.responseVisible ?? false)
     readonly property string appIcon: PolkitService.flow?.iconName ?? ""
-    readonly property real textInset: 10
+    readonly property real contentInset: 16
+    readonly property real textInset: 6
+    readonly property real topInset: 20
+    readonly property real bottomInset: 16
+    readonly property real iconSize: 72
+    readonly property real buttonWidth: 110
+    readonly property real buttonGap: 8
     readonly property color fieldColor: Looks.dark ? "#73000000" : "#d9ffffff"
 
     function submit(): void {
@@ -62,8 +69,8 @@ Item {
         id: sheet
         backdrop: backdrop
         anchors.centerIn: parent
-        width: 320
-        height: column.implicitHeight + 49
+        width: 260
+        height: column.implicitHeight + root.topInset + root.bottomInset
         scale: 0.94
         opacity: 0
         Component.onCompleted: {
@@ -91,16 +98,16 @@ Item {
                 left: parent.left
                 right: parent.right
                 top: parent.top
-                topMargin: 30
-                leftMargin: 19
-                rightMargin: 20
+                topMargin: root.topInset
+                leftMargin: root.contentInset
+                rightMargin: root.contentInset
             }
             spacing: 0
 
             Item {
                 x: root.textInset
-                width: 44
-                height: 44
+                width: root.iconSize
+                height: root.iconSize
 
                 Rectangle {
                     anchors.fill: parent
@@ -108,11 +115,11 @@ Item {
                     color: Looks.colors.primary
                     antialiasing: true
 
-                    MaterialSymbol {
+                    MSymbol {
                         anchors.centerIn: parent
-                        text: "lock"
-                        iconSize: 26
-                        fill: 1
+                        symbol: "lock.fill"
+                        width: 30
+                        height: 40
                         color: Looks.dark ? "#000000" : "#ffffff"
                     }
                 }
@@ -123,15 +130,15 @@ Item {
                         bottom: parent.bottom
                     }
                     visible: root.appIcon.length > 0
-                    width: 22
-                    height: 22
+                    width: 28
+                    height: 28
                     radius: width / 2
                     color: Looks.accent
                     antialiasing: true
 
                     IconImage {
                         anchors.centerIn: parent
-                        implicitSize: 16
+                        implicitSize: 20
                         source: Quickshell.iconPath(root.appIcon, "image-missing")
                         smooth: true
                     }
@@ -253,55 +260,29 @@ Item {
                 height: 24
             }
 
-            SheetButton {
-                width: parent.width
-                label: Translation.tr("Continue")
-                primary: true
-                enabled: PolkitService.interactionAvailable
-                onActivated: root.submit()
-            }
+            Row {
+                spacing: root.buttonGap
 
-            Item {
-                width: 1
-                height: 10
-            }
+                MPushButton {
+                    controlHeight: Looks.control.large
+                    minimumWidth: root.buttonWidth
+                    label: Translation.tr("Cancel")
+                    onClicked: PolkitService.cancel()
+                }
 
-            SheetButton {
-                width: parent.width
-                label: Translation.tr("Cancel")
-                onActivated: PolkitService.cancel()
+                MPushButton {
+                    controlHeight: Looks.control.large
+                    minimumWidth: root.buttonWidth
+                    label: Translation.tr("Continue")
+                    prominent: true
+                    opacity: PolkitService.interactionAvailable ? 1 : 0.4
+                    onClicked: {
+                        if (PolkitService.interactionAvailable)
+                            root.submit();
+                    }
+                }
             }
         }
     }
 
-    component SheetButton: Rectangle {
-        id: button
-
-        property string label: ""
-        property bool primary: false
-        property bool enabled: true
-
-        signal activated
-
-        height: 34
-        radius: height / 2
-        antialiasing: true
-        opacity: button.enabled ? 1 : 0.4
-        color: button.primary ? Looks.accent : Looks.colors.quaternary
-
-        MText {
-            anchors.centerIn: parent
-            text: button.label
-            font.pixelSize: Looks.font.style.title3.size
-            emphasized: true
-            color: button.primary ? "#ffffff" : Looks.colors.primary
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            enabled: button.enabled
-            cursorShape: Qt.PointingHandCursor
-            onClicked: button.activated()
-        }
-    }
 }
