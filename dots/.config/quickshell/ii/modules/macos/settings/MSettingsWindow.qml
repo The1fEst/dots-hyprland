@@ -213,8 +213,8 @@ Item {
             anchors {
                 left: parent.left
                 right: parent.right
-                top: parent.top
             }
+            y: -Math.max(0, content.contentY)
             height: page.item?.bandHeight ?? 0
             visible: band.height > 0
 
@@ -356,6 +356,7 @@ Item {
         }
 
         Flickable {
+            id: content
             anchors {
                 left: parent.left
                 right: parent.right
