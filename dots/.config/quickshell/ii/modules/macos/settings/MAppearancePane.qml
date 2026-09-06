@@ -1,6 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
+import Quickshell.Io
 import qs.modules.common
 import qs.modules.macos.controls
 import qs.modules.macos.looks
@@ -8,7 +10,25 @@ import qs.modules.macos.looks
 Column {
     id: root
 
+    readonly property string accent: Config.options?.appearance.palette.accentColor ?? ""
+
+    readonly property list<color> accents: [Looks.colors.blue, Looks.colors.purple, Looks.colors.pink, Looks.colors.red, Looks.colors.orange, Looks.colors.yellow, Looks.colors.green, Looks.colors.gray]
+
     spacing: Looks.settings.formGap
+
+    function seeds(hex: string): bool {
+        return root.accent.toLowerCase() === hex.toLowerCase();
+    }
+
+    function setAccent(hex: string): void {
+        const generate = ["bash", Quickshell.shellPath("scripts/colors/switchwall.sh")];
+        const fromTheWallpaperInUse = ["--color", "clear", "--noswitch"];
+        accentProc.exec(generate.concat(hex.length > 0 ? ["--color", hex] : fromTheWallpaperInUse));
+    }
+
+    Process {
+        id: accentProc
+    }
 
     function describe(font: var): string {
         if (!font?.family)
@@ -20,6 +40,42 @@ Column {
     MSettingsGroup {
         width: parent.width
         title: qsTr("Theme")
+
+        MSettingsRow {
+            label: qsTr("Color")
+
+            Row {
+                spacing: 4
+
+                Column {
+                    spacing: 4
+
+                    MColorSwatch {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spectrum: true
+                        selected: root.accent.length === 0
+                        onClicked: root.setAccent("")
+                    }
+
+                    MText {
+                        text: qsTr("Multicolor")
+                        textStyle: Looks.font.style.subheadline
+                    }
+                }
+
+                Repeater {
+                    model: root.accents
+
+                    MColorSwatch {
+                        required property color modelData
+
+                        color: modelData
+                        selected: root.seeds(String(modelData))
+                        onClicked: root.setAccent(String(modelData))
+                    }
+                }
+            }
+        }
 
         MSettingsRow {
             label: qsTr("GTK theme")

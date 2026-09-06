@@ -109,10 +109,8 @@ Singleton {
         readonly property color badgeShadow: "#26000000"
     }
 
-    // The system accent, which is one colour across both appearances — `colors.blue` is
-    // the kit's control tint and reads a shade cooler than what a switch or a sidebar
-    // selection actually paints.
-    readonly property color accent: "#3478f6"
+    readonly property color kitControlTint: "#3478f6"
+    readonly property color accent: Config.options?.appearance.palette.accentColor || root.kitControlTint
     readonly property color accentPressed: dark ? Qt.lighter(accent, 1.12) : Qt.darker(accent, 1.12)
 
     readonly property QtObject surfaces: dark ? darkSurfaces : lightSurfaces
