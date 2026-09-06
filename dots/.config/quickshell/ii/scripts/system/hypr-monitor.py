@@ -3,12 +3,14 @@
 
 Usage: hypr-monitor.py <file> <output> key=value [key=value ...]
        hypr-monitor.py --read <file>
+       hypr-monitor.py --icc-profiles
 
 Only the named keys of the named output are touched. Every other key of that
 block, every other block and the layout of the file are left as they are, which
 is what keeps hand-written settings such as the HDR ones on a monitor intact.
-Values that look numeric are written bare, everything else quoted. An output
-with no block yet gets one appended.
+Values that look numeric are written bare, a value already in braces is written
+as the lua table it is, and everything else is quoted. An output with no block
+yet gets one appended.
 
 Reading gives back what each block asks for rather than what Hyprland ended up
 with, which is the difference between a colour profile of "auto" and the profile
@@ -16,8 +18,20 @@ auto resolved to.
 """
 
 import json
+import os
 import re
 import sys
+
+# A monitor rule's reserved area is a lua table, so a value runs to the end of the line
+# unless it is braced.
+VALUE = r'\{[^}]*\}|[^,\n]*'
+
+ICC_DIRECTORIES = [
+    os.path.expanduser('~/.local/share/icc'),
+    os.path.expanduser('~/.color/icc'),
+    '/usr/local/share/color/icc',
+    '/usr/share/color/icc',
+]
 
 
 def is_number(value):
@@ -29,7 +43,17 @@ def is_number(value):
 
 
 def render(value):
+    if value.startswith('{'):
+        return value
     return value if is_number(value) else '"%s"' % value
+
+
+def icc_profiles():
+    found = []
+    for directory in ICC_DIRECTORIES:
+        for root, _, names in os.walk(directory):
+            found += [os.path.join(root, name) for name in names if name.lower().endswith(('.icc', '.icm'))]
+    return sorted(found)
 
 
 def blocks(text):
@@ -43,7 +67,7 @@ def output_of(block):
 
 
 def keys_of(block):
-    pairs = re.findall(r'\n[ \t]*(\w+)[ \t]*=[ \t]*([^,\n]*)', block)
+    pairs = re.findall(r'\n[ \t]*(\w+)[ \t]*=[ \t]*(%s)' % VALUE, block)
     return {key: value.strip().strip('"') for key, value in pairs}
 
 
@@ -57,7 +81,7 @@ def read(path):
 
 
 def set_key(block, key, value):
-    pattern = re.compile(r'(\n\s*%s\s*=\s*)([^,\n]*)(,?)' % re.escape(key))
+    pattern = re.compile(r'(\n\s*%s\s*=\s*)(%s)(,?)' % (re.escape(key), VALUE))
     if pattern.search(block):
         return pattern.sub(lambda m: m.group(1) + render(value) + (m.group(3) or ','), block, count=1)
     return block.replace('\n})', '\n\t%s = %s,\n})' % (key, render(value)), 1)
@@ -66,6 +90,10 @@ def set_key(block, key, value):
 def main():
     if len(sys.argv) == 3 and sys.argv[1] == '--read':
         read(sys.argv[2])
+        return 0
+
+    if len(sys.argv) == 2 and sys.argv[1] == '--icc-profiles':
+        print(json.dumps(icc_profiles()))
         return 0
 
     if len(sys.argv) < 4:

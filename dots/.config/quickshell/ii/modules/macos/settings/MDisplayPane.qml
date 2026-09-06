@@ -118,7 +118,7 @@ Column {
             value: "adobe"
         },
         {
-            label: qsTr("Wide colour"),
+            label: qsTr("Wide color"),
             value: "wide"
         },
         {
@@ -136,8 +136,51 @@ Column {
     ]
 
     property var persisted: ({})
+    property list<string> iccProfiles: []
 
-    readonly property string colorProfile: root.persisted[root.monitor?.name ?? ""]?.cm ?? root.monitor?.colorManagementPreset ?? "srgb"
+    readonly property var ruleDefaults: ({
+        bitdepth: 8,
+        sdr_eotf: "default",
+        sdrbrightness: 1,
+        sdrsaturation: 1,
+        vrr: -1,
+        icc: "",
+        supports_wide_color: 0,
+        supports_hdr: 0,
+        sdr_min_luminance: 0.2,
+        sdr_max_luminance: 80,
+        min_luminance: -1,
+        max_luminance: -1,
+        max_avg_luminance: -1,
+        reserved_area: "0"
+    })
+
+    readonly property var rule: root.persisted[root.monitor?.name ?? ""] ?? ({})
+
+    readonly property string colorProfile: root.rule.cm ?? root.monitor?.colorManagementPreset ?? "srgb"
+
+    function ruleValue(key: string): var {
+        return root.rule[key] ?? root.ruleDefaults[key];
+    }
+
+    function ruleNumber(key: string): real {
+        return Number(root.ruleValue(key));
+    }
+
+    function reservedSide(side: string): int {
+        const area = String(root.ruleValue("reserved_area"));
+        const named = area.match(new RegExp(`${side}\\s*=\\s*(-?\\d+)`));
+        if (named)
+            return parseInt(named[1]);
+        return parseInt(area) || 0;
+    }
+
+    function setReservedSide(side: string, size: int): void {
+        const sides = ["top", "right", "bottom", "left"].map(name => `${name} = ${name === side ? size : root.reservedSide(name)}`);
+        root.apply({
+            reserved_area: `{ ${sides.join(", ")} }`
+        });
+    }
 
     function setColorProfile(profile: string): void {
         root.apply({
@@ -150,24 +193,30 @@ Column {
         return qsTr("%1 Hertz").arg(Math.round(rate));
     }
 
+    function ruleForWhatIsRunning(monitor: var, size: string, rate: real): var {
+        const kept = root.persisted[monitor.name] ?? ({});
+        return {
+            mode: `${size}@${rate.toFixed(2)}`,
+            position: `${monitor.x}x${monitor.y}`,
+            scale: monitor.scale,
+            transform: monitor.transform,
+            bitdepth: kept.bitdepth ?? (monitor.currentFormat.includes("2101010") ? 10 : 8),
+            cm: kept.cm ?? monitor.colorManagementPreset
+        };
+    }
+
     function applyTo(monitor: var, keys: var): void {
         if (!monitor)
             return;
         const size = keys.size ?? `${monitor.width}x${monitor.height}`;
         const rate = keys.rate ?? monitor.refreshRate;
-        const mode = `${size}@${rate.toFixed(2)}`;
-        const position = keys.position ?? `${monitor.x}x${monitor.y}`;
-        const scale = keys.scale ?? monitor.scale;
-        const transform = keys.transform ?? monitor.transform;
 
-        const bitdepth = keys.bitdepth ?? (monitor.currentFormat.includes("2101010") ? 10 : 8);
-        const cm = keys.cm ?? monitor.colorManagementPreset;
+        const settings = Object.assign(root.ruleForWhatIsRunning(monitor, size, rate), keys);
+        delete settings.size;
+        delete settings.rate;
 
-        const settings = [`mode=${mode}`, `position=${position}`, `scale=${scale}`, `transform=${transform}`, `bitdepth=${bitdepth}`, `cm=${cm}`];
-        const keyword = `${monitor.name},${mode},${position},${scale},transform,${transform},bitdepth,${bitdepth},cm,${cm}`;
-
-        applyProc.exec(["hyprctl", "keyword", "monitor", keyword]);
-        persistProc.exec(["python3", Quickshell.shellPath("scripts/system/hypr-monitor.py"), Quickshell.env("HOME") + "/.config/hypr/settings.lua", monitor.name].concat(settings));
+        const pairs = Object.keys(settings).map(key => `${key}=${settings[key]}`);
+        persistProc.exec(["python3", Quickshell.shellPath("scripts/system/hypr-monitor.py"), Quickshell.env("HOME") + "/.config/hypr/settings.lua", monitor.name].concat(pairs));
     }
 
     function apply(keys: var): void {
@@ -181,13 +230,27 @@ Column {
     }
 
     Process {
-        id: applyProc
-        onExited: HyprlandData.updateMonitors()
+        id: reloadProc
+        command: ["hyprctl", "reload"]
+        onExited: {
+            HyprlandData.updateMonitors();
+            readProc.running = true;
+        }
     }
 
     Process {
         id: persistProc
-        onExited: readProc.running = true
+        onExited: reloadProc.running = true
+    }
+
+    Process {
+        id: iccProc
+        running: true
+        command: ["python3", Quickshell.shellPath("scripts/system/hypr-monitor.py"), "--icc-profiles"]
+
+        stdout: StdioCollector {
+            onStreamFinished: root.iccProfiles = JSON.parse(this.text.length > 0 ? this.text : "[]")
+        }
     }
 
     Process {
@@ -288,6 +351,9 @@ Column {
                             label: qsTr("Mirror for %1").arg(other.model || other.name),
                             value: other.name
                         })))
+                onSelected: value => root.apply({
+                    mirror: value === "extend" ? "" : value
+                })
             }
         }
 
@@ -329,18 +395,7 @@ Column {
         width: parent.width
 
         MSettingsRow {
-            label: qsTr("Color profile")
-
-            MPopupButton {
-                current: root.colorProfile
-                options: root.colorProfiles
-                onSelected: value => root.setColorProfile(value)
-            }
-        }
-
-        MSettingsRow {
             label: qsTr("Refresh rate")
-            separator: false
 
             MPopupButton {
                 current: root.rateLabel(root.monitor?.refreshRate ?? 0)
@@ -353,6 +408,57 @@ Column {
                 })
             }
         }
+
+        MSettingsRow {
+            label: qsTr("Variable refresh rate")
+            separator: false
+
+            MPopupButton {
+                current: String(root.ruleNumber("vrr"))
+                options: [
+                    {
+                        label: qsTr("Follow the global setting"),
+                        value: "-1"
+                    },
+                    {
+                        label: qsTr("Off"),
+                        value: "0"
+                    },
+                    {
+                        label: qsTr("On"),
+                        value: "1"
+                    },
+                    {
+                        label: qsTr("Fullscreen only"),
+                        value: "2"
+                    },
+                    {
+                        label: qsTr("Fullscreen games and video"),
+                        value: "3"
+                    }
+                ]
+                onSelected: value => root.apply({
+                    vrr: parseInt(value)
+                })
+            }
+        }
+    }
+
+    MPushButton {
+        anchors.right: parent.right
+        visible: root.monitors.length > 1
+        label: qsTr("Arrange…")
+        onClicked: arrange.open()
+    }
+
+    MDisplayColour {
+        width: parent.width
+        pane: root
+    }
+
+    MDisplayLuminance {
+        width: parent.width
+        pane: root
     }
 
     MSettingsGroup {
@@ -380,6 +486,22 @@ Column {
                     {
                         label: qsTr("270°"),
                         value: "3"
+                    },
+                    {
+                        label: qsTr("Flipped"),
+                        value: "4"
+                    },
+                    {
+                        label: qsTr("Flipped, 90°"),
+                        value: "5"
+                    },
+                    {
+                        label: qsTr("Flipped, 180°"),
+                        value: "6"
+                    },
+                    {
+                        label: qsTr("Flipped, 270°"),
+                        value: "7"
                     }
                 ]
                 onSelected: value => root.apply({
@@ -389,11 +511,41 @@ Column {
         }
     }
 
-    MPushButton {
-        anchors.right: parent.right
-        visible: root.monitors.length > 1
-        label: qsTr("Arrange…")
-        onClicked: arrange.open()
+    MSettingsGroup {
+        width: parent.width
+        title: qsTr("Reserved area")
+
+        Repeater {
+            model: ["top", "right", "bottom", "left"]
+
+            MSettingsRow {
+                id: side
+
+                required property string modelData
+
+                readonly property var names: ({
+                    top: qsTr("Top"),
+                    right: qsTr("Right"),
+                    bottom: qsTr("Bottom"),
+                    left: qsTr("Left")
+                })
+
+                label: side.names[side.modelData]
+
+                MNumberField {
+                    from: 0
+                    to: 2000
+                    fieldWidth: 44
+                    value: root.reservedSide(side.modelData)
+                    onEdited: size => root.setReservedSide(side.modelData, size)
+                }
+            }
+        }
+
+        MSettingsRow {
+            separator: false
+            note: qsTr("Space kept clear of tiled windows along each edge of this display.")
+        }
     }
 
     MArrangeSheet {
