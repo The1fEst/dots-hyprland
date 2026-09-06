@@ -579,6 +579,8 @@ Singleton {
                     property int paddingH: 16
                     property int paddingTop: 16
                     property int bottomMargin: 6
+                    property int magnification: 27
+                    property bool showIndicators: true
                 }
             }
         }

@@ -217,7 +217,7 @@ Singleton {
         readonly property int menuBarItemSpacing: 0
         readonly property var dockSettings: Config.options?.macos.dock ?? null
         readonly property int dockIconSize: dockSettings?.iconSize ?? 57
-        readonly property int dockIconMaxSize: dockIconSize + 27
+        readonly property int dockIconMaxSize: dockIconSize + (dockSettings?.magnification ?? 27)
         readonly property int dockIconSpacing: dockSettings?.iconSpacing ?? 17
         readonly property int dockIconRadius: dockSettings?.iconRadius ?? 13
         readonly property int dockSeparatorWidth: dockIconSpacing

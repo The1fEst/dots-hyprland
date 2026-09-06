@@ -43,6 +43,13 @@ Singleton {
         },
         {
             group: 1,
+            name: qsTr("Desktop & Dock"),
+            icon: "menubar.dock.rectangle",
+            tint: "#3e8df7",
+            pane: "MDesktopDockPane.qml"
+        },
+        {
+            group: 1,
             name: qsTr("Displays"),
             icon: "sun.max.fill",
             tint: "#3e8df7",

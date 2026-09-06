@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import qs.services
+import qs.modules.common
 import qs.modules.macos.looks
 
 Item {
@@ -67,7 +68,7 @@ Item {
     }
 
     Rectangle {
-        visible: !root.isSeparator && root.windowCount > 0
+        visible: !root.isSeparator && root.windowCount > 0 && (Config.options?.macos.dock.showIndicators ?? true)
         anchors.horizontalCenter: parent.horizontalCenter
         y: parent.height + Looks.sizes.dockIndicatorGap
         width: Looks.sizes.dockIndicatorSize
