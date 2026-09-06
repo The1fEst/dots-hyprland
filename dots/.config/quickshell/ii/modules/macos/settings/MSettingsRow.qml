@@ -49,7 +49,7 @@ Item {
     // from the edge than a row trailing a button does.
     property real controlInset: Looks.settings.formRowInset
 
-    readonly property real contentHeight: root.note.length > 0 ? note.height : Math.max(labels.height, badge.visible ? badge.height : 0, glyphSlot.visible ? glyphSlot.height : 0)
+    readonly property real contentHeight: root.note.length > 0 ? note.height : Math.max(labels.height, badge.visible ? badge.height : 0, glyphSlot.visible ? glyphSlot.height : 0, controlSlot.height)
     readonly property real labelsTop: Math.round((root.height - labels.height) / 2)
 
     function headY(control: real): real {
