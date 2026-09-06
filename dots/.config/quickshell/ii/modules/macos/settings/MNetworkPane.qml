@@ -73,7 +73,6 @@ Column {
             iconTint: "#3e8df7"
 
             MSwitch {
-                controlHeight: Looks.control.small
                 checked: Network.wifiEnabled
                 onToggled: on => Network.enableWifi(on)
             }

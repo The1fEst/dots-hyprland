@@ -6,8 +6,9 @@ import qs.modules.macos.looks
 Rectangle {
     id: root
 
-    property int controlHeight: Looks.control.regular
+    property int controlHeight: Looks.control.small
     property bool checked: false
+    property bool available: true
 
     readonly property var metrics: Looks.control.switchMetrics(root.controlHeight)
     readonly property real knobInset: (root.controlHeight - root.metrics.knobHeight) / 2
@@ -18,6 +19,8 @@ Rectangle {
     implicitHeight: root.controlHeight
     radius: height / 2
     antialiasing: true
+    enabled: root.available
+    opacity: root.available ? 1 : 0.4
     color: {
         if (root.checked)
             return press.pressed ? Looks.accentPressed : Looks.accent;

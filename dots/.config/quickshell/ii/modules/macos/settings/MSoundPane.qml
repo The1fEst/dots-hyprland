@@ -105,7 +105,6 @@ Column {
             separator: false
 
             MSwitch {
-                controlHeight: Looks.control.small
                 checked: root.current?.audio.muted ?? false
                 onToggled: on => {
                     if (root.current)

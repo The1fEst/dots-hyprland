@@ -49,7 +49,6 @@ MSheet {
 
         MSwitch {
             id: showPassword
-            controlHeight: Looks.control.small
             onToggled: on => checked = on
         }
     }

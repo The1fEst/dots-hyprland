@@ -76,7 +76,6 @@ Column {
             separator: root.poweredOn
 
             MSwitch {
-                controlHeight: Looks.control.small
                 checked: root.poweredOn
                 onToggled: on => {
                     if (root.adapter)

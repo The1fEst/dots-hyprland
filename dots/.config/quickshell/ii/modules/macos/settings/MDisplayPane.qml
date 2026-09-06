@@ -379,7 +379,6 @@ Column {
             label: qsTr("Show all resolutions")
 
             MSwitch {
-                controlHeight: Looks.control.small
                 checked: root.allResolutions
                 onToggled: on => root.allResolutions = on
             }
