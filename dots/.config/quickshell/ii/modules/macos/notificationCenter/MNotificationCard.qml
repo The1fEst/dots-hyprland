@@ -14,6 +14,16 @@ MGlass {
     required property var notif
     property int maximumBodyLines: 3
 
+    readonly property string themeIconName: root.notif.appIcon ?? ""
+    readonly property string senderOwnIconFile: root.notif.image ?? ""
+    readonly property string guessedFromAppName: Quickshell.iconPath(AppSearch.guessIcon(root.notif.appName), "image-missing")
+
+    readonly property string iconSource: {
+        if (root.themeIconName.length > 0)
+            return Quickshell.iconPath(root.themeIconName, true) || root.guessedFromAppName;
+        return root.senderOwnIconFile.length > 0 ? root.senderOwnIconFile : root.guessedFromAppName;
+    }
+
     readonly property bool hovered: hoverArea.containsMouse || closeArea.containsMouse || replyField.containsMouse
     readonly property bool canReply: root.notif.hasInlineReply ?? false
     // Kept open while it holds focus or a half typed reply, so it does not vanish the
@@ -105,7 +115,7 @@ MGlass {
 
         IconImage {
             anchors.fill: parent
-            source: root.notif.appIcon.length > 0 ? Quickshell.iconPath(root.notif.appIcon, true) || Quickshell.iconPath(AppSearch.guessIcon(root.notif.appName), "image-missing") : Quickshell.iconPath(AppSearch.guessIcon(root.notif.appName), "image-missing")
+            source: root.iconSource
             smooth: true
         }
     }
