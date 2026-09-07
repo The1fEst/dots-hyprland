@@ -223,6 +223,17 @@ case "${EXPERIMENTAL_FILES_SCRIPT}" in
   *)source sdata/subcmd-install/3.files-legacy.sh;;
 esac
 
+# Enabling belongs here rather than in the setups step, which runs before the unit file
+# has been copied. Not `--now': the shell starts with the Hyprland session.
+if [[ ! -z $(systemctl --version) ]]; then
+  x systemctl --user daemon-reload
+  if [[ ! -z "${DBUS_SESSION_BUS_ADDRESS}" ]]; then
+    v systemctl --user enable quickshell.service
+  else
+    v sudo systemctl --machine=$(whoami)@.host --user enable quickshell.service
+  fi
+fi
+
 if [[ ! "$OS_GROUP_ID" == "fedora" ]]; then
   showfun install_google_sans_flex
   v install_google_sans_flex

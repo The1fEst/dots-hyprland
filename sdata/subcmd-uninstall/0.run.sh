@@ -104,6 +104,11 @@ function deletion_prompt(){
   done
 }
 
+# Before the unit file goes, so that its enablement symlink goes with it.
+if [[ ! -z $(systemctl --version) ]] && [[ ! -z "${DBUS_SESSION_BUS_ADDRESS}" ]]; then
+  v systemctl --user disable quickshell.service --now
+fi
+
 deletion_prompt "${INSTALLED_LISTFILE}"
 
 empty_dir_listfile=$(mktemp)

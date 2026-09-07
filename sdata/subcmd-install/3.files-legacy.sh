@@ -5,16 +5,19 @@
 
 #####################################################################################
 # MISC (For dots/.config/* but not quickshell, not fish, not Hyprland, not fontconfig)
+# `systemd' is left out of the loop because the loop syncs a directory with `--delete',
+# and ~/.config/systemd/user holds units of the user's own next to ours.
 case "${SKIP_MISCCONF}" in
   true) true;;
   *)
-    for i in $(find dots/.config/ -mindepth 1 -maxdepth 1 ! -name 'quickshell' ! -name 'fish' ! -name 'hypr' ! -name 'fontconfig' -exec basename {} \;); do
+    for i in $(find dots/.config/ -mindepth 1 -maxdepth 1 ! -name 'quickshell' ! -name 'fish' ! -name 'hypr' ! -name 'fontconfig' ! -name 'systemd' -exec basename {} \;); do
 #      i="dots/.config/$i"
       echo "[$0]: Found target: dots/.config/$i"
       if [ -d "dots/.config/$i" ];then install_dir__sync "dots/.config/$i" "$XDG_CONFIG_HOME/$i"
       elif [ -f "dots/.config/$i" ];then install_file "dots/.config/$i" "$XDG_CONFIG_HOME/$i"
       fi
     done
+    install_file "dots/.config/systemd/user/quickshell.service" "${XDG_CONFIG_HOME}/systemd/user/quickshell.service"
     install_dir "dots/.local/share/konsole" "${XDG_DATA_HOME}"/konsole
     ;;
 esac
