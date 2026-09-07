@@ -1,0 +1,16 @@
+[Unit]
+Description=Quickshell
+PartOf=graphical-session.target
+After=graphical-session.target
+StartLimitIntervalSec=300
+StartLimitBurst=20
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/qs -c ii
+Restart=always
+RestartSec=2
+Slice=session.slice
+
+[Install]
+WantedBy=hyprland-session.target
