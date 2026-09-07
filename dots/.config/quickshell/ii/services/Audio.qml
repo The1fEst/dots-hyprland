@@ -48,6 +48,23 @@ Singleton {
     // Signals
     signal sinkProtectionTriggered(string reason);
 
+    readonly property bool micMuted: root.source?.audio.muted ?? false
+    property bool pastTheFirstSourceArriving: false
+
+    onMicMutedChanged: {
+        if (!root.pastTheFirstSourceArriving)
+            return;
+        Quickshell.execDetached(["notify-send", Translation.tr("Microphone"), root.micMuted ? Translation.tr("Muted") : Translation.tr("Unmuted"), "-a", "Shell", "-i", Quickshell.shellPath("assets/icons/micgate.png"), "--hint=int:transient:1"]);
+        if (Config.options.sounds.microphone)
+            root.playSystemSound(root.micMuted ? "device-removed" : "device-added");
+    }
+
+    Timer {
+        running: true
+        interval: 3000
+        onTriggered: root.pastTheFirstSourceArriving = true
+    }
+
     // Controls
     function toggleMute() {
         Audio.sink.audio.muted = !Audio.sink.audio.muted

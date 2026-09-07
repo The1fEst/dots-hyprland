@@ -78,5 +78,12 @@ ShellRoot {
 
         onPressed: root.cyclePanelFamily()
     }
+
+    GlobalShortcut {
+        name: "micMuteToggle"
+        description: "Toggles the microphone"
+
+        onPressed: Audio.toggleMicMute()
+    }
 }
 
