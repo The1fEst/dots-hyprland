@@ -9,11 +9,6 @@ local hyprScripts = "$HOME/.config/hypr/hyprland/scripts"
 local qsIpcCall = "qs -c $qsConfig ipc call"
 local qsIsAlive = qsIpcCall .. " TEST_ALIVE"
 
-hl.bind("SUPER + SUPER_L", hl.dsp.global("quickshell:searchToggleRelease"), { description = "Shell: Toggle search" })
-hl.bind("SUPER + SUPER_R", hl.dsp.global("quickshell:searchToggleRelease"))
-hl.bind("SUPER + SUPER_L", hl.dsp.exec_cmd(qsIsAlive .. " || pkill fuzzel || fuzzel"))
-hl.bind("SUPER + SUPER_R", hl.dsp.exec_cmd(qsIsAlive .. " || pkill fuzzel || fuzzel"))
-
 hl.bind("SUPER_L", hl.dsp.global("quickshell:workspaceNumber"), { ignore_mods = true, transparent = true })
 hl.bind("SUPER_R", hl.dsp.global("quickshell:workspaceNumber"), { ignore_mods = true, transparent = true })
 hl.bind("SUPER_L", hl.dsp.global("quickshell:workspaceNumber"),
@@ -23,18 +18,17 @@ hl.bind("SUPER_R", hl.dsp.global("quickshell:workspaceNumber"),
 hl.bind("SUPER + Tab", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
 hl.bind("SUPER + V", hl.dsp.global("quickshell:overviewClipboardToggle"))
 hl.bind("SUPER + Period", hl.dsp.global("quickshell:overviewEmojiToggle"))
-hl.bind("SUPER + A", hl.dsp.global("quickshell:sidebarLeftToggle"), { description = "Shell: Toggle left sidebar" })
+hl.bind("SUPER + A", hl.dsp.global("quickshell:searchToggle"), { description = "Shell: Toggle search" })
 hl.bind("SUPER + ALT + A", hl.dsp.global("quickshell:sidebarLeftToggleDetach"))
-hl.bind("SUPER + B", hl.dsp.global("quickshell:sidebarLeftToggle"))
-hl.bind("SUPER + O", hl.dsp.global("quickshell:sidebarLeftToggle"))
 hl.bind("SUPER + N", hl.dsp.global("quickshell:sidebarRightToggle"), { description = "Shell: Toggle right sidebar" })
 hl.bind("SUPER + Slash", hl.dsp.global("quickshell:cheatsheetToggle"), { description = "Shell: Toggle cheatsheet" })
 hl.bind("SUPER + K", hl.dsp.global("quickshell:oskToggle"), { description = "Shell: Toggle on-screen keyboard" })
 hl.bind("SUPER + M", hl.dsp.global("quickshell:mediaControlsToggle"), { description = "Shell: Toggle media controls" })
 hl.bind("CTRL + ALT + Delete", hl.dsp.global("quickshell:sessionToggle"), { description = "Shell: Toggle session menu" })
-hl.bind("SUPER + J", hl.dsp.global("quickshell:barToggle"), { description = "Shell: Toggle bar" })
 hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd(qsIsAlive .. " || pkill wlogout || wlogout -p layer-shell"))
 hl.bind("SHIFT + SUPER + ALT + Slash", hl.dsp.exec_cmd("qs -p $HOME/.config/quickshell/$qsConfig/welcome.qml"))
+hl.bind("CTRL + SUPER + ALT + Slash", hl.dsp.exec_cmd("xdg-open $HOME/.config/hypr/hyprland/keybinds.lua"),
+    { description = "Edit keybinds" })
 
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(qsIpcCall .. " brightness increment || brightnessctl s 5%+"),
     { locked = true, repeating = true })
@@ -64,8 +58,8 @@ hl.bind("SUPER + V", hl.dsp.exec_cmd(
 hl.bind("SUPER + Period", hl.dsp.exec_cmd(
         qsIsAlive .. " || pkill fuzzel || " .. hyprScripts .. "/fuzzel-emoji.sh copy"),
     { description = "Utilities: Emoji >> clipboard" })
-hl.bind("SUPER + SHIFT + S", hl.dsp.global("quickshell:regionScreenshot"), { description = "Utilities: Screen snip" })
-hl.bind("SUPER + SHIFT + S",
+hl.bind("Print", hl.dsp.global("quickshell:regionScreenshot"), { description = "Utilities: Screen snip" })
+hl.bind("Print",
     hl.dsp.exec_cmd(qsIsAlive .. " || pidof slurp || hyprshot --freeze --clipboard-only --mode region --silent"))
 --# Color picker
 hl.bind("SUPER + SHIFT + C", hl.dsp.exec_cmd("hyprpicker -a"),
@@ -81,7 +75,7 @@ hl.bind("SUPER + SHIFT + ALT + R", hl.dsp.exec_cmd(qsScripts .. "/videos/record.
     { locked = true, description = "Utilities: Record screen (with sound)" })
 --# Fullscreen screenshot
 local grimhyprctl = "grim -o \"$(hyprctl activeworkspace -j | jq -r '.monitor')\""
-hl.bind("Print", hl.dsp.exec_cmd(grimhyprctl .. " - | wl-copy"),
+hl.bind("SUPER + Print", hl.dsp.exec_cmd(grimhyprctl .. " - | wl-copy"),
     { locked = true, description = "Utilities: Screenshot >> clipboard" })
 hl.bind("CTRL + Print", hl.dsp.exec_cmd(
     "mkdir -p $(xdg-user-dir PICTURES)/Screenshots && " ..
@@ -129,6 +123,8 @@ hl.bind("ALT + XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_SOURCE@ 
 hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_SOURCE@ toggle"), { locked = true })
 hl.bind("SUPER + ALT + M", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_SOURCE@ toggle"),
     { locked = true, description = "Media: Toggle mic" })
+hl.bind("ALT + Slash", hl.dsp.global("quickshell:micMuteToggle"),
+    { locked = true, description = "Media: Toggle mic" })
 
 --#!
 --##! Window
@@ -148,12 +144,18 @@ for i = 1, 2 do
     local focusdir = { "l", "r" }
     hl.bind("SUPER + " .. arrowkey[i], hl.dsp.focus({ direction = focusdir[i] }))
 end
---#/# bind = SUPER + SHIFT, ←/↑/→/↓,, -- Move in direction
-for i = 1, 4 do
-    local arrowkey = { "Left", "Right", "Up", "Down" }
-    local focusdir = { "l", "r", "u", "d" }
+--#/# bind = SUPER + SHIFT, ↑/↓,, -- Move in direction
+for i = 1, 2 do
+    local arrowkey = { "Up", "Down" }
+    local focusdir = { "u", "d" }
     hl.bind("SUPER + SHIFT + " .. arrowkey[i], hl.dsp.window.move({ direction = focusdir[i] }),
         { description = "Window: Move " .. arrowkey[i] })
+end
+--#/# bind = SUPER + ALT + ←/↑/→/↓,, -- Move focused window in direction
+for i = 1, 4 do
+    local arrowkey = { "Left", "Right", "Up", "Down" }
+    local movedir = { "l", "r", "u", "d" }
+    hl.bind("SUPER + ALT + " .. arrowkey[i], hl.dsp.window.move({ direction = movedir[i] }), { repeating = true })
 end
 
 hl.bind("ALT + F4",
@@ -171,10 +173,52 @@ hl.bind("SUPER + Semicolon", hl.dsp.layout("splitratio -0.1"), { repeating = tru
 hl.bind("SUPER + Apostrophe", hl.dsp.layout("splitratio +0.1"), { repeating = true })
 --# Positioning mode
 hl.bind("SUPER + ALT + Space", hl.dsp.window.float({ action = "toggle" }), { description = "Window: Float/Tile" })
-hl.bind("SUPER + D", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }),
-    { description = "Window: Maximize" })
-hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }),
+hl.bind("SUPER + W", hl.dsp.window.float({ action = "toggle" }), { description = "Window: Toggle floating" })
+hl.bind("SUPER + J", hl.dsp.layout("togglesplit"), { description = "Window: Toggle split" })
+hl.bind("SUPER + D", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }),
     { description = "Window: Fullscreen" })
+
+--#/# bind = SUPER + F,, -- Toggle monocle layout on the current workspace
+--#/# bind = SUPER + SHIFT + ←/→,, -- Cycle windows of the current workspace
+-- Monocle is a built-in Hyprland layout: every window fills the workspace and only the
+-- topmost one is visible. It is turned on per workspace with a workspace rule, so the
+-- other workspaces keep tiling normally.
+local monocle_rules = {} -- [workspace id] = HL.WorkspaceRule
+
+local function monocle_toggle()
+    local ws = hl.get_active_workspace()
+    if not ws then
+        return
+    end
+    local rule = monocle_rules[ws.id]
+    if not rule then
+        -- Rules are created enabled, so the first press is the "on" press
+        monocle_rules[ws.id] = hl.workspace_rule({
+            workspace = ws.special and ws.name or tostring(ws.id),
+            layout = "monocle",
+        })
+        return
+    end
+    rule:set_enabled(ws.tiled_layout ~= "monocle")
+end
+
+local function monocle_cycle(prev)
+    local ws = hl.get_active_workspace()
+    if ws and ws.tiled_layout == "monocle" then
+        -- Monocle's own layout message, it also raises the window it focuses
+        hl.dispatch(hl.dsp.layout(prev and "cycleprev" or "cyclenext"))
+    else
+        hl.dispatch(hl.dsp.window.cycle_next({ prev = prev }))
+    end
+end
+
+hl.bind("SUPER + F", monocle_toggle, { description = "Window: Toggle monocle layout" })
+hl.bind("SUPER + SHIFT + Left", function()
+    monocle_cycle(true)
+end, { repeating = true, description = "Window: Cycle to previous window" })
+hl.bind("SUPER + SHIFT + Right", function()
+    monocle_cycle(false)
+end, { repeating = true, description = "Window: Cycle to next window" })
 hl.bind("SUPER + ALT + F", hl.dsp.window.fullscreen_state({ internal = 0, client = 3, action = "toggle" }),
     { description = "Window: Fullscreen spoof" })
 hl.bind("SUPER + P", hl.dsp.window.pin(), { description = "Window: Pin" })
@@ -223,8 +267,9 @@ for i = 1, 4 do
 end
 
 hl.bind("SUPER + ALT + S",
-    hl.dsp.window.move({ workspace = "special:special", follow = false }), { description = "Window: Send to scratchpad" })
-hl.bind("CTRL + SUPER + S", hl.dsp.workspace.toggle_special("special"))
+    hl.dsp.window.move({ workspace = "special:magic", follow = false }),
+    { description = "Window: Send to scratchpad silently" })
+hl.bind("CTRL + SUPER + S", hl.dsp.workspace.toggle_special("magic"))
 
 --##! Workspace
 --# Switching
@@ -249,19 +294,29 @@ for i = 1, 10 do
     end)
 end
 
---#/# bind = CTRL+SUPER, ←/→,, -- Focus left/right
---#/# bind = CTRL+SUPER+ALT, ←/→,, -- # [hidden] Focus busy left/right
-for i = 1, 2 do
-    local keys = { "Left", "Right" }
-    local prefix = { "r-", "r+" }
-    local descdir = { "left", "right" }
-    hl.bind("CTRL + SUPER + " .. keys[i], hl.dsp.focus({ workspace = prefix[i] .. "1" }), {description = "Workspace: Focus " .. descdir[i]})
+--#/# bind = CTRL+SUPER, ←/→,, -- Focus left/right adjacent workspace
+--#/# bind = CTRL+SUPER+ALT, ←/→,, -- Move window to adjacent workspace and follow
+-- Wraps inside the group of `workspaceGroupSize` workspaces the focused one belongs to,
+-- so a monitor with its own group keeps its arrows to itself.
+local function workspace_group_cycle(delta)
+    local curr = hl.get_active_workspace().id
+    local base = math.floor((curr - 1) / workspaceGroupSize) * workspaceGroupSize
+    local offset = ((curr - base - 1 + delta) % workspaceGroupSize) + 1
+    return base + offset
 end
-for i = 1, 2 do
-    local keys = { "Left", "Right" }
-    local prefix = { "m-", "m+" }
-    hl.bind("CTRL + SUPER + ALT + " .. keys[i], hl.dsp.focus({ workspace = prefix[i] .. "1" }))
-end
+
+hl.bind("CTRL + SUPER + Left", function()
+    hl.dispatch(hl.dsp.focus({ workspace = workspace_group_cycle(-1) }))
+end, { description = "Workspace: Focus left adjacent" })
+hl.bind("CTRL + SUPER + Right", function()
+    hl.dispatch(hl.dsp.focus({ workspace = workspace_group_cycle(1) }))
+end, { description = "Workspace: Focus right adjacent" })
+hl.bind("CTRL + SUPER + ALT + Left", function()
+    hl.dispatch(hl.dsp.window.move({ workspace = workspace_group_cycle(-1), follow = true }))
+end, { description = "Window: Send to left adjacent workspace and follow" })
+hl.bind("CTRL + SUPER + ALT + Right", function()
+    hl.dispatch(hl.dsp.window.move({ workspace = workspace_group_cycle(1), follow = true }))
+end, { description = "Window: Send to right adjacent workspace and follow" })
 --#/# bind = SUPER, Page_↑/↓,, -- Focus left/right
 for i = 1, 4 do
     local key = { "SUPER + Page_Down", "SUPER + Page_Up" }
@@ -277,8 +332,10 @@ for i = 1, 4 do
     hl.bind(keycombos[i], hl.dsp.focus({ workspace = prefix[i] .. "1" }))
 end
 --## Special
-hl.bind("SUPER + S", hl.dsp.workspace.toggle_special("special"), { description = "Workspace: Toggle scratchpad" })
-hl.bind("SUPER + mouse:275", hl.dsp.workspace.toggle_special("special"))
+hl.bind("SUPER + S", hl.dsp.workspace.toggle_special("magic"), { description = "Workspace: Toggle scratchpad" })
+hl.bind("SUPER + mouse:275", hl.dsp.workspace.toggle_special("magic"))
+hl.bind("SUPER + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic", follow = true }),
+    { description = "Window: Send to scratchpad" })
 for i = 1, 4 do
     local key = { "BracketLeft", "BracketRight", "Up", "Down" }
     local prefix = { "-1", "+1", "r-5", "r+5" }
@@ -325,12 +382,15 @@ hl.bind("CTRL + SHIFT + ALT + SUPER + Delete", hl.dsp.exec_cmd("systemctl powero
     { description = "Session: Shut down" }) -- # [hidden] Power off
 
 
+--##! Input
+hl.bind("SUPER + Space", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"),
+    { locked = true, description = "Input: Switch keyboard layout" })
+
 --##! Apps
 hl.bind("SUPER + Return", hl.dsp.exec_cmd(terminal), { description = "App: Terminal" })
 hl.bind("SUPER + T", hl.dsp.exec_cmd(terminal))
 hl.bind("CTRL + ALT + T", hl.dsp.exec_cmd(terminal))
 hl.bind("SUPER + E", hl.dsp.exec_cmd(fileManager), { description = "App: File manager" })
-hl.bind("SUPER + W", hl.dsp.exec_cmd(browser), { description = "App: Browser" })
 hl.bind("SUPER + C", hl.dsp.exec_cmd(codeEditor), { description = "App: Code editor" })
 hl.bind("CTRL + SUPER + SHIFT + ALT + W", hl.dsp.exec_cmd(officeSoftware), { description = "App: Office software" })
 hl.bind("SUPER + X", hl.dsp.exec_cmd(textEditor), { description = "App: Text editor" })
