@@ -3,7 +3,11 @@ hl.on("hyprland.start", function ()
 
     -- Bar, wallpaper
     hl.exec_cmd("$HOME/.config/hypr/hyprland/scripts/start_geoclue_agent.sh")
-    hl.exec_cmd("dbus-update-activation-environment --systemd --all && systemctl --user start quickshell.service")
+    -- The target is what the rest of the session hangs off: binding to
+    -- graphical-session.target is what starts the portals and the autostarted apps.
+    -- quickshell is named as well so that it comes up even where enabling it failed.
+    hl.exec_cmd(
+        "dbus-update-activation-environment --systemd --all && systemctl --user start hyprland-session.target quickshell.service")
     hl.exec_cmd("$HOME/.config/hypr/custom/scripts/__restore_video_wallpaper.sh")
 
     -- Core components (authentication, lock screen, notification daemon)

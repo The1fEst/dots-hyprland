@@ -57,8 +57,11 @@ patterns:
   - from: "dots/.config/hypr/custom"
     to: "$XDG_CONFIG_HOME/hypr/custom"
     mode: "skip-if-exists"
-  # The shell's own user unit. Named file by file: ~/.config/systemd/user holds units
-  # of the user's own next to it.
+  # The session target and the shell's own unit. Named file by file: ~/.config/systemd/user
+  # holds units of the user's own next to them.
+  - from: "dots/.config/systemd/user/hyprland-session.target"
+    to: "$XDG_CONFIG_HOME/systemd/user/hyprland-session.target"
+    mode: "hard"
   - from: "dots/.config/systemd/user/quickshell.service"
     to: "$XDG_CONFIG_HOME/systemd/user/quickshell.service"
     mode: "hard"

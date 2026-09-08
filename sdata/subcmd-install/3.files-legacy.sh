@@ -17,7 +17,9 @@ case "${SKIP_MISCCONF}" in
       elif [ -f "dots/.config/$i" ];then install_file "dots/.config/$i" "$XDG_CONFIG_HOME/$i"
       fi
     done
-    install_file "dots/.config/systemd/user/quickshell.service" "${XDG_CONFIG_HOME}/systemd/user/quickshell.service"
+    for i in hyprland-session.target quickshell.service ; do
+      install_file "dots/.config/systemd/user/$i" "${XDG_CONFIG_HOME}/systemd/user/$i"
+    done
     install_dir "dots/.local/share/konsole" "${XDG_DATA_HOME}"/konsole
     ;;
 esac
