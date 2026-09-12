@@ -12,7 +12,16 @@ SpinBox {
     property real baseHeight: 35
     property real radius: Appearance.rounding.small
     property real innerButtonRadius: Appearance.rounding.unsharpen
+    property int decimals: 0
+    readonly property real factor: Math.pow(10, root.decimals)
     editable: true
+
+    validator: DoubleValidator {
+        bottom: Math.min(root.from, root.to) / root.factor
+        top: Math.max(root.from, root.to) / root.factor
+        decimals: root.decimals
+        notation: DoubleValidator.StandardNotation
+    }
 
     opacity: root.enabled ? 1 : 0.4
 
@@ -28,14 +37,14 @@ SpinBox {
         StyledTextInput {
             id: labelText
             anchors.centerIn: parent
-            text: root.value // displayText would make the numbers weird like 1,000 instead of 1000
+            text: (root.value / root.factor).toFixed(root.decimals)
             color: Appearance.colors.colOnLayer2
             font.family: Appearance.font.family.numbers
             font.variableAxes: Appearance.font.variableAxes.numbers
             font.pixelSize: Appearance.font.pixelSize.small
             validator: root.validator
             onTextChanged: {
-                root.value = parseFloat(text);
+                root.value = Math.round(parseFloat(text) * root.factor);
             }
         }
     }
