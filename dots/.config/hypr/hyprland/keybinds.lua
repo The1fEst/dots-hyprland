@@ -4,6 +4,8 @@ if is_file_exists(HOME .. "/.config/hypr/custom/variables.lua") then
     require("custom.variables")
 end
 
+local workspaceNumberKeys = math.min(workspaceGroupSize, 10)
+
 local qsScripts = "$HOME/.config/quickshell/$qsConfig/scripts"
 local hyprScripts = "$HOME/.config/hypr/hyprland/scripts"
 local qsIpcCall = "qs -c $qsConfig ipc call"
@@ -27,6 +29,8 @@ hl.bind("SUPER + M", hl.dsp.global("quickshell:mediaControlsToggle"), { descript
 hl.bind("CTRL + ALT + Delete", hl.dsp.global("quickshell:sessionToggle"), { description = "Shell: Toggle session menu" })
 hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd(qsIsAlive .. " || pkill wlogout || wlogout -p layer-shell"))
 hl.bind("SHIFT + SUPER + ALT + Slash", hl.dsp.exec_cmd("qs -p $HOME/.config/quickshell/$qsConfig/welcome.qml"))
+hl.bind("CTRL + SUPER + ALT + K", hl.dsp.exec_cmd("qs -p $HOME/.config/quickshell/$qsConfig/killDialog.qml"),
+    { description = "Shell: Kill conflicting daemons" })
 hl.bind("CTRL + SUPER + ALT + Slash", hl.dsp.exec_cmd("xdg-open $HOME/.config/hypr/hyprland/keybinds.lua"),
     { description = "Edit keybinds" })
 
@@ -224,7 +228,7 @@ hl.bind("SUPER + ALT + F", hl.dsp.window.fullscreen_state({ internal = 0, client
 hl.bind("SUPER + P", hl.dsp.window.pin(), { description = "Window: Pin" })
 
 --#/# bind = SUPER+ALT, Hash,, -- Send to workspace -- (1, 2, 3,...)
-for i = 1, 10 do
+for i = 1, workspaceNumberKeys do
     hl.bind("SUPER + ALT + " .. (i % 10), function()
         hl.dispatch(hl.dsp.window.move({ workspace = workspace_in_group(i), follow = false }))
     end, { description = "Window: Send to workspace " .. i })
@@ -237,7 +241,7 @@ end
 --     end)
 -- end
 --# keypad numbers
-for i = 1, 10 do
+for i = 1, workspaceNumberKeys do
     local numpadkey = { 87, 88, 89, 83, 84, 85, 79, 80, 81, 90 }
     hl.bind("SUPER + ALT + code:" .. numpadkey[i], function()
         hl.dispatch(hl.dsp.window.move({ workspace = workspace_in_group(i), follow = false }))
@@ -274,20 +278,20 @@ hl.bind("CTRL + SUPER + S", hl.dsp.workspace.toggle_special("magic"))
 --##! Workspace
 --# Switching
 --#/# bind = SUPER, Hash,, -- Focus workspace -- (1, 2, 3,...)
-for i = 1, 10 do
+for i = 1, workspaceNumberKeys do
     hl.bind("SUPER + " .. (i % 10), function()
         hl.dispatch(hl.dsp.focus({ workspace = workspace_in_group(i) }))
     end, { description = "Workspace: Focus " .. i })
 end
 --# We also use raw keycodes because some keyboard layouts register number keys as different chars. The codes can be verified with `wev`
-for i = 1, 10 do
+for i = 1, workspaceNumberKeys do
     local numberkey = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 }
     hl.bind("SUPER + code:" .. numberkey[i], function()
         hl.dispatch(hl.dsp.focus({ workspace = workspace_in_group(i) }))
     end)
 end
 --# keypad numbers
-for i = 1, 10 do
+for i = 1, workspaceNumberKeys do
     local numpadkey = { 87, 88, 89, 83, 84, 85, 79, 80, 81, 90 }
     hl.bind("SUPER + code:" .. numpadkey[i], function()
         hl.dispatch(hl.dsp.focus({ workspace = workspace_in_group(i) }))
