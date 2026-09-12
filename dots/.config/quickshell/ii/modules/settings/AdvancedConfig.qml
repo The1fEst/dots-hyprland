@@ -333,6 +333,21 @@ ContentPage {
                 }
             }
             ConfigSlider {
+                text: Translation.tr("Magnification")
+                buttonIcon: "zoom_in"
+                usePercentTooltip: false
+                from: 0
+                to: 48
+                stopIndicatorValues: [27]
+                value: Config.options.macos.dock.magnification
+                onMoved: newValue => {
+                    Config.options.macos.dock.magnification = Math.round(newValue);
+                }
+                StyledToolTip {
+                    text: Translation.tr("How far an icon grows when the pointer is over it")
+                }
+            }
+            ConfigSlider {
                 text: Translation.tr("Icon spacing")
                 buttonIcon: "space_bar"
                 usePercentTooltip: false
@@ -390,6 +405,14 @@ ContentPage {
                 value: Config.options.macos.dock.bottomMargin
                 onMoved: newValue => {
                     Config.options.macos.dock.bottomMargin = Math.round(newValue);
+                }
+            }
+            ConfigSwitch {
+                buttonIcon: "circle"
+                text: Translation.tr("Show indicators for open applications")
+                checked: Config.options.macos.dock.showIndicators
+                onCheckedChanged: {
+                    Config.options.macos.dock.showIndicators = checked;
                 }
             }
         }
