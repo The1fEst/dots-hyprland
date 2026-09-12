@@ -78,7 +78,7 @@ Singleton {
         JsonAdapter {
             id: configOptionsJsonAdapter
 
-            property string panelFamily: "ii" // "ii", "waffle", "macos"
+            property string panelFamily: "ii"
 
             property JsonObject policies: JsonObject {}
 
@@ -542,46 +542,6 @@ Singleton {
                 }
                 property JsonObject calendar: JsonObject {
                     property bool force2CharDayOfWeek: true
-                }
-            }
-
-            property JsonObject macos: JsonObject {
-                property JsonObject glass: JsonObject {
-                    property real tintOpacity: 0
-                    property real blur: 50
-                    property real refraction: 1
-                    property real chroma: 0
-                    property real edgeHighlight: 0
-                    property real specular: 0.2
-                    property real fresnel: 0
-                    property real distortion: 0
-                    property real zRadius: 2.6
-                    property real opacity: 1
-                    property real saturation: 0
-                    property real brightness: 0
-                    property real shadowOpacity: 0.3
-                    property real shadowSpread: 10
-                    property int bevelMode: 0
-                }
-                property JsonObject controlCenter: JsonObject {
-                    property list<string> controls: ["wifi", "media", "bluetooth", "screenSnip", "colorPicker", "mic", "darkMode", "volume", "brightness"]
-                    property list<string> sizes: [] // "<widget id>:<small|normal|large>"
-                }
-                property JsonObject menuBar: JsonObject {
-                    property list<string> items: ["spaces", "tray", "battery"]
-                }
-                property JsonObject network: JsonObject {
-                    property string askToJoin: "notify" // "off", "notify", "ask"
-                }
-                property JsonObject dock: JsonObject {
-                    property int iconSize: 57
-                    property int iconSpacing: 17
-                    property int iconRadius: 13
-                    property int paddingH: 16
-                    property int paddingTop: 16
-                    property int bottomMargin: 6
-                    property int magnification: 27
-                    property bool showIndicators: true
                 }
             }
         }
