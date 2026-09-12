@@ -19,6 +19,8 @@ Item {
     property real blurMax: Looks.glass.blurMax
     property bool captureWindows: true
 
+    property bool onScreen: root.captureWindows
+
     readonly property var screenData: QsWindow.window?.screen ?? null
     readonly property Item sharp: sharpSource
     readonly property Item blurred: blurLayer
@@ -106,7 +108,7 @@ Item {
         id: sharpSource
         visible: false
         sourceItem: composite
-        live: true
+        live: root.onScreen
         width: root.width
         height: root.height
     }
@@ -115,7 +117,7 @@ Item {
         id: blurLayer
         anchors.fill: parent
         visible: false
-        layer.enabled: true
+        layer.enabled: root.onScreen
 
         MultiEffect {
             source: sharpSource

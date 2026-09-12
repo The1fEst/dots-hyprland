@@ -198,7 +198,8 @@ Scope {
                 // Mission Control lifts the windows off the desktop and leaves the
                 // wallpaper bare; refracting the windows that are no longer there would
                 // show a desktop that is not on screen.
-                captureWindows: !GlobalStates.missionControlOpen
+                onScreen: dockWindow.reveal
+                captureWindows: dockWindow.reveal && !GlobalStates.missionControlOpen
             }
 
             MouseArea {
