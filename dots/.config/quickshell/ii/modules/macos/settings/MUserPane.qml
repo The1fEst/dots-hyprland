@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Widgets
+import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.macos.controls
@@ -37,7 +38,7 @@ Column {
             StyledImage {
                 id: portrait
                 anchors.fill: parent
-                source: MAccount.iconFile.length > 0 ? `file://${MAccount.iconFile}` : ""
+                source: UserAccount.iconFile.length > 0 ? `file://${UserAccount.iconFile}` : ""
                 sourceSize: Qt.size(avatar.width * 2, avatar.width * 2)
                 fillMode: Image.PreserveAspectCrop
             }
@@ -58,7 +59,7 @@ Column {
                 top: avatar.bottom
                 topMargin: root.nameGap
             }
-            text: MAccount.displayName
+            text: UserAccount.displayName
             textStyle: Looks.font.style.title3
             emphasized: true
         }
@@ -68,8 +69,8 @@ Column {
                 horizontalCenter: parent.horizontalCenter
                 top: name.bottom
             }
-            visible: MAccount.email.length > 0
-            text: MAccount.email
+            visible: UserAccount.email.length > 0
+            text: UserAccount.email
             color: Looks.colors.secondary
         }
     }
@@ -81,20 +82,20 @@ Column {
             label: qsTr("Name")
 
             MTextField {
-                text: MAccount.realName
-                placeholder: MAccount.userName
-                onCommitted: value => MAccount.set("RealName", "s", value)
+                text: UserAccount.realName
+                placeholder: UserAccount.userName
+                onCommitted: value => UserAccount.set("RealName", "s", value)
             }
         }
 
         MSettingsRow {
             label: qsTr("Username")
-            value: MAccount.userName
+            value: UserAccount.userName
         }
 
         MSettingsRow {
             label: qsTr("Account type")
-            value: MAccount.administrator ? qsTr("Administrator") : qsTr("Standard")
+            value: UserAccount.administrator ? qsTr("Administrator") : qsTr("Standard")
         }
 
         MSettingsRow {
@@ -102,8 +103,8 @@ Column {
             separator: false
 
             MTextField {
-                text: MAccount.email
-                onCommitted: value => MAccount.set("Email", "s", value)
+                text: UserAccount.email
+                onCommitted: value => UserAccount.set("Email", "s", value)
             }
         }
     }

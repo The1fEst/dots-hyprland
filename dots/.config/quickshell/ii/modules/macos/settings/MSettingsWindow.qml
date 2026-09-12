@@ -115,7 +115,7 @@ Item {
                     StyledImage {
                         id: avatarImage
                         anchors.fill: parent
-                        source: MAccount.iconFile.length > 0 ? `file://${MAccount.iconFile}` : ""
+                        source: UserAccount.iconFile.length > 0 ? `file://${UserAccount.iconFile}` : ""
                         sourceSize: Qt.size(76, 76)
                         fillMode: Image.PreserveAspectCrop
                     }
@@ -140,7 +140,7 @@ Item {
 
                     MText {
                         width: parent.width
-                        text: MAccount.displayName
+                        text: UserAccount.displayName
                         elide: Text.ElideRight
                         emphasized: true
                         color: MSettingsNav.currentIndex === accountRow.page ? "#ffffff" : Looks.colors.primary

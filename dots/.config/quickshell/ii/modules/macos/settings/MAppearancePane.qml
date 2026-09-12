@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.services
 import qs.modules.common
 import qs.modules.macos.controls
 import qs.modules.macos.looks
@@ -81,12 +82,12 @@ Column {
             label: qsTr("GTK theme")
 
             MPopupButton {
-                current: MAppearance.gtkTheme
-                options: MAppearance.gtkThemes.map(name => ({
+                current: DesktopAppearance.gtkTheme
+                options: DesktopAppearance.gtkThemes.map(name => ({
                             label: name,
                             value: name
                         }))
-                onSelected: value => MAppearance.setThemes(value, MAppearance.qtStyle)
+                onSelected: value => DesktopAppearance.setThemes(value, DesktopAppearance.qtStyle)
             }
         }
 
@@ -95,12 +96,12 @@ Column {
             separator: false
 
             MPopupButton {
-                current: MAppearance.qtStyle
-                options: MAppearance.qtStyles.map(name => ({
+                current: DesktopAppearance.qtStyle
+                options: DesktopAppearance.qtStyles.map(name => ({
                             label: name,
                             value: name
                         }))
-                onSelected: value => MAppearance.setThemes(MAppearance.gtkTheme, value)
+                onSelected: value => DesktopAppearance.setThemes(DesktopAppearance.gtkTheme, value)
             }
         }
     }
@@ -115,12 +116,12 @@ Column {
             wrapDetail: true
 
             MPopupButton {
-                current: MAppearance.cursorTheme
-                options: MAppearance.cursorThemes.map(name => ({
+                current: DesktopAppearance.cursorTheme
+                options: DesktopAppearance.cursorThemes.map(name => ({
                             label: name,
                             value: name
                         }))
-                onSelected: value => MAppearance.setCursor(value, MAppearance.cursorSize)
+                onSelected: value => DesktopAppearance.setCursor(value, DesktopAppearance.cursorSize)
             }
         }
 
@@ -131,8 +132,8 @@ Column {
             MNumberField {
                 from: 8
                 to: 128
-                value: MAppearance.cursorSize
-                onEdited: size => MAppearance.setCursor(MAppearance.cursorTheme, size)
+                value: DesktopAppearance.cursorSize
+                onEdited: size => DesktopAppearance.setCursor(DesktopAppearance.cursorTheme, size)
             }
         }
     }
@@ -148,12 +149,12 @@ Column {
             separator: false
 
             MPopupButton {
-                current: MAppearance.iconTheme
-                options: MAppearance.iconThemes.map(name => ({
+                current: DesktopAppearance.iconTheme
+                options: DesktopAppearance.iconThemes.map(name => ({
                             label: name,
                             value: name
                         }))
-                onSelected: value => MAppearance.setIcons(value)
+                onSelected: value => DesktopAppearance.setIcons(value)
             }
         }
     }
@@ -201,7 +202,7 @@ Column {
 
             MPushButton {
                 label: qsTr("Adjust All…")
-                onClicked: sheet.edit("all", MAppearance.fonts["general"] ?? ({
+                onClicked: sheet.edit("all", DesktopAppearance.fonts["general"] ?? ({
                             family: "",
                             style: "",
                             size: 10
@@ -212,7 +213,7 @@ Column {
 
     MFontSheet {
         id: sheet
-        onChosen: (role, parts) => MAppearance.setFont(role, parts)
+        onChosen: (role, parts) => DesktopAppearance.setFont(role, parts)
     }
 
     component MFontRow: MSettingsRow {
@@ -220,7 +221,7 @@ Column {
 
         required property string role
 
-        readonly property var font: MAppearance.fonts[fontRow.role] ?? ({
+        readonly property var font: DesktopAppearance.fonts[fontRow.role] ?? ({
                 family: "",
                 style: "",
                 size: 10

@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import qs.services
 import qs.modules.macos.controls
 import qs.modules.macos.looks
 
@@ -19,7 +20,7 @@ MSheet {
     readonly property int listHeight: 220
     readonly property int sampleHeight: 56
 
-    readonly property var styles: MAppearance.families[root.family] ?? []
+    readonly property var styles: DesktopAppearance.families[root.family] ?? []
 
     readonly property bool everyRole: root.role === "all"
     property bool takesFamily: true
@@ -36,7 +37,7 @@ MSheet {
         root.takesFamily = role !== "all";
         root.takesStyle = role !== "all";
         root.takesSize = role !== "all";
-        MAppearance.loadFamilies();
+        DesktopAppearance.loadFamilies();
         root.open();
     }
 
@@ -106,7 +107,7 @@ MSheet {
                     height: root.listHeight
                     available: root.takesFamily
                     previewsFamilies: true
-                    options: MAppearance.familyNames
+                    options: DesktopAppearance.familyNames
                     current: root.family
                     onSelected: value => {
                         root.family = value;
@@ -157,7 +158,7 @@ MSheet {
                     width: root.sizeColumn
                     height: root.listHeight - Looks.control.regular - 6
                     available: root.takesSize
-                    options: MAppearance.sizes.map(one => String(one))
+                    options: DesktopAppearance.sizes.map(one => String(one))
                     current: String(root.size)
                     onSelected: value => root.size = parseInt(value)
                 }

@@ -7,7 +7,7 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    readonly property list<string> names: ["general:gaps_in", "general:gaps_out", "general:border_size", "general:allow_tearing", "decoration:rounding", "decoration:blur:enabled", "decoration:blur:size", "decoration:blur:passes", "decoration:blur:xray","decoration:active_opacity", "decoration:inactive_opacity", "animations:enabled"]
+    readonly property list<string> names: ["general:gaps_in", "general:gaps_out", "general:border_size", "general:allow_tearing", "decoration:rounding", "decoration:rounding_power","decoration:blur:enabled", "decoration:blur:size", "decoration:blur:passes", "decoration:blur:xray","decoration:active_opacity", "decoration:inactive_opacity", "animations:enabled"]
 
     property var options: ({})
 

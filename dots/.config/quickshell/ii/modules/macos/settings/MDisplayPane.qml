@@ -21,246 +21,65 @@ Column {
 
     readonly property string wallpaper: Config.options?.background.wallpaperPath ?? ""
 
-    readonly property list<var> modes: {
-        const seen = new Map();
-        for (const mode of root.monitor?.availableModes ?? []) {
-            const parts = mode.match(/^(\d+)x(\d+)@([\d.]+)Hz$/);
-            if (!parts)
-                continue;
-            const size = `${parts[1]}x${parts[2]}`;
-            const rate = parseFloat(parts[3]);
-            const known = seen.get(size);
-            if (!known)
-                seen.set(size, {
-                    width: parseInt(parts[1]),
-                    height: parseInt(parts[2]),
-                    rates: [rate]
-                });
-            else if (!known.rates.includes(rate))
-                known.rates.push(rate);
-        }
-        return [...seen.values()].sort((a, b) => b.width * b.height - a.width * a.height);
-    }
-
-    readonly property var nativeMode: root.modes[0] ?? null
-
     readonly property real logicalWidth: Math.round((root.monitor?.width ?? 0) / Math.max(0.01, root.monitor?.scale ?? 1))
     readonly property real logicalHeight: Math.round((root.monitor?.height ?? 0) / Math.max(0.01, root.monitor?.scale ?? 1))
 
-    readonly property list<var> scaledModes: {
-        const native = root.nativeMode;
-        if (!native)
-            return [];
-        const out = [];
-        for (const divisor of [1, 1.25, 4 / 3, 1.5, 1.6, 2]) {
-            const width = native.width / divisor;
-            const height = native.height / divisor;
-            if (Math.abs(width - Math.round(width)) > 0.001 || Math.abs(height - Math.round(height)) > 0.001)
-                continue;
-            out.push({
-                width: Math.round(width),
-                height: Math.round(height),
-                mode: native,
-                scale: Math.round(divisor * 1e6) / 1e6,
-                native: divisor === 1
-            });
-        }
-        return out;
-    }
-
-    readonly property list<var> panelModes: root.modes.map(mode => ({
-                width: mode.width,
-                height: mode.height,
-                mode: mode,
-                scale: 1,
-                rate: mode.rates.slice().sort((a, b) => b - a)[0],
-                native: mode === root.nativeMode
-            }))
-
     property bool allResolutions: false
 
-    readonly property list<var> shownModes: {
-        if (!root.allResolutions)
-            return root.scaledModes;
-        const out = root.scaledModes.slice();
-        const seen = new Set(out.map(entry => `${entry.width}x${entry.height}`));
-        for (const entry of root.panelModes) {
-            const size = `${entry.width}x${entry.height}`;
-            if (seen.has(size))
-                continue;
-            seen.add(size);
-            out.push(entry);
-        }
-        return out.sort((a, b) => b.width * b.height - a.width * a.height);
-    }
+    readonly property list<var> shownModes: DisplayOptions.shownModesOf(root.monitor, root.allResolutions)
+    readonly property list<var> ratesForCurrentSize: DisplayOptions.ratesOf(root.monitor)
 
-    readonly property list<var> ratesForCurrentSize: (root.modes.find(m => m.width === root.monitor?.width && m.height === root.monitor?.height)?.rates ?? []).slice().sort((a, b) => b - a)
+    readonly property list<var> colorProfiles: DisplayOptions.colorProfiles(root.monitor)
 
-    readonly property list<var> colorProfiles: [
-        {
-            label: qsTr("Automatic"),
-            value: "auto"
-        },
-        {
-            label: qsTr("sRGB"),
-            value: "srgb"
-        },
-        {
-            label: qsTr("DCI P3"),
-            value: "dcip3"
-        },
-        {
-            label: qsTr("Display P3"),
-            value: "dp3"
-        },
-        {
-            label: qsTr("Adobe RGB"),
-            value: "adobe"
-        },
-        {
-            label: qsTr("Wide color"),
-            value: "wide"
-        },
-        {
-            label: root.monitor?.model || qsTr("Display profile"),
-            value: "edid"
-        },
-        {
-            label: qsTr("HDR"),
-            value: "hdr"
-        },
-        {
-            label: qsTr("HDR (%1)").arg(root.monitor?.model || qsTr("display profile")),
-            value: "hdredid"
-        }
-    ]
+    readonly property string primary: DisplayOptions.primary
+    readonly property list<string> iccProfiles: DisplayOptions.iccProfiles
 
-    property var persisted: ({})
-    property list<string> iccProfiles: []
-
-    readonly property var ruleDefaults: ({
-        bitdepth: 8,
-        sdr_eotf: "default",
-        sdrbrightness: 1,
-        sdrsaturation: 1,
-        vrr: -1,
-        icc: "",
-        supports_wide_color: 0,
-        supports_hdr: 0,
-        sdr_min_luminance: 0.2,
-        sdr_max_luminance: 80,
-        min_luminance: -1,
-        max_luminance: -1,
-        max_avg_luminance: -1,
-        reserved_area: "0"
-    })
-
-    readonly property var rule: root.persisted[root.monitor?.name ?? ""] ?? ({})
-
-    readonly property string colorProfile: root.rule.cm ?? root.monitor?.colorManagementPreset ?? "srgb"
+    readonly property string colorProfile: DisplayOptions.colorProfileOf(root.monitor)
 
     function ruleValue(key: string): var {
-        return root.rule[key] ?? root.ruleDefaults[key];
+        return DisplayOptions.valueOf(root.monitor?.name ?? "", key);
     }
 
     function ruleNumber(key: string): real {
-        return Number(root.ruleValue(key));
+        return DisplayOptions.numberOf(root.monitor?.name ?? "", key);
     }
 
     function reservedSide(side: string): int {
-        const area = String(root.ruleValue("reserved_area"));
-        const named = area.match(new RegExp(`${side}\\s*=\\s*(-?\\d+)`));
-        if (named)
-            return parseInt(named[1]);
-        return parseInt(area) || 0;
+        return DisplayOptions.reservedSideOf(root.monitor?.name ?? "", side);
     }
 
     function setReservedSide(side: string, size: int): void {
-        const sides = ["top", "right", "bottom", "left"].map(name => `${name} = ${name === side ? size : root.reservedSide(name)}`);
-        root.apply({
-            reserved_area: `{ ${sides.join(", ")} }`
-        });
+        DisplayOptions.setReservedSide(root.monitor, side, size);
     }
 
     function setColorProfile(profile: string): void {
-        root.apply({
-            bitdepth: profile.startsWith("hdr") ? 10 : 8,
-            cm: profile
-        });
+        DisplayOptions.setColorProfile(root.monitor, profile);
     }
 
     function rateLabel(rate: real): string {
         return qsTr("%1 Hertz").arg(Math.round(rate));
     }
 
-    function ruleForWhatIsRunning(monitor: var, size: string, rate: real): var {
-        const kept = root.persisted[monitor.name] ?? ({});
-        return {
-            mode: `${size}@${rate.toFixed(2)}`,
-            position: `${monitor.x}x${monitor.y}`,
-            scale: monitor.scale,
-            transform: monitor.transform,
-            bitdepth: kept.bitdepth ?? (monitor.currentFormat.includes("2101010") ? 10 : 8),
-            cm: kept.cm ?? monitor.colorManagementPreset
-        };
-    }
-
-    function applyTo(monitor: var, keys: var): void {
-        if (!monitor)
-            return;
-        const size = keys.size ?? `${monitor.width}x${monitor.height}`;
-        const rate = keys.rate ?? monitor.refreshRate;
-
-        const settings = Object.assign(root.ruleForWhatIsRunning(monitor, size, rate), keys);
-        delete settings.size;
-        delete settings.rate;
-
-        const pairs = Object.keys(settings).map(key => `${key}=${settings[key]}`);
-        persistProc.exec(["python3", Quickshell.shellPath("scripts/system/hypr-monitor.py"), Quickshell.env("HOME") + "/.config/hypr/settings.lua", monitor.name].concat(pairs));
-    }
-
     function apply(keys: var): void {
-        root.applyTo(root.monitor, keys);
+        DisplayOptions.applyTo(root.monitor, keys);
+    }
+
+    function useAs(value: string): void {
+        if (value === "main") {
+            DisplayOptions.setPrimary(root.monitor?.name ?? "", null);
+            return;
+        }
+        const keys = {
+            mirror: value === "extend" ? "" : value
+        };
+        if (root.primary === root.monitor?.name)
+            DisplayOptions.setPrimary(root.others[0]?.name ?? "", keys);
+        else
+            root.apply(keys);
     }
 
     function moveTo(name: string, x: int, y: int): void {
-        root.applyTo(root.monitors.find(m => m.name === name), {
-            position: `${x}x${y}`
-        });
-    }
-
-    Process {
-        id: reloadProc
-        command: ["hyprctl", "reload"]
-        onExited: {
-            HyprlandData.updateMonitors();
-            readProc.running = true;
-        }
-    }
-
-    Process {
-        id: persistProc
-        onExited: reloadProc.running = true
-    }
-
-    Process {
-        id: iccProc
-        running: true
-        command: ["python3", Quickshell.shellPath("scripts/system/hypr-monitor.py"), "--icc-profiles"]
-
-        stdout: StdioCollector {
-            onStreamFinished: root.iccProfiles = JSON.parse(this.text.length > 0 ? this.text : "[]")
-        }
-    }
-
-    Process {
-        id: readProc
-        running: true
-        command: ["python3", Quickshell.shellPath("scripts/system/hypr-monitor.py"), "--read", Quickshell.env("HOME") + "/.config/hypr/settings.lua"]
-
-        stdout: StdioCollector {
-            onStreamFinished: root.persisted = JSON.parse(this.text.length > 0 ? this.text : "{}")
-        }
+        DisplayOptions.moveTo(name, x, y);
     }
 
     spacing: Looks.settings.formGap
@@ -341,8 +160,12 @@ Column {
             visible: root.others.length > 0
 
             MPopupButton {
-                current: root.others.find(other => other.name === root.monitor?.mirrorOf)?.name ?? "extend"
+                current: root.primary === root.monitor?.name ? "main" : (root.others.find(other => other.name === root.monitor?.mirrorOf)?.name ?? "extend")
                 options: [
+                    {
+                        label: qsTr("Main display"),
+                        value: "main"
+                    },
                     {
                         label: qsTr("Extended display"),
                         value: "extend"
@@ -351,11 +174,10 @@ Column {
                             label: qsTr("Mirror for %1").arg(other.model || other.name),
                             value: other.name
                         })))
-                onSelected: value => root.apply({
-                    mirror: value === "extend" ? "" : value
-                })
+                onSelected: value => root.useAs(value)
             }
         }
+
 
         Repeater {
             model: root.shownModes

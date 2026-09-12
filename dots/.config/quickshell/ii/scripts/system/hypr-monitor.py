@@ -2,6 +2,7 @@
 """Set keys on one monitor block in a Hyprland lua monitor config.
 
 Usage: hypr-monitor.py <file> <output> key=value [key=value ...]
+       hypr-monitor.py <file> --primary <output>
        hypr-monitor.py --read <file>
        hypr-monitor.py --icc-profiles
 
@@ -15,6 +16,9 @@ yet gets one appended.
 Reading gives back what each block asks for rather than what Hyprland ended up
 with, which is the difference between a colour profile of "auto" and the profile
 auto resolved to.
+
+Hyprland has no primary monitor, so the one Windows applications open on is an
+environment variable rather than a rule, and it is written as one.
 """
 
 import json
@@ -25,6 +29,8 @@ import sys
 # A monitor rule's reserved area is a lua table, so a value runs to the end of the line
 # unless it is braced.
 VALUE = r'\{[^}]*\}|[^,\n]*'
+
+PRIMARY_VARIABLE = 'WAYLANDDRV_PRIMARY_MONITOR'
 
 ICC_DIRECTORIES = [
     os.path.expanduser('~/.local/share/icc'),
@@ -71,13 +77,38 @@ def keys_of(block):
     return {key: value.strip().strip('"') for key, value in pairs}
 
 
-def read(path):
+def contents(path):
     try:
         with open(path) as handle:
-            text = handle.read()
+            return handle.read()
     except FileNotFoundError:
-        text = ''
-    print(json.dumps({output_of(m.group(0)): keys_of(m.group(0)) for m in blocks(text) if output_of(m.group(0))}))
+        return ''
+
+
+def primary_of(text):
+    match = re.search(r'hl\.env\(\s*"%s"\s*,\s*"([^"]*)"' % PRIMARY_VARIABLE, text)
+    return match.group(1) if match else ''
+
+
+def read(path):
+    text = contents(path)
+    print(json.dumps({
+        'monitors': {output_of(m.group(0)): keys_of(m.group(0)) for m in blocks(text) if output_of(m.group(0))},
+        'primary': primary_of(text),
+    }))
+
+
+def set_primary(path, output):
+    text = contents(path)
+    pattern = re.compile(r'(hl\.env\(\s*"%s"\s*,\s*")[^"]*(")' % PRIMARY_VARIABLE)
+    line = 'hl.env("%s", "%s")' % (PRIMARY_VARIABLE, output)
+    if pattern.search(text):
+        text = pattern.sub(lambda m: m.group(1) + output + m.group(2), text, count=1)
+    else:
+        text = text.rstrip('\n') + '\n' + line + '\n'
+
+    with open(path, 'w') as handle:
+        handle.write(text)
 
 
 def set_key(block, key, value):
@@ -94,6 +125,10 @@ def main():
 
     if len(sys.argv) == 2 and sys.argv[1] == '--icc-profiles':
         print(json.dumps(icc_profiles()))
+        return 0
+
+    if len(sys.argv) == 4 and sys.argv[2] == '--primary':
+        set_primary(sys.argv[1], sys.argv[3])
         return 0
 
     if len(sys.argv) < 4:

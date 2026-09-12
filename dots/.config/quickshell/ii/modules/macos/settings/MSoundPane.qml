@@ -124,19 +124,19 @@ Column {
         width: parent.width
 
         Repeater {
-            model: MAudioCards.cards
+            model: AudioCards.cards
 
             MSettingsRow {
                 required property var modelData
                 required property int index
 
                 label: modelData.description
-                separator: index < MAudioCards.cards.length - 1
+                separator: index < AudioCards.cards.length - 1
 
                 MPopupButton {
                     current: modelData.active
                     options: modelData.profiles
-                    onSelected: value => MAudioCards.setProfile(modelData.name, value)
+                    onSelected: value => AudioCards.setProfile(modelData.name, value)
                 }
             }
         }
