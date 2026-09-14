@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
@@ -88,6 +89,18 @@ ContentPage {
                     }))
         }
 
+        RippleButtonWithIcon {
+            materialIcon: "refresh"
+            mainText: Translation.tr("Rescan displays")
+            onClicked: {
+                Quickshell.execDetached(["hyprctl", "dispatch", "forcerendererreload"]);
+                DisplayOptions.reload();
+            }
+            StyledToolTip {
+                text: Translation.tr("Asks every monitor what it can do again. Modes a display only reports after it is fully awake show up after this.")
+            }
+        }
+
         ContentSubsection {
             title: Translation.tr("Use as")
             visible: root.others.length > 0
@@ -116,16 +129,14 @@ ContentPage {
                 onActivated: index => {
                     const value = model[index].value;
                     if (value === "main") {
-                        DisplayOptions.setPrimary(root.name, null);
+                        DisplayOptions.setPrimary(root.name);
                         return;
                     }
-                    const keys = {
-                        mirror: value === "extend" ? "" : value
-                    };
                     if (DisplayOptions.primary === root.name)
-                        DisplayOptions.setPrimary(root.others[0]?.name ?? "", keys);
-                    else
-                        root.apply(keys);
+                        DisplayOptions.setPrimary(root.others[0]?.name ?? "");
+                    root.apply({
+                        mirror: value === "extend" ? "" : value
+                    });
                 }
             }
         }
@@ -514,6 +525,53 @@ ContentPage {
                 to: 2000
                 stepSize: 1
                 onCommitted: size => DisplayOptions.setReservedSide(root.monitor, reserved.modelData.side, size)
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "nightlight"
+        title: Translation.tr("Night light")
+
+        ConfigSwitch {
+            buttonIcon: "schedule"
+            text: Translation.tr("Automatic schedule")
+            checked: Config.options.light.night.automatic
+            onCheckedChanged: {
+                Config.options.light.night.automatic = checked;
+            }
+        }
+
+        ConfigRow {
+            uniform: true
+            enabled: Config.options.light.night.automatic
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("From (HH:mm)")
+                text: Config.options.light.night.from
+                onEditingFinished: {
+                    Config.options.light.night.from = text.trim();
+                }
+            }
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("To (HH:mm)")
+                text: Config.options.light.night.to
+                onEditingFinished: {
+                    Config.options.light.night.to = text.trim();
+                }
+            }
+        }
+
+        ConfigSpinBox {
+            icon: "thermostat"
+            text: Translation.tr("Color temperature (K)")
+            value: Config.options.light.night.colorTemperature
+            from: 1000
+            to: 6500
+            stepSize: 100
+            onValueChanged: {
+                Config.options.light.night.colorTemperature = value;
             }
         }
     }

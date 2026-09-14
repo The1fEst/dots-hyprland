@@ -12,8 +12,31 @@ Singleton {
     readonly property string file: Quickshell.env("HOME") + "/.config/hypr/settings.lua"
 
     property var requested: ({})
-    property string primary: ""
+    property string chosenPrimary: ""
     property list<string> iccProfiles: []
+
+    readonly property var connectorPreference: ({
+        DP: 0,
+        HDMI: 1,
+        DVI: 2,
+        eDP: 3,
+        LVDS: 4,
+        VGA: 5
+    })
+
+    readonly property string defaultPrimary: HyprlandData.monitors.slice().sort((a, b) => root.connectorRankOf(a.name) - root.connectorRankOf(b.name) || root.connectorNumberOf(a.name) - root.connectorNumberOf(b.name) || a.name.localeCompare(b.name))[0]?.name ?? ""
+
+    readonly property string primary: HyprlandData.monitors.some(m => m.name === root.chosenPrimary) ? root.chosenPrimary : root.defaultPrimary
+
+    function connectorRankOf(name: string): int {
+        const rank = root.connectorPreference[name.split("-")[0]];
+        return rank === undefined ? 9 : rank;
+    }
+
+    function connectorNumberOf(name: string): int {
+        const trailing = name.match(/(\d+)$/);
+        return trailing ? parseInt(trailing[1]) : 0;
+    }
 
     readonly property var ruleDefaults: ({
         bitdepth: 8,
@@ -212,41 +235,83 @@ Singleton {
         delete settings.rate;
 
         const pairs = Object.keys(settings).map(key => `${key}=${settings[key]}`);
-        persistProc.exec(["python3", root.tool, root.file, monitor.name].concat(pairs));
+        root.enqueueWrite(["python3", root.tool, root.file, monitor.name].concat(pairs));
+    }
+
+    function placeAll(spots: var): void {
+        for (const spot of spots) {
+            const monitor = HyprlandData.monitors.find(m => m.name === spot.name);
+            const position = `${spot.x}x${spot.y}`;
+            if (!monitor || (monitor.x === spot.x && monitor.y === spot.y && root.ruleOf(spot.name).position === position))
+                continue;
+            root.applyTo(monitor, {
+                position: position
+            });
+        }
+    }
+
+    function anchorOn(name: string): void {
+        const anchor = HyprlandData.monitors.find(m => m.name === name);
+        if (!anchor)
+            return;
+        root.placeAll(HyprlandData.monitors.map(m => ({
+                    name: m.name,
+                    x: m.x - anchor.x,
+                    y: m.y - anchor.y
+                })));
     }
 
     function moveTo(name: string, x: int, y: int): void {
-        root.applyTo(HyprlandData.monitors.find(m => m.name === name), {
-            position: `${x}x${y}`
-        });
+        const moved = HyprlandData.monitors.map(m => ({
+                    name: m.name,
+                    x: m.name === name ? x : m.x,
+                    y: m.name === name ? y : m.y
+                }));
+        const anchor = moved.find(m => m.name === root.primary) ?? moved[0];
+        if (!anchor)
+            return;
+        root.placeAll(moved.map(m => ({
+                    name: m.name,
+                    x: m.x - anchor.x,
+                    y: m.y - anchor.y
+                })));
     }
 
-    property var keysAfterPrimary: null
-
-    function setPrimary(name: string, keys: var): void {
-        root.keysAfterPrimary = keys;
-        primaryProc.exec(["python3", root.tool, root.file, "--primary", name]);
+    function setPrimary(name: string): void {
+        if (name.length === 0)
+            return;
+        root.enqueueWrite(["python3", root.tool, root.file, "--primary", name]);
+        root.anchorOn(name);
     }
 
     function reload(): void {
         readProc.running = true;
     }
 
-    Process {
-        id: primaryProc
-        onExited: {
-            const keys = root.keysAfterPrimary;
-            root.keysAfterPrimary = null;
-            if (keys)
-                root.applyTo(HyprlandData.monitors.find(m => m.name === root.primary), keys);
-            else
-                reloadProc.running = true;
+    property var pendingWrites: []
+    property bool writing: false
+
+    function enqueueWrite(command: var): void {
+        root.pendingWrites = [...root.pendingWrites, command];
+        if (!root.writing)
+            root.runNextWrite();
+    }
+
+    function runNextWrite(): void {
+        if (root.pendingWrites.length === 0) {
+            root.writing = false;
+            reloadProc.running = true;
+            return;
         }
+        const next = root.pendingWrites[0];
+        root.pendingWrites = root.pendingWrites.slice(1);
+        root.writing = true;
+        persistProc.exec(next);
     }
 
     Process {
         id: persistProc
-        onExited: reloadProc.running = true
+        onExited: root.runNextWrite()
     }
 
     Process {
@@ -267,7 +332,7 @@ Singleton {
             onStreamFinished: {
                 const kept = JSON.parse(this.text.length > 0 ? this.text : "{}");
                 root.requested = kept.monitors ?? ({});
-                root.primary = kept.primary ?? "";
+                root.chosenPrimary = kept.primary ?? "";
             }
         }
     }
