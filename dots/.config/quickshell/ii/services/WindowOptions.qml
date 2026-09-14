@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Hyprland
 
 Singleton {
     id: root
@@ -19,6 +20,10 @@ Singleton {
         return typeof raw === "string" ? parseFloat(raw) : (raw ?? 0);
     }
 
+    function numberOr(name: string, fallback: real): real {
+        return root.options[name] === undefined ? fallback : root.number(name);
+    }
+
     function flag(name: string): bool {
         return root.options[name] === true;
     }
@@ -29,6 +34,14 @@ Singleton {
 
     function reload(): void {
         readProc.running = true;
+    }
+
+    Connections {
+        target: Hyprland
+        function onRawEvent(event) {
+            if (event.name === "configreloaded")
+                root.reload();
+        }
     }
 
     Process {

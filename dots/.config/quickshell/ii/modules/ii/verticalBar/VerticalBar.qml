@@ -55,12 +55,15 @@ Scope {
                 }
                 property bool superShow: false
                 property bool mustShow: hoverRegion.containsMouse || superShow
+
+                readonly property real hugRounding: WindowOptions.numberOr("decoration:rounding", Appearance.rounding.screenRounding)
+
                 exclusionMode: ExclusionMode.Ignore
                 exclusiveZone: (Config?.options.bar.autoHide.enable && (!mustShow || !Config?.options.bar.autoHide.pushWindows)) ? 0 :
                     Appearance.sizes.baseVerticalBarWidth + (Config.options.bar.cornerStyle === 1 ? Appearance.sizes.hyprlandGapsOut : 0)
                 WlrLayershell.namespace: "quickshell:verticalBar"
                 // WlrLayershell.layer: WlrLayer.Overlay // TODO enable this when bar can hide when fullscreen
-                implicitWidth: Appearance.sizes.verticalBarWidth + Appearance.rounding.screenRounding
+                implicitWidth: Appearance.sizes.verticalBarWidth + barRoot.hugRounding
                 mask: Region {
                     item: hoverMaskRegion
                 }
@@ -144,7 +147,7 @@ Scope {
                             left: barContent.right
                             right: undefined
                         }
-                        width: Appearance.rounding.screenRounding
+                        width: barRoot.hugRounding
                         active: showBarBackground && Config.options.bar.cornerStyle === 0 // Hug
 
                         states: State {
@@ -162,7 +165,7 @@ Scope {
                         }
 
                         sourceComponent: Item {
-                            implicitHeight: Appearance.rounding.screenRounding
+                            implicitHeight: barRoot.hugRounding
                             RoundCorner {
                                 id: topCorner
                                 anchors {
@@ -171,7 +174,7 @@ Scope {
                                     top: parent.top
                                 }
 
-                                implicitSize: Appearance.rounding.screenRounding
+                                implicitSize: barRoot.hugRounding
                                 color: showBarBackground ? Appearance.colors.colLayer0 : "transparent"
 
                                 corner: RoundCorner.CornerEnum.TopLeft
@@ -190,7 +193,7 @@ Scope {
                                     left: !Config.options.bar.bottom ? parent.left : undefined
                                     right: Config.options.bar.bottom ? parent.right : undefined
                                 }
-                                implicitSize: Appearance.rounding.screenRounding
+                                implicitSize: barRoot.hugRounding
                                 color: showBarBackground ? Appearance.colors.colLayer0 : "transparent"
 
                                 corner: RoundCorner.CornerEnum.BottomLeft
