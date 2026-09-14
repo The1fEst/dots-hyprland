@@ -239,14 +239,26 @@ ContentPage {
 
         ContentSubsection {
             title: Translation.tr("Monitors")
-            tooltip: Translation.tr("Comma-separated monitor names (see 'hyprctl monitors'). Leave empty to show the bar everywhere.")
+            tooltip: Translation.tr("Which monitors get a bar. With none picked it shows on all of them.")
 
-            MaterialTextField {
-                Layout.fillWidth: true
-                placeholderText: Translation.tr("e.g. eDP-1, HDMI-A-1")
-                text: (Config.options.bar.screenList ?? []).join(", ")
-                onEditingFinished: {
-                    Config.options.bar.screenList = StringUtils.splitList(text);
+            Repeater {
+                model: HyprlandData.monitors
+
+                ConfigSwitch {
+                    id: barScreen
+
+                    required property var modelData
+
+                    readonly property var picked: Config.options.bar.screenList ?? []
+
+                    buttonIcon: "monitor"
+                    text: `${barScreen.modelData.model || barScreen.modelData.name} (${barScreen.modelData.name})`
+                    checked: barScreen.picked.includes(barScreen.modelData.name)
+                    onCheckedChanged: {
+                        if (checked === barScreen.picked.includes(barScreen.modelData.name))
+                            return;
+                        Config.options.bar.screenList = checked ? [...barScreen.picked, barScreen.modelData.name] : barScreen.picked.filter(name => name !== barScreen.modelData.name);
+                    }
                 }
             }
         }

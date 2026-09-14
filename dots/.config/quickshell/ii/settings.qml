@@ -29,9 +29,9 @@ ApplicationWindow {
             component: "modules/settings/QuickConfig.qml"
         },
         {
-            name: Translation.tr("General"),
-            icon: "browse",
-            component: "modules/settings/GeneralConfig.qml"
+            name: Translation.tr("Appearance"),
+            icon: "palette",
+            component: "modules/settings/AppearanceConfig.qml"
         },
         {
             name: Translation.tr("Bar"),
@@ -40,24 +40,39 @@ ApplicationWindow {
             component: "modules/settings/BarConfig.qml"
         },
         {
+            name: Translation.tr("Panels"),
+            icon: "bottom_app_bar",
+            component: "modules/settings/PanelsConfig.qml"
+        },
+        {
             name: Translation.tr("Background"),
             icon: "texture",
             component: "modules/settings/BackgroundConfig.qml"
         },
         {
-            name: Translation.tr("Interface"),
-            icon: "bottom_app_bar",
-            component: "modules/settings/InterfaceConfig.qml"
+            name: Translation.tr("Lock screen"),
+            icon: "lock",
+            component: "modules/settings/LockConfig.qml"
         },
         {
-            name: Translation.tr("Desktop"),
-            icon: "desktop_windows",
-            component: "modules/settings/DesktopConfig.qml"
+            name: Translation.tr("Capture"),
+            icon: "screenshot_frame_2",
+            component: "modules/settings/CaptureConfig.qml"
         },
         {
             name: Translation.tr("Displays"),
             icon: "monitor",
             component: "modules/settings/DisplaysConfig.qml"
+        },
+        {
+            name: Translation.tr("Sound"),
+            icon: "volume_up",
+            component: "modules/settings/SoundConfig.qml"
+        },
+        {
+            name: Translation.tr("General"),
+            icon: "browse",
+            component: "modules/settings/GeneralConfig.qml"
         },
         {
             name: Translation.tr("Services"),
@@ -167,7 +182,7 @@ ApplicationWindow {
                 id: navRailWrapper
                 Layout.fillHeight: true
                 Layout.margins: 5
-                implicitWidth: navRail.expanded ? 150 : fab.baseSize
+                implicitWidth: navRail.expanded ? Math.min(230, Math.max(150, tabArray.implicitWidth)) : fab.baseSize
                 Behavior on implicitWidth {
                     animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
                 }
@@ -175,6 +190,7 @@ ApplicationWindow {
                     id: navRail
                     anchors {
                         left: parent.left
+                        right: parent.right
                         top: parent.top
                         bottom: parent.bottom
                     }
@@ -213,27 +229,57 @@ ApplicationWindow {
                         }
                     }
 
-                    NavigationRailTabArray {
-                        currentIndex: root.currentPage
-                        expanded: navRail.expanded
-                        Repeater {
-                            model: root.pages
-                            NavigationRailButton {
-                                required property var index
-                                required property var modelData
-                                toggled: root.currentPage === index
-                                onPressed: root.currentPage = index;
-                                expanded: navRail.expanded
-                                buttonIcon: modelData.icon
-                                buttonIconRotation: modelData.iconRotation || 0
-                                buttonText: modelData.name
-                                showToggledHighlight: false
+                    StyledFlickable {
+                        id: navRailScroll
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        contentHeight: tabArray.implicitHeight
+                        clip: true
+
+                        function revealCurrentPage(): void {
+                            const tabHeight = tabArray.implicitHeight / Math.max(1, root.pages.length);
+                            const top = root.currentPage * tabHeight;
+                            const bottom = top + tabHeight;
+                            if (top < navRailScroll.contentY)
+                                navRailScroll.contentY = top;
+                            else if (bottom > navRailScroll.contentY + navRailScroll.height)
+                                navRailScroll.contentY = bottom - navRailScroll.height;
+                        }
+
+                        Connections {
+                            target: root
+                            function onCurrentPageChanged() {
+                                navRailScroll.revealCurrentPage();
                             }
                         }
-                    }
 
-                    Item {
-                        Layout.fillHeight: true
+                        NavigationRailTabArray {
+                            id: tabArray
+                            width: navRailScroll.width
+                            height: implicitHeight
+                            currentIndex: root.currentPage
+                            expanded: navRail.expanded
+                            Repeater {
+                                model: root.pages
+                                NavigationRailButton {
+                                    required property var index
+                                    required property var modelData
+                                    toggled: root.currentPage === index
+                                    onPressed: root.currentPage = index;
+                                    expanded: navRail.expanded
+                                    buttonIcon: modelData.icon
+                                    buttonIconRotation: modelData.iconRotation || 0
+                                    buttonText: modelData.name
+                                    showLabel: navRail.expanded
+                                    showToggledHighlight: false
+
+                                    StyledToolTip {
+                                        extraVisibleCondition: !navRail.expanded
+                                        text: modelData.name
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

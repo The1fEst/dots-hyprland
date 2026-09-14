@@ -95,69 +95,6 @@ ContentPage {
     }
 
     ContentSection {
-        icon: "volume_up"
-        title: Translation.tr("Audio")
-
-        ConfigSwitch {
-            buttonIcon: "hearing"
-            text: Translation.tr("Earbang protection")
-            checked: Config.options.audio.protection.enable
-            onCheckedChanged: {
-                Config.options.audio.protection.enable = checked;
-            }
-            StyledToolTip {
-                text: Translation.tr("Prevents abrupt increments and restricts volume limit")
-            }
-        }
-        ConfigRow {
-            enabled: Config.options.audio.protection.enable
-            ConfigSpinBox {
-                icon: "arrow_warm_up"
-                text: Translation.tr("Max allowed increase")
-                value: Config.options.audio.protection.maxAllowedIncrease
-                from: 0
-                to: 100
-                stepSize: 2
-                onValueChanged: {
-                    Config.options.audio.protection.maxAllowedIncrease = value;
-                }
-            }
-            ConfigSpinBox {
-                icon: "vertical_align_top"
-                text: Translation.tr("Volume limit")
-                value: Config.options.audio.protection.maxAllowed
-                from: 0
-                to: 154 // pavucontrol allows up to 153%
-                stepSize: 2
-                onValueChanged: {
-                    Config.options.audio.protection.maxAllowed = value;
-                }
-            }
-        }
-
-        Repeater {
-            model: AudioCards.cards
-
-            ContentSubsection {
-                id: card
-
-                required property var modelData
-
-                title: card.modelData.description
-                tooltip: Translation.tr("Which of the card's input and output configurations PipeWire uses")
-
-                StyledComboBox {
-                    buttonIcon: "speaker"
-                    textRole: "label"
-                    model: card.modelData.profiles
-                    currentIndex: Math.max(0, card.modelData.profiles.findIndex(profile => profile.value === card.modelData.active))
-                    onActivated: index => AudioCards.setProfile(card.modelData.name, card.modelData.profiles[index].value)
-                }
-            }
-        }
-    }
-
-    ContentSection {
         icon: "apps"
         title: Translation.tr("Applications")
 
@@ -312,24 +249,8 @@ ContentPage {
     }
 
     ContentSection {
-        icon: "calendar_month"
-        title: Translation.tr("Calendar")
-
-        MaterialTextField {
-            Layout.fillWidth: true
-            Layout.leftMargin: 8
-            Layout.rightMargin: 8
-            placeholderText: Translation.tr("Locale (e.g. en-GB, determines the first day of week)")
-            text: Config.options.calendar.locale
-            onEditingFinished: {
-                Config.options.calendar.locale = text.trim();
-            }
-        }
-    }
-
-    ContentSection {
         icon: "language"
-        title: Translation.tr("Language")
+        title: Translation.tr("Language & region")
 
         ContentSubsection {
             title: Translation.tr("Interface Language")
@@ -362,46 +283,25 @@ ContentPage {
                 }
             }
         }
-    }
 
-    ContentSection {
-        icon: "notification_sound"
-        title: Translation.tr("Sounds")
-        ConfigRow {
-            uniform: true
-            ConfigSwitch {
-                buttonIcon: "battery_android_full"
-                text: Translation.tr("Battery")
-                checked: Config.options.sounds.battery
-                onCheckedChanged: {
-                    Config.options.sounds.battery = checked;
-                }
-            }
-            ConfigSwitch {
-                buttonIcon: "av_timer"
-                text: Translation.tr("Pomodoro")
-                checked: Config.options.sounds.pomodoro
-                onCheckedChanged: {
-                    Config.options.sounds.pomodoro = checked;
-                }
-            }
-        }
+        ContentSubsection {
+            title: Translation.tr("Calendar locale")
+            tooltip: Translation.tr("Determines the first day of week")
 
-        MaterialTextField {
-            Layout.fillWidth: true
-            Layout.leftMargin: 8
-            Layout.rightMargin: 8
-            placeholderText: Translation.tr("Sound theme (e.g. freedesktop)")
-            text: Config.options.sounds.theme
-            onEditingFinished: {
-                Config.options.sounds.theme = text.trim();
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("e.g. en-GB")
+                text: Config.options.calendar.locale
+                onEditingFinished: {
+                    Config.options.calendar.locale = text.trim();
+                }
             }
         }
     }
 
     ContentSection {
         icon: "nest_clock_farsight_analog"
-        title: Translation.tr("Time")
+        title: Translation.tr("Time & date")
 
         ConfigSwitch {
             buttonIcon: "pace"
