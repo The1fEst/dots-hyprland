@@ -1,0 +1,14 @@
+[Module-devicenotifications]
+autoload=true
+
+[Module-browserintegrationreminder]
+autoload=false
+
+[Module-donationmessage]
+autoload=false
+
+[Module-plasma_session_shortcuts]
+autoload=false
+
+[Module-statusnotifierwatcher]
+autoload=false
