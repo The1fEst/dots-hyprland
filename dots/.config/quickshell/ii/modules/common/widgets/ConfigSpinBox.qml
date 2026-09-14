@@ -12,9 +12,14 @@ RowLayout {
     property alias from: spinBoxWidget.from
     property alias to: spinBoxWidget.to
     property alias decimals: spinBoxWidget.decimals
+    readonly property alias hovered: hoverHandler.hovered
     spacing: 10
     Layout.leftMargin: 8
     Layout.rightMargin: 8
+
+    HoverHandler {
+        id: hoverHandler
+    }
 
     RowLayout {
         spacing: 10
