@@ -19,15 +19,52 @@ Singleton {
     // For the service
     property var baseLayoutFilePath: "/usr/share/X11/xkb/rules/base.lst"
     property bool needsLayoutRefresh: false
+    property bool keyboardsDisagree: false
+
+    function applyLayoutIndex(index: int) {
+        if (index < 0 || index >= root.layoutCodes.length)
+            return;
+        applyLayoutProc.exec(["hyprctl", "switchxkblayout", "all", String(index)]);
+    }
+
+    function cycleLayout() {
+        if (root.layoutCodes.length <= 1)
+            return;
+        const current = root.layoutCodes.indexOf(root.currentLayoutCode);
+        root.applyLayoutIndex((current + 1) % root.layoutCodes.length);
+    }
+
+    function alignKeyboards() {
+        if (!root.keyboardsDisagree)
+            return;
+        root.keyboardsDisagree = false;
+        root.applyLayoutIndex(root.layoutCodes.indexOf(root.currentLayoutCode));
+    }
+
+    Timer {
+        id: settleTimer
+        interval: 120
+        onTriggered: fetchLayoutsProc.running = true
+    }
 
     // Update the layout code according to the layout name (Hyprland gives the name not the code)
-    onCurrentLayoutNameChanged: root.updateLayoutCode()
+    onCurrentLayoutNameChanged: {
+        root.updateLayoutCode();
+        const oskLayout = root.currentLayoutName.split(" (")[0];
+        if (Config.options.osk.layout !== oskLayout)
+            Config.options.osk.layout = oskLayout;
+    }
     function updateLayoutCode() {
         if (cachedLayoutCodes.hasOwnProperty(currentLayoutName)) {
             root.currentLayoutCode = cachedLayoutCodes[currentLayoutName];
+            root.alignKeyboards();
         } else {
             getLayoutProc.running = true;
         }
+    }
+
+    Process {
+        id: applyLayoutProc
     }
 
     // Get the layout code from the base.lst file by grabbing the line with the current layout name
@@ -62,9 +99,10 @@ Singleton {
                         root.currentLayoutCode = complexLayout;
                         return true;
                     }
-                    
+
                     return false;
                 });
+                root.alignKeyboards();
                 // console.log("[HyprlandXkb] Found line:", foundLine);
                 // console.log("[HyprlandXkb] Layout:", root.currentLayoutName, "| Code:", root.currentLayoutCode);
                 // console.log("[HyprlandXkb] Cached layout codes:", JSON.stringify(root.cachedLayoutCodes, null, 2));
@@ -81,10 +119,20 @@ Singleton {
         stdout: StdioCollector {
             id: devicesCollector
             onStreamFinished: {
-                const parsedOutput = JSON.parse(devicesCollector.text);
-                const hyprlandKeyboard = parsedOutput["keyboards"].find(kb => kb.main === true);
+                const keyboards = JSON.parse(devicesCollector.text)["keyboards"] ?? [];
+                if (keyboards.length === 0)
+                    return;
+                const hyprlandKeyboard = keyboards.find(kb => kb.main === true) ?? keyboards[0];
                 root.layoutCodes = hyprlandKeyboard["layout"].split(",");
-                root.currentLayoutName = hyprlandKeyboard["active_keymap"];
+
+                const votes = ({});
+                for (const keyboard of keyboards)
+                    votes[keyboard["active_keymap"]] = (votes[keyboard["active_keymap"]] ?? 0) + 1;
+                const byPopularity = Object.keys(votes).sort((one, other) => votes[other] - votes[one]);
+
+                root.keyboardsDisagree = byPopularity.length > 1;
+                root.currentLayoutName = byPopularity[0];
+                root.updateLayoutCode();
                 // console.log("[HyprlandXkb] Fetched | Layouts (multiple: " + (root.layoutCodes.length > 1) + "): "
                 //     + root.layoutCodes.join(", ") + " | Active: " + root.currentLayoutName);
             }
@@ -104,12 +152,9 @@ Singleton {
                 // If there's only one layout, the updated layout is always the same
                 if (root.layoutCodes.length <= 1) return;
 
-                // Update when layout might have changed
                 const dataString = event.data;
-                root.currentLayoutName = dataString.substring(dataString.indexOf(",") + 1);
-
-                // Update layout for on-screen keyboard (osk)
-                Config.options.osk.layout = root.currentLayoutName.split(" (")[0];
+                if (dataString.substring(dataString.indexOf(",") + 1) !== root.currentLayoutName)
+                    settleTimer.restart();
             } else if (event.name == "configreloaded") {
                 // Mark layout code list to be updated when config is reloaded
                 root.needsLayoutRefresh = true;

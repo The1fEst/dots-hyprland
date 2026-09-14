@@ -387,8 +387,9 @@ hl.bind("CTRL + SHIFT + ALT + SUPER + Delete", hl.dsp.exec_cmd("systemctl powero
 
 
 --##! Input
-hl.bind("SUPER + Space", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"),
+hl.bind("SUPER + Space", hl.dsp.global("quickshell:xkbLayoutNext"),
     { locked = true, description = "Input: Switch keyboard layout" })
+hl.bind("SUPER + Space", hl.dsp.exec_cmd(qsIsAlive .. " || hyprctl switchxkblayout all next"), { locked = true })
 
 --##! Apps
 hl.bind("SUPER + Return", hl.dsp.exec_cmd(terminal), { description = "App: Terminal" })

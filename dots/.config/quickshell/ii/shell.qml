@@ -80,5 +80,12 @@ ShellRoot {
 
         onPressed: Audio.toggleMicMute()
     }
+
+    GlobalShortcut {
+        name: "xkbLayoutNext"
+        description: "Switches every keyboard to the next layout"
+
+        onPressed: HyprlandXkb.cycleLayout()
+    }
 }
 
