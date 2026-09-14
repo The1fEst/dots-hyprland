@@ -13,6 +13,7 @@ TabButton {
     property real buttonIconRotation: 0
     property string buttonText
     property bool expanded: false
+    property bool showLabel: true
     property bool showToggledHighlight: true
     readonly property real visualWidth: root.expanded ? root.baseSize + 20 + itemText.implicitWidth : root.baseSize
 
@@ -41,7 +42,7 @@ TabButton {
         }
         
         implicitWidth: root.visualWidth
-        implicitHeight: root.expanded ? itemIconBackground.implicitHeight : itemIconBackground.implicitHeight + itemText.implicitHeight 
+        implicitHeight: root.expanded || !root.showLabel ? itemIconBackground.implicitHeight : itemIconBackground.implicitHeight + itemText.implicitHeight
 
         Rectangle {
             id: itemBackground
@@ -142,6 +143,10 @@ TabButton {
                 }
             }
             text: buttonText
+            visible: root.showLabel
+            width: root.expanded ? implicitWidth : root.baseSize
+            horizontalAlignment: root.expanded ? Text.AlignLeft : Text.AlignHCenter
+            elide: Text.ElideRight
             font.pixelSize: 14
             color: Appearance.colors.colOnLayer1
         }
