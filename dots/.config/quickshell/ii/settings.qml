@@ -74,6 +74,12 @@ ApplicationWindow {
             keywords: ["notification", "banner", "message", "popup", "disturb", "osd"]
         },
         {
+            name: Translation.tr("Search"),
+            icon: "search",
+            component: "modules/settings/SearchConfig.qml",
+            keywords: ["search", "find", "launcher", "prefix", "results", "fuzzy"]
+        },
+        {
             name: Translation.tr("Mouse & Touchpad"),
             icon: "mouse",
             component: "modules/settings/MouseConfig.qml",
