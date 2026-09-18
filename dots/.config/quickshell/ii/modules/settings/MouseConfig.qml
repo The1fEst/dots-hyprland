@@ -121,4 +121,103 @@ ContentPage {
             }
         }
     }
+
+    ContentSection {
+        icon: "touch_app"
+        title: Translation.tr("Touchpad")
+
+        HyprlandSwitch {
+            buttonIcon: "keyboard"
+            text: Translation.tr("Disable while typing")
+            option: "input:touchpad:disable_while_typing"
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Clicking")
+
+            HyprlandSwitch {
+                buttonIcon: "touch_app"
+                text: Translation.tr("Tap to click")
+                option: "input:touchpad:tap-to-click"
+
+                StyledToolTip {
+                    text: Translation.tr("Quickly touch the touchpad to click.")
+                }
+            }
+
+            HyprlandSwitch {
+                buttonIcon: "drag_pan"
+                text: Translation.tr("Tap and drag")
+                option: "input:touchpad:tap-and-drag"
+            }
+
+            HyprlandSwitch {
+                buttonIcon: "pan_tool"
+                text: Translation.tr("Middle click with three fingers")
+                option: "input:touchpad:middle_button_emulation"
+            }
+
+            ContentSubsection {
+                title: Translation.tr("Secondary click")
+
+                ConfigSelectionArray {
+                    currentValue: HyprlandOptions.flag("input:touchpad:clickfinger_behavior")
+                    onSelected: newValue => HyprlandOptions.set("input:touchpad:clickfinger_behavior", newValue)
+                    options: [
+                        {
+                            displayName: Translation.tr("Corner push"),
+                            icon: "south_west",
+                            value: false
+                        },
+                        {
+                            displayName: Translation.tr("Two finger push"),
+                            icon: "touch_app",
+                            value: true
+                        }
+                    ]
+                }
+            }
+
+            ContentSubsection {
+                title: Translation.tr("Tap with two or three fingers")
+
+                ConfigSelectionArray {
+                    currentValue: HyprlandOptions.text("input:touchpad:tap_button_map") || "lrm"
+                    onSelected: newValue => HyprlandOptions.set("input:touchpad:tap_button_map", newValue)
+                    options: [
+                        {
+                            displayName: Translation.tr("Right, then middle"),
+                            icon: "arrow_forward",
+                            value: "lrm"
+                        },
+                        {
+                            displayName: Translation.tr("Middle, then right"),
+                            icon: "arrow_upward",
+                            value: "lmr"
+                        }
+                    ]
+                }
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Scrolling")
+
+            HyprlandSwitch {
+                buttonIcon: "swap_vert"
+                text: Translation.tr("Natural scrolling")
+                option: "input:touchpad:natural_scroll"
+            }
+
+            OptionSpinBox {
+                icon: "height"
+                text: Translation.tr("Scroll amount (%)")
+                current: Math.round(HyprlandOptions.number("input:touchpad:scroll_factor") * 100)
+                from: 10
+                to: 500
+                stepSize: 10
+                onCommitted: factor => HyprlandOptions.set("input:touchpad:scroll_factor", factor / 100)
+            }
+        }
+    }
 }
