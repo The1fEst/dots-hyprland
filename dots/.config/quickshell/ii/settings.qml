@@ -43,6 +43,12 @@ ApplicationWindow {
             keywords: ["network", "ethernet", "wired", "vpn", "wireguard", "connection", "proxy"]
         },
         {
+            name: Translation.tr("Bluetooth"),
+            icon: "bluetooth",
+            component: "modules/settings/BluetoothConfig.qml",
+            keywords: ["bluetooth", "pair", "device", "headset", "mouse", "keyboard", "wireless"]
+        },
+        {
             name: Translation.tr("Displays"),
             icon: "monitor",
             component: "modules/settings/DisplaysConfig.qml",
