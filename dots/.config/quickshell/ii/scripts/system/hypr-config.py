@@ -26,15 +26,18 @@ def run(command):
 
 
 def read(options):
+    batch = ' ; '.join('getoption %s' % option for option in options)
     state = {}
-    for option in options:
+    for line in run(['hyprctl', '-j', '--batch', batch]).splitlines():
+        if not line.strip():
+            continue
         try:
-            reply = json.loads(run(['hyprctl', 'getoption', option, '-j']) or '{}')
+            reply = json.loads(line)
         except json.JSONDecodeError:
             continue
         for kind in ('int', 'float', 'bool', 'str', 'css', 'vec2'):
             if kind in reply:
-                state[option] = reply[kind]
+                state[reply['option']] = reply[kind]
                 break
     print(json.dumps(state))
 
@@ -51,7 +54,9 @@ def render(value):
 
 
 def line_for(option, value):
-    keys = option.split(':')
+    # hyprctl spells some options with a dash, the lua config only takes them as
+    # lua identifiers: input:touchpad:tap-to-click is set as tap_to_click.
+    keys = [key.replace('-', '_') for key in option.split(':')]
     body = '%s = %s' % (keys[-1], render(value))
     for key in reversed(keys[:-1]):
         body = '%s = { %s }' % (key, body)

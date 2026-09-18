@@ -466,11 +466,11 @@ ContentPage {
 
                     icon: windowOption.modelData.icon
                     text: windowOption.modelData.name
-                    current: WindowOptions.number(windowOption.modelData.option)
+                    current: HyprlandOptions.number(windowOption.modelData.option)
                     from: 0
                     to: windowOption.modelData.to
                     stepSize: 1
-                    onCommitted: value => WindowOptions.set(windowOption.modelData.option, value)
+                    onCommitted: value => HyprlandOptions.set(windowOption.modelData.option, value)
                 }
             }
         }
@@ -481,22 +481,22 @@ ContentPage {
             OptionSpinBox {
                 icon: "rounded_corner"
                 text: Translation.tr("Corner rounding")
-                current: WindowOptions.number("decoration:rounding")
+                current: HyprlandOptions.number("decoration:rounding")
                 from: 0
                 to: 40
                 stepSize: 1
-                onCommitted: radius => WindowOptions.set("decoration:rounding", radius)
+                onCommitted: radius => HyprlandOptions.set("decoration:rounding", radius)
             }
 
             OptionSpinBox {
                 icon: "line_curve"
                 text: Translation.tr("Corner shape")
-                current: Math.round(WindowOptions.number("decoration:rounding_power") * 10)
+                current: Math.round(HyprlandOptions.number("decoration:rounding_power") * 10)
                 decimals: 1
                 from: 20
                 to: 100
                 stepSize: 1
-                onCommitted: power => WindowOptions.set("decoration:rounding_power", power / 10)
+                onCommitted: power => HyprlandOptions.set("decoration:rounding_power", power / 10)
                 StyledToolTip {
                     text: Translation.tr("2 is a circle, higher squares the corner off while keeping it smooth")
                 }
@@ -509,45 +509,45 @@ ContentPage {
             ConfigSwitch {
                 buttonIcon: "blur_on"
                 text: Translation.tr("Blur behind windows")
-                checked: WindowOptions.flag("decoration:blur:enabled")
+                checked: HyprlandOptions.flag("decoration:blur:enabled")
                 onCheckedChanged: {
-                    if (checked !== WindowOptions.flag("decoration:blur:enabled"))
-                        WindowOptions.set("decoration:blur:enabled", checked);
+                    if (checked !== HyprlandOptions.flag("decoration:blur:enabled"))
+                        HyprlandOptions.set("decoration:blur:enabled", checked);
                 }
             }
 
             ConfigRow {
-                enabled: WindowOptions.flag("decoration:blur:enabled")
+                enabled: HyprlandOptions.flag("decoration:blur:enabled")
 
                 OptionSpinBox {
                     icon: "blur_circular"
                     text: Translation.tr("Radius")
-                    current: WindowOptions.number("decoration:blur:size")
+                    current: HyprlandOptions.number("decoration:blur:size")
                     from: 1
                     to: 40
                     stepSize: 1
-                    onCommitted: size => WindowOptions.set("decoration:blur:size", size)
+                    onCommitted: size => HyprlandOptions.set("decoration:blur:size", size)
                 }
 
                 OptionSpinBox {
                     icon: "layers"
                     text: Translation.tr("Passes")
-                    current: WindowOptions.number("decoration:blur:passes")
+                    current: HyprlandOptions.number("decoration:blur:passes")
                     from: 1
                     to: 10
                     stepSize: 1
-                    onCommitted: passes => WindowOptions.set("decoration:blur:passes", passes)
+                    onCommitted: passes => HyprlandOptions.set("decoration:blur:passes", passes)
                 }
             }
 
             ConfigSwitch {
                 buttonIcon: "hide_image"
                 text: Translation.tr("X-ray")
-                enabled: WindowOptions.flag("decoration:blur:enabled")
-                checked: WindowOptions.flag("decoration:blur:xray")
+                enabled: HyprlandOptions.flag("decoration:blur:enabled")
+                checked: HyprlandOptions.flag("decoration:blur:xray")
                 onCheckedChanged: {
-                    if (checked !== WindowOptions.flag("decoration:blur:xray"))
-                        WindowOptions.set("decoration:blur:xray", checked);
+                    if (checked !== HyprlandOptions.flag("decoration:blur:xray"))
+                        HyprlandOptions.set("decoration:blur:xray", checked);
                 }
                 StyledToolTip {
                     text: Translation.tr("A floating window blurs the wallpaper rather than the windows behind it")
@@ -562,21 +562,21 @@ ContentPage {
                 OptionSpinBox {
                     icon: "opacity"
                     text: Translation.tr("Focused window (%)")
-                    current: Math.round(WindowOptions.number("decoration:active_opacity") * 100)
+                    current: Math.round(HyprlandOptions.number("decoration:active_opacity") * 100)
                     from: 10
                     to: 100
                     stepSize: 1
-                    onCommitted: opacity => WindowOptions.set("decoration:active_opacity", opacity / 100)
+                    onCommitted: opacity => HyprlandOptions.set("decoration:active_opacity", opacity / 100)
                 }
 
                 OptionSpinBox {
                     icon: "opacity"
                     text: Translation.tr("Other windows (%)")
-                    current: Math.round(WindowOptions.number("decoration:inactive_opacity") * 100)
+                    current: Math.round(HyprlandOptions.number("decoration:inactive_opacity") * 100)
                     from: 10
                     to: 100
                     stepSize: 1
-                    onCommitted: opacity => WindowOptions.set("decoration:inactive_opacity", opacity / 100)
+                    onCommitted: opacity => HyprlandOptions.set("decoration:inactive_opacity", opacity / 100)
                 }
             }
         }
@@ -587,20 +587,20 @@ ContentPage {
             ConfigSwitch {
                 buttonIcon: "animation"
                 text: Translation.tr("Animations")
-                checked: WindowOptions.flag("animations:enabled")
+                checked: HyprlandOptions.flag("animations:enabled")
                 onCheckedChanged: {
-                    if (checked !== WindowOptions.flag("animations:enabled"))
-                        WindowOptions.set("animations:enabled", checked);
+                    if (checked !== HyprlandOptions.flag("animations:enabled"))
+                        HyprlandOptions.set("animations:enabled", checked);
                 }
             }
 
             ConfigSwitch {
                 buttonIcon: "screenshot_monitor"
                 text: Translation.tr("Allow tearing")
-                checked: WindowOptions.flag("general:allow_tearing")
+                checked: HyprlandOptions.flag("general:allow_tearing")
                 onCheckedChanged: {
-                    if (checked !== WindowOptions.flag("general:allow_tearing"))
-                        WindowOptions.set("general:allow_tearing", checked);
+                    if (checked !== HyprlandOptions.flag("general:allow_tearing"))
+                        HyprlandOptions.set("general:allow_tearing", checked);
                 }
                 StyledToolTip {
                     text: Translation.tr("Lets a game draw a frame before the display is ready for it, trading a torn line for latency")

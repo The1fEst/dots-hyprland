@@ -53,7 +53,7 @@ Scope {
                 property bool superShow: false
                 property bool mustShow: hoverRegion.containsMouse || superShow
 
-                readonly property real hugRounding: WindowOptions.numberOr("decoration:rounding", Appearance.rounding.screenRounding)
+                readonly property real hugRounding: HyprlandOptions.numberOr("decoration:rounding", Appearance.rounding.screenRounding)
                 exclusionMode: ExclusionMode.Ignore
                 exclusiveZone: (Config?.options.bar.autoHide.enable && (!mustShow || !Config?.options.bar.autoHide.pushWindows)) ? 0 :
                     Appearance.sizes.baseBarHeight + (Config.options.bar.cornerStyle === 1 ? Appearance.sizes.hyprlandGapsOut : 0)
