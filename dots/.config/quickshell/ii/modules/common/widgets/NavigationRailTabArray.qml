@@ -12,20 +12,28 @@ Item {
     implicitWidth: tabBarColumn.implicitWidth
     Layout.topMargin: 25
 
-    Rectangle {
-        property real itemHeight: tabBarColumn.children[0]?.baseSize ?? 56
-        property real baseHighlightHeight: tabBarColumn.children[0]?.baseHighlightHeight ?? 56
-        anchors {
-            top: tabBarColumn.top
-            left: tabBarColumn.left
-            topMargin: itemHeight * root.currentIndex + (root.expanded ? 0 : ((itemHeight - baseHighlightHeight) / 2))
+    readonly property var tabItems: {
+        const buttons = [];
+        for (let i = 0; i < tabBarColumn.children.length; i++) {
+            const child = tabBarColumn.children[i];
+            if (child instanceof NavigationRailButton)
+                buttons.push(child);
         }
+        return buttons;
+    }
+    readonly property Item currentItem: root.tabItems[root.currentIndex] ?? null
+
+    Rectangle {
+        property real itemHeight: root.currentItem?.baseSize ?? 56
+        property real highlightHeight: root.currentItem?.baseHighlightHeight ?? 56
+        anchors.left: tabBarColumn.left
+        y: (root.currentItem?.y ?? 0) + (root.expanded ? 0 : ((itemHeight - highlightHeight) / 2))
         radius: Appearance.rounding.full
         color: Appearance.colors.colSecondaryContainer
-        implicitHeight: root.expanded ? itemHeight : baseHighlightHeight
-        implicitWidth: tabBarColumn?.children[root.currentIndex]?.visualWidth ?? 100
+        implicitHeight: root.expanded ? itemHeight : highlightHeight
+        implicitWidth: root.currentItem?.visualWidth ?? 100
 
-        Behavior on anchors.topMargin {
+        Behavior on y {
             NumberAnimation {
                 duration: Appearance.animationCurves.expressiveFastSpatialDuration
                 easing.type: Appearance.animation.elementMove.type

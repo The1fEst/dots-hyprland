@@ -237,9 +237,11 @@ ApplicationWindow {
                         clip: true
 
                         function revealCurrentPage(): void {
-                            const tabHeight = tabArray.implicitHeight / Math.max(1, root.pages.length);
-                            const top = root.currentPage * tabHeight;
-                            const bottom = top + tabHeight;
+                            const item = tabArray.currentItem;
+                            if (!item)
+                                return;
+                            const top = item.y;
+                            const bottom = top + item.height;
                             if (top < navRailScroll.contentY)
                                 navRailScroll.contentY = top;
                             else if (bottom > navRailScroll.contentY + navRailScroll.height)
