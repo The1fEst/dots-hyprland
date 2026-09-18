@@ -29,6 +29,17 @@ ApplicationWindow {
             component: "modules/settings/QuickConfig.qml"
         },
         {
+            name: Translation.tr("Displays"),
+            icon: "monitor",
+            component: "modules/settings/DisplaysConfig.qml",
+            startsGroup: true
+        },
+        {
+            name: Translation.tr("Sound"),
+            icon: "volume_up",
+            component: "modules/settings/SoundConfig.qml"
+        },
+        {
             name: Translation.tr("Appearance"),
             icon: "palette",
             component: "modules/settings/AppearanceConfig.qml"
@@ -50,29 +61,21 @@ ApplicationWindow {
             component: "modules/settings/BackgroundConfig.qml"
         },
         {
+            name: Translation.tr("General"),
+            icon: "browse",
+            component: "modules/settings/GeneralConfig.qml",
+            startsGroup: true
+        },
+        {
             name: Translation.tr("Lock screen"),
             icon: "lock",
-            component: "modules/settings/LockConfig.qml"
+            component: "modules/settings/LockConfig.qml",
+            startsGroup: true
         },
         {
             name: Translation.tr("Capture"),
             icon: "screenshot_frame_2",
             component: "modules/settings/CaptureConfig.qml"
-        },
-        {
-            name: Translation.tr("Displays"),
-            icon: "monitor",
-            component: "modules/settings/DisplaysConfig.qml"
-        },
-        {
-            name: Translation.tr("Sound"),
-            icon: "volume_up",
-            component: "modules/settings/SoundConfig.qml"
-        },
-        {
-            name: Translation.tr("General"),
-            icon: "browse",
-            component: "modules/settings/GeneralConfig.qml"
         },
         {
             name: Translation.tr("Services"),
@@ -240,8 +243,8 @@ ApplicationWindow {
                             const item = tabArray.currentItem;
                             if (!item)
                                 return;
-                            const top = item.y;
-                            const bottom = top + item.height;
+                            const top = item.y - (item.startsGroup ? item.groupSpacing : 0);
+                            const bottom = item.y + item.height;
                             if (top < navRailScroll.contentY)
                                 navRailScroll.contentY = top;
                             else if (bottom > navRailScroll.contentY + navRailScroll.height)
@@ -272,6 +275,7 @@ ApplicationWindow {
                                     buttonIcon: modelData.icon
                                     buttonIconRotation: modelData.iconRotation || 0
                                     buttonText: modelData.name
+                                    startsGroup: modelData.startsGroup ?? false
                                     showLabel: navRail.expanded
                                     showToggledHighlight: false
 

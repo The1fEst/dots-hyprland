@@ -15,6 +15,8 @@ TabButton {
     property bool expanded: false
     property bool showLabel: true
     property bool showToggledHighlight: true
+    property bool startsGroup: false
+    readonly property real groupSpacing: 13
     readonly property real visualWidth: root.expanded ? root.baseSize + 20 + itemText.implicitWidth : root.baseSize
 
     property real baseSize: 56
@@ -25,11 +27,26 @@ TabButton {
     // The navigation item’s target area always spans the full width of the
     // nav rail, even if the item container hugs its contents.
     Layout.fillWidth: true
+    Layout.topMargin: root.startsGroup ? root.groupSpacing : 0
     // implicitWidth: contentItem.implicitWidth
     implicitHeight: baseSize
 
     background: null
     PointingHandInteraction {}
+
+    Rectangle {
+        visible: root.startsGroup
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.top
+            bottomMargin: (root.groupSpacing - height) / 2
+            leftMargin: 8
+            rightMargin: 8
+        }
+        implicitHeight: 1
+        color: Appearance.colors.colOutlineVariant
+    }
 
     // Real stuff
     contentItem: Item {
