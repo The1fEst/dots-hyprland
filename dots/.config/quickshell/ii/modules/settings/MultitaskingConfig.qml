@@ -263,6 +263,74 @@ ContentPage {
         }
 
         ContentSubsection {
+            title: Translation.tr("Swiping between workspaces")
+            tooltip: Translation.tr("Which fingers do the swiping is set in the Hyprland configuration; these are the numbers behind it")
+
+            ConfigRow {
+                uniform: true
+
+                OptionSpinBox {
+                    icon: "swipe"
+                    text: Translation.tr("Full swipe (px)")
+                    current: HyprlandOptions.number("gestures:workspace_swipe_distance")
+                    from: 100
+                    to: 2000
+                    stepSize: 50
+                    onCommitted: distance => HyprlandOptions.set("gestures:workspace_swipe_distance", distance)
+                }
+
+                OptionSpinBox {
+                    icon: "undo"
+                    text: Translation.tr("Give up under (%)")
+                    current: Math.round(HyprlandOptions.number("gestures:workspace_swipe_cancel_ratio") * 100)
+                    from: 0
+                    to: 100
+                    stepSize: 5
+                    onCommitted: ratio => HyprlandOptions.set("gestures:workspace_swipe_cancel_ratio", ratio / 100)
+                }
+            }
+
+            OptionSpinBox {
+                icon: "speed"
+                text: Translation.tr("Flick speed that switches anyway")
+                current: HyprlandOptions.number("gestures:workspace_swipe_min_speed_to_force")
+                from: 0
+                to: 100
+                stepSize: 1
+                onCommitted: speed => HyprlandOptions.set("gestures:workspace_swipe_min_speed_to_force", speed)
+            }
+
+            HyprlandSwitch {
+                buttonIcon: "swap_horiz"
+                text: Translation.tr("A swipe keeps the direction it started in")
+                option: "gestures:workspace_swipe_direction_lock"
+            }
+
+            OptionSpinBox {
+                enabled: HyprlandOptions.flag("gestures:workspace_swipe_direction_lock")
+                icon: "straighten"
+                text: Translation.tr("Locks after (px)")
+                current: HyprlandOptions.number("gestures:workspace_swipe_direction_lock_threshold")
+                from: 0
+                to: 200
+                stepSize: 5
+                onCommitted: threshold => HyprlandOptions.set("gestures:workspace_swipe_direction_lock_threshold", threshold)
+            }
+
+            HyprlandSwitch {
+                buttonIcon: "add_box"
+                text: Translation.tr("Swiping past the last workspace makes a new one")
+                option: "gestures:workspace_swipe_create_new"
+            }
+
+            HyprlandSwitch {
+                buttonIcon: "all_inclusive"
+                text: Translation.tr("Keep swiping without lifting the fingers")
+                option: "gestures:workspace_swipe_forever"
+            }
+        }
+
+        ContentSubsection {
             title: Translation.tr("Distance between workspaces")
             tooltip: Translation.tr("How far apart two workspaces sit while the switch is animating")
 
