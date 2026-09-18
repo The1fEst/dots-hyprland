@@ -75,10 +75,16 @@ ApplicationWindow {
             keywords: ["application", "default", "preferred", "terminal", "browser", "language", "region"]
         },
         {
+            name: Translation.tr("Mouse & Touchpad"),
+            icon: "mouse",
+            component: "modules/settings/MouseConfig.qml",
+            startsGroup: true,
+            keywords: ["trackpad", "touchpad", "pointer", "click", "tap", "button", "scroll", "cursor", "sensitivity"]
+        },
+        {
             name: Translation.tr("Keyboard"),
             icon: "keyboard",
             component: "modules/settings/KeyboardConfig.qml",
-            startsGroup: true,
             keywords: ["layout", "input", "source", "xkb", "shortcut", "hotkey", "compose", "character", "repeat"]
         },
         {
@@ -113,7 +119,7 @@ ApplicationWindow {
             keywords: ["device", "system", "information", "details", "hostname", "memory", "processor", "version", "os"]
         }
     ]
-    property int currentPage: 0
+    property int currentPage: 8
     property string pageQuery: ""
     readonly property bool searching: root.pageQuery.trim().length > 0
     readonly property var shownPages: {
@@ -347,7 +353,7 @@ ApplicationWindow {
 
                     active: Config.ready
                     Component.onCompleted: {
-                        source = root.pages[0].component
+                        source = root.pages[root.currentPage].component
                     }
 
                     Connections {

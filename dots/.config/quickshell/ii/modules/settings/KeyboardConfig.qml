@@ -122,13 +122,6 @@ ContentPage {
         root.chooserQuery = "";
     }
 
-    component HyprlandSwitch: OptionSwitch {
-        required property string option
-
-        current: HyprlandOptions.flag(option)
-        onCommitted: value => HyprlandOptions.set(option, value)
-    }
-
     ContentSection {
         icon: "keyboard"
         title: Translation.tr("Input Sources")
