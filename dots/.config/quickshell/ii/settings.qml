@@ -80,11 +80,17 @@ ApplicationWindow {
             keywords: ["style", "light", "dark", "theme", "colour", "color", "font", "rounding", "blur", "opacity", "animation", "wallpaper", "background", "bar", "panel", "dock", "sidebar"]
         },
         {
+            name: Translation.tr("Apps"),
+            icon: "apps",
+            component: "modules/settings/AppsConfig.qml",
+            startsGroup: true,
+            keywords: ["application", "default", "preferred", "terminal", "browser", "open", "with", "handler"]
+        },
+        {
             name: Translation.tr("General"),
             icon: "browse",
             component: "modules/settings/GeneralConfig.qml",
-            startsGroup: true,
-            keywords: ["application", "default", "preferred", "terminal", "browser", "language", "region"]
+            keywords: ["language", "region", "time", "date", "account", "work", "safety"]
         },
         {
             name: Translation.tr("Notifications"),
