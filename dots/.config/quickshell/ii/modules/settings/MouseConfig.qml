@@ -123,6 +123,56 @@ ContentPage {
     }
 
     ContentSection {
+        icon: "highlight_mouse_cursor"
+        title: Translation.tr("Pointer")
+
+        ContentSubsection {
+            title: Translation.tr("Hiding")
+
+            OptionSpinBox {
+                icon: "timer"
+                text: Translation.tr("Hide when still for (s)")
+                current: HyprlandOptions.number("cursor:inactive_timeout")
+                from: 0
+                to: 120
+                stepSize: 1
+                onCommitted: seconds => HyprlandOptions.set("cursor:inactive_timeout", seconds)
+
+                StyledToolTip {
+                    text: Translation.tr("Zero keeps the pointer on screen no matter how long it sits still.")
+                }
+            }
+
+            HyprlandSwitch {
+                buttonIcon: "keyboard_hide"
+                text: Translation.tr("Hide while typing")
+                option: "cursor:hide_on_key_press"
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Drawing")
+
+            OptionSwitch {
+                buttonIcon: "memory"
+                text: Translation.tr("Let the screen draw the pointer")
+                current: HyprlandOptions.number("cursor:no_hardware_cursors") === 0
+                onCommitted: hardware => HyprlandOptions.set("cursor:no_hardware_cursors", hardware ? 0 : 1)
+
+                StyledToolTip {
+                    text: Translation.tr("A pointer the screen draws itself stays smooth whatever the rest of the screen is doing.\nTurn it off if the pointer disappears or is drawn in the wrong place.")
+                }
+            }
+
+            HyprlandSwitch {
+                buttonIcon: "animated_images"
+                text: Translation.tr("Use hyprcursor themes")
+                option: "cursor:enable_hyprcursor"
+            }
+        }
+    }
+
+    ContentSection {
         icon: "touch_app"
         title: Translation.tr("Touchpad")
 
