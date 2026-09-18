@@ -40,7 +40,10 @@ Singleton {
 
     function text(name: string): string {
         const raw = root.options[name];
-        return raw === undefined ? "" : String(raw);
+        if (raw === undefined)
+            return "";
+        const value = String(raw);
+        return value === "[[EMPTY]]" ? "" : value;
     }
 
     property var pending: ({})
