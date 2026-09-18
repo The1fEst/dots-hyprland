@@ -87,12 +87,6 @@ ApplicationWindow {
             keywords: ["application", "default", "preferred", "terminal", "browser", "open", "with", "handler"]
         },
         {
-            name: Translation.tr("General"),
-            icon: "browse",
-            component: "modules/settings/GeneralConfig.qml",
-            keywords: ["language", "region", "time", "date", "account", "work", "safety"]
-        },
-        {
             name: Translation.tr("Notifications"),
             icon: "notifications",
             component: "modules/settings/NotificationsConfig.qml",
@@ -125,22 +119,10 @@ ApplicationWindow {
             keywords: ["privacy", "security", "lock", "screen", "screenshot", "recording", "camera", "microphone", "clipboard", "safety"]
         },
         {
-            name: Translation.tr("Services"),
-            icon: "settings",
-            component: "modules/settings/ServicesConfig.qml",
-            keywords: ["service", "weather", "updates", "translation", "search", "ai"]
-        },
-        {
-            name: Translation.tr("Advanced"),
-            icon: "construction",
-            component: "modules/settings/AdvancedConfig.qml",
-            keywords: ["advanced", "developer", "hacks", "experimental", "policies"]
-        },
-        {
-            name: Translation.tr("About"),
-            icon: "info",
-            component: "modules/settings/About.qml",
-            keywords: ["device", "system", "information", "details", "hostname", "memory", "processor", "version", "os"]
+            name: Translation.tr("System"),
+            icon: "settings_applications",
+            component: "modules/settings/SystemConfig.qml",
+            keywords: ["system", "about", "device", "information", "hostname", "memory", "processor", "version", "os", "language", "region", "time", "date", "user", "account", "services", "advanced"]
         }
     ]
     property int currentPage: 0
