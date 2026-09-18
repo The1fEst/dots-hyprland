@@ -75,6 +75,13 @@ ApplicationWindow {
             keywords: ["application", "default", "preferred", "terminal", "browser", "language", "region"]
         },
         {
+            name: Translation.tr("Keyboard"),
+            icon: "keyboard",
+            component: "modules/settings/KeyboardConfig.qml",
+            startsGroup: true,
+            keywords: ["layout", "input", "source", "xkb", "shortcut", "hotkey", "compose", "character", "repeat"]
+        },
+        {
             name: Translation.tr("Lock screen"),
             icon: "lock",
             component: "modules/settings/LockConfig.qml",
