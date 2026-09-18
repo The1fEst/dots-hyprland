@@ -122,6 +122,77 @@ ContentPage {
         }
     }
 
+    property int deviceIndex: 0
+
+    readonly property string device: DeviceOptions.mice[root.deviceIndex] ?? ""
+
+    function deviceNumber(device: string, key: string, fallback: real): real {
+        const value = DeviceOptions.valueOf(device, key);
+        return value.length === 0 ? fallback : Number(value);
+    }
+
+    ContentSection {
+        icon: "usb"
+        title: Translation.tr("This mouse only")
+
+        StyledText {
+            visible: DeviceOptions.mice.length === 0
+            Layout.leftMargin: 8
+            text: Translation.tr("No pointing device is connected")
+            color: Appearance.colors.colSubtext
+        }
+
+        ContentSubsection {
+            visible: DeviceOptions.mice.length > 0
+            title: Translation.tr("Device")
+            tooltip: Translation.tr("A device with nothing set here follows the general settings above")
+
+            StyledComboBox {
+                buttonIcon: "mouse"
+                textRole: "displayName"
+                model: DeviceOptions.mice.map(name => ({
+                            displayName: name
+                        }))
+                currentIndex: root.deviceIndex
+                onActivated: index => root.deviceIndex = index
+            }
+
+            ConfigSlider {
+                text: Translation.tr("Speed")
+                buttonIcon: "speed"
+                usePercentTooltip: false
+                from: -100
+                to: 100
+                value: Math.round(root.deviceNumber(root.device, "sensitivity", HyprlandOptions.number("input:sensitivity")) * 100)
+                onMoved: speed => DeviceOptions.set(root.device, "sensitivity", String(speed / 100))
+            }
+
+            OptionSwitch {
+                buttonIcon: "trending_up"
+                text: Translation.tr("Mouse acceleration")
+                current: (DeviceOptions.valueOf(root.device, "accel_profile") || HyprlandOptions.text("input:accel_profile")) !== "flat"
+                onCommitted: accelerated => DeviceOptions.set(root.device, "accel_profile", accelerated ? "adaptive" : "flat")
+            }
+
+            OptionSwitch {
+                buttonIcon: "swap_vert"
+                text: Translation.tr("Natural scrolling")
+                current: (DeviceOptions.valueOf(root.device, "natural_scroll") || String(HyprlandOptions.flag("input:natural_scroll"))) === "true"
+                onCommitted: natural => DeviceOptions.set(root.device, "natural_scroll", String(natural))
+            }
+
+            RippleButtonWithIcon {
+                enabled: DeviceOptions.overrides(root.device) > 0
+                materialIcon: "settings_backup_restore"
+                mainText: Translation.tr("Follow the general settings")
+                onClicked: {
+                    for (const key of ["sensitivity", "accel_profile", "natural_scroll"])
+                        DeviceOptions.unset(root.device, key);
+                }
+            }
+        }
+    }
+
     ContentSection {
         icon: "highlight_mouse_cursor"
         title: Translation.tr("Pointer")
