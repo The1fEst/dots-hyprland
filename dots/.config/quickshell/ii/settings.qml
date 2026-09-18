@@ -30,6 +30,13 @@ ApplicationWindow {
             keywords: ["quick", "common", "frequent"]
         },
         {
+            name: Translation.tr("Wi-Fi"),
+            icon: "wifi",
+            component: "modules/settings/WifiConfig.qml",
+            startsGroup: true,
+            keywords: ["wifi", "wireless", "network", "internet", "connection", "password"]
+        },
+        {
             name: Translation.tr("Displays"),
             icon: "monitor",
             component: "modules/settings/DisplaysConfig.qml",
