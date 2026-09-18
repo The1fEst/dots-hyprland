@@ -2,6 +2,7 @@ import qs
 import qs.services
 import qs.services.network
 import qs.modules.common
+import qs.modules.common.functions
 import qs.modules.common.widgets
 import QtQuick
 import QtQuick.Layouts
@@ -50,7 +51,7 @@ WindowDialog {
         DialogButton {
             buttonText: Translation.tr("Details")
             onClicked: {
-                Quickshell.execDetached(["bash", "-c", `${Network.ethernet ? Config.options.apps.networkEthernet : Config.options.apps.network}`]);
+                AppLaunch.shell(Network.ethernet ? Config.options.apps.networkEthernet : Config.options.apps.network);
                 GlobalStates.sidebarRightOpen = false;
             }
         }

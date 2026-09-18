@@ -98,7 +98,7 @@ Item {
                 text: Translation.tr("More Internet settings")
                 onClicked: {
                     Hyprland.dispatch('hl.dsp.global("quickshell:sidebarRightToggle")');
-                    Quickshell.execDetached(["bash", "-c", Config.options.apps.network]);
+                    AppLaunch.shell(Config.options.apps.network);
                 }
             }
             WBorderlessButton {

@@ -126,7 +126,7 @@ WBorderlessButton {
                                     anchors.fill: parent
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-                                        Quickshell.execDetached(["bash", "-c", Config.options.apps.manageUser])
+                                        AppLaunch.shell(Config.options.apps.manageUser)
                                         GlobalStates.searchOpen = false;
                                     }
                                 }

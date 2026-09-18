@@ -2,6 +2,7 @@ pragma Singleton
 import Quickshell
 import qs.services
 import qs.modules.common
+import qs.modules.common.functions
 
 Singleton {
     id: root
@@ -13,7 +14,7 @@ Singleton {
     }
 
     function changePassword() {
-        Quickshell.execDetached(["bash", "-c", `${Config.options.apps.changePassword}`]);
+        AppLaunch.shell(Config.options.apps.changePassword);
     }
 
     function lock() {
@@ -30,7 +31,7 @@ Singleton {
     }
 
     function launchTaskManager() {
-        Quickshell.execDetached(["bash", "-c", `${Config.options.apps.taskManager}`]);
+        AppLaunch.shell(Config.options.apps.taskManager);
     }
 
     function hibernate() {

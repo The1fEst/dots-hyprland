@@ -12,11 +12,9 @@ Restart=always
 RestartSec=2
 Slice=session.slice
 
-# A shell that runs away with memory takes the whole session down with it, so it is
-# held to a ceiling it has no business reaching and restarted when it does. A ceiling
-# rather than MemoryHigh: throttling a shell that is merely churning buffers would make
-# the desktop stutter instead.
-MemoryMax=8G
+# Apps are launched into scopes of their own, but anything that still ends up here
+# is a guest: stopping the shell must not take it down.
+KillMode=process
 
 [Install]
 WantedBy=hyprland-session.target

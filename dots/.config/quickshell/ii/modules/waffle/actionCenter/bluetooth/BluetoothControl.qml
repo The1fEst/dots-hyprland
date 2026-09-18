@@ -108,7 +108,7 @@ Item {
                 text: Translation.tr("More Bluetooth settings")
                 onClicked: {
                     Hyprland.dispatch('hl.dsp.global("quickshell:sidebarRightToggle")');
-                    Quickshell.execDetached(["bash", "-c", Config.options.apps.bluetooth]);
+                    AppLaunch.shell(Config.options.apps.bluetooth);
                 }
             }
             WBorderlessButton {

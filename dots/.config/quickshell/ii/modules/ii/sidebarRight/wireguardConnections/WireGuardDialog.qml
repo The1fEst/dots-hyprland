@@ -141,7 +141,7 @@ WindowDialog {
         DialogButton {
             buttonText: Translation.tr("New Connection")
             onClicked: {
-                Quickshell.execDetached(["bash", "-c", Config.options.apps.network]);
+                AppLaunch.shell(Config.options.apps.network);
                 GlobalStates.sidebarRightOpen = false;
             }
         }

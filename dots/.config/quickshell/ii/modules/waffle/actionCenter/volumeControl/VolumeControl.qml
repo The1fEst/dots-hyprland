@@ -64,7 +64,7 @@ Item {
 
                 onClicked: {
                     Hyprland.dispatch('hl.dsp.global("quickshell:sidebarRightToggle")');
-                    Quickshell.execDetached(["bash", "-c", Config.options.apps.volumeMixer]);
+                    AppLaunch.shell(Config.options.apps.volumeMixer);
                 }
 
                 contentItem: Item {

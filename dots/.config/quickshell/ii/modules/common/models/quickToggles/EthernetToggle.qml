@@ -12,5 +12,5 @@ QuickToggleModel {
     icon: Network.ethernet ? "lan" : "settings_ethernet"
 
     toggled: Network.ethernet
-    mainAction: () => Quickshell.execDetached(["bash", "-c", Config.options.apps.networkEthernet])
+    mainAction: () => AppLaunch.shell(Config.options.apps.networkEthernet)
 }

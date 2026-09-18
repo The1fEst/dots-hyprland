@@ -48,14 +48,12 @@ AppButton {
         } else if (root.appEntry.toplevels.length === 1) {
             root.appEntry.toplevels[0].activate()
         } else {
-            root.desktopEntry.execute()
+            AppLaunch.entry(root.desktopEntry)
         }
     }
 
     middleClickAction: () => {
-        if (root.desktopEntry) {
-            desktopEntry.execute()
-        }
+        AppLaunch.entry(root.desktopEntry)
     }
 
     altAction: () => {
@@ -105,7 +103,7 @@ AppButton {
                 iconName: action.icon,
                 text: action.name,
                 action: () => {
-                    action.execute()
+                    AppLaunch.action(action)
                 }
             })).concat({ type: "separator" }) : []),
             {
@@ -113,9 +111,7 @@ AppButton {
                 text: root.desktopEntry ? root.desktopEntry.name : StringUtils.toTitleCase(appEntry.appId),
                 monochromeIcon: false,
                 action: () => {
-                    if (root.desktopEntry) {
-                        root.desktopEntry.execute()
-                    }
+                    AppLaunch.entry(root.desktopEntry)
                 }
             },
             {
