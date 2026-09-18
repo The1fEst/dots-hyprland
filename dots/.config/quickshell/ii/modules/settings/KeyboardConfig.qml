@@ -43,6 +43,35 @@ ContentPage {
         });
     }
 
+    function optionGroup(code: string): var {
+        return XkbLayouts.optionGroups.find(group => group.code === code) ?? null;
+    }
+
+    function optionPrefix(group: var): string {
+        return (group?.options[0]?.code ?? "").split(":")[0];
+    }
+
+    function optionChoices(group: var, noneLabel: string): var {
+        const choices = [
+            {
+                displayName: noneLabel,
+                value: ""
+            }
+        ];
+        for (const option of group?.options ?? [])
+            choices.push({
+                displayName: option.name,
+                value: option.code
+            });
+        return choices;
+    }
+
+    function indexOfOption(choices: var, prefix: string): int {
+        const chosen = XkbLayouts.optionOf(prefix);
+        const found = choices.findIndex(choice => choice.value === chosen);
+        return found !== -1 ? found : 0;
+    }
+
     function applySources(sources: var): void {
         XkbLayouts.apply(sources.map(source => source.code), sources.map(source => source.variant));
     }
@@ -252,9 +281,35 @@ ContentPage {
         }
     }
 
+    component OptionCombo: ContentSubsection {
+        id: combo
+
+        required property string groupCode
+        required property string noneLabel
+        property string buttonIcon: ""
+
+        readonly property var group: root.optionGroup(combo.groupCode)
+        readonly property var choices: root.optionChoices(combo.group, combo.noneLabel)
+
+        StyledComboBox {
+            buttonIcon: combo.buttonIcon
+            textRole: "displayName"
+            model: combo.choices
+            currentIndex: root.indexOfOption(combo.choices, root.optionPrefix(combo.group))
+            onActivated: index => XkbLayouts.setOption(root.optionPrefix(combo.group), combo.choices[index].value)
+        }
+    }
+
     ContentSection {
         icon: "keyboard_alt"
         title: Translation.tr("Typing")
+
+        OptionCombo {
+            title: Translation.tr("Switch between layouts with")
+            groupCode: "grp"
+            buttonIcon: "swap_horiz"
+            noneLabel: Translation.tr("Only the shell shortcut")
+        }
 
         ContentSubsection {
             title: Translation.tr("Key repeat")
@@ -298,6 +353,29 @@ ContentPage {
             StyledToolTip {
                 text: Translation.tr("On: a shortcut is the letter it types, so it moves with the layout.\nOff: a shortcut is the place on the keyboard, so it stays put in any layout.")
             }
+        }
+    }
+
+    ContentSection {
+        icon: "emoji_symbols"
+        title: Translation.tr("Special Character Entry")
+
+        ContentSubsectionLabel {
+            text: Translation.tr("Ways of typing symbols and letter variants")
+        }
+
+        OptionCombo {
+            title: Translation.tr("Alternate characters key")
+            groupCode: "lv3"
+            buttonIcon: "keyboard_option_key"
+            noneLabel: Translation.tr("None")
+        }
+
+        OptionCombo {
+            title: Translation.tr("Compose key")
+            groupCode: "Compose key"
+            buttonIcon: "text_select_start"
+            noneLabel: Translation.tr("None")
         }
     }
 }
