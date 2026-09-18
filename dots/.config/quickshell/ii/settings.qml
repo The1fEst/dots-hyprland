@@ -118,17 +118,11 @@ ApplicationWindow {
             keywords: ["layout", "input", "source", "xkb", "shortcut", "hotkey", "compose", "character", "repeat"]
         },
         {
-            name: Translation.tr("Lock screen"),
+            name: Translation.tr("Privacy & Security"),
             icon: "lock",
-            component: "modules/settings/LockConfig.qml",
+            component: "modules/settings/PrivacyConfig.qml",
             startsGroup: true,
-            keywords: ["lock", "screen", "privacy", "security", "idle", "password"]
-        },
-        {
-            name: Translation.tr("Capture"),
-            icon: "screenshot_frame_2",
-            component: "modules/settings/CaptureConfig.qml",
-            keywords: ["screenshot", "recording", "screen", "snip", "region", "annotation"]
+            keywords: ["privacy", "security", "lock", "screen", "screenshot", "recording", "camera", "microphone", "clipboard", "safety"]
         },
         {
             name: Translation.tr("Services"),
