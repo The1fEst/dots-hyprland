@@ -416,47 +416,6 @@ ContentPage {
         title: Translation.tr("Windows")
 
         ContentSubsection {
-            title: Translation.tr("Layout")
-
-            Repeater {
-                model: [
-                    {
-                        option: "general:gaps_in",
-                        icon: "width",
-                        name: Translation.tr("Gap between windows"),
-                        to: 100
-                    },
-                    {
-                        option: "general:gaps_out",
-                        icon: "fit_screen",
-                        name: Translation.tr("Gap around the screen"),
-                        to: 200
-                    },
-                    {
-                        option: "general:border_size",
-                        icon: "border_outer",
-                        name: Translation.tr("Border width"),
-                        to: 20
-                    }
-                ]
-
-                OptionSpinBox {
-                    id: windowOption
-
-                    required property var modelData
-
-                    icon: windowOption.modelData.icon
-                    text: windowOption.modelData.name
-                    current: HyprlandOptions.number(windowOption.modelData.option)
-                    from: 0
-                    to: windowOption.modelData.to
-                    stepSize: 1
-                    onCommitted: value => HyprlandOptions.set(windowOption.modelData.option, value)
-                }
-            }
-        }
-
-        ContentSubsection {
             title: Translation.tr("Corners")
 
             OptionSpinBox {
