@@ -12,6 +12,27 @@ ContentPage {
 
     property bool choosing: false
     property string chooserQuery: ""
+    property string shortcutQuery: ""
+
+    readonly property var shortcutGroups: {
+        const terms = root.shortcutQuery.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+        const wanted = bind => {
+            if (terms.length === 0)
+                return true;
+            const haystack = `${HyprlandKeybinds.labelOf(bind)} ${HyprlandKeybinds.keys(bind).join(" ")}`.toLowerCase();
+            return terms.every(term => haystack.includes(term));
+        };
+        const groups = [];
+        for (const category of HyprlandKeybinds.keybindCategories) {
+            const binds = HyprlandKeybinds.keybinds.filter(bind => HyprlandKeybinds.categoryOf(bind) === category && wanted(bind));
+            if (binds.length > 0)
+                groups.push({
+                    name: category,
+                    binds: binds
+                });
+        }
+        return groups;
+    }
 
     readonly property var sources: XkbLayouts.codes.map((code, index) => ({
                 code: code,
@@ -376,6 +397,58 @@ ContentPage {
             groupCode: "Compose key"
             buttonIcon: "text_select_start"
             noneLabel: Translation.tr("None")
+        }
+    }
+
+    ContentSection {
+        icon: "shortcut"
+        title: Translation.tr("Keyboard Shortcuts")
+
+        MaterialTextField {
+            Layout.fillWidth: true
+            placeholderText: Translation.tr("Search shortcuts")
+            onTextChanged: root.shortcutQuery = text
+        }
+
+        Repeater {
+            model: root.shortcutGroups
+
+            delegate: ContentSubsection {
+                id: shortcutGroup
+                required property var modelData
+
+                title: shortcutGroup.modelData.name
+
+                Repeater {
+                    model: shortcutGroup.modelData.binds
+
+                    delegate: RowLayout {
+                        id: shortcutRow
+                        required property var modelData
+
+                        Layout.fillWidth: true
+                        Layout.leftMargin: 8
+                        Layout.rightMargin: 8
+                        spacing: 8
+
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: HyprlandKeybinds.labelOf(shortcutRow.modelData)
+                            elide: Text.ElideRight
+                            color: Appearance.colors.colOnLayer1
+                        }
+
+                        Repeater {
+                            model: HyprlandKeybinds.keys(shortcutRow.modelData)
+
+                            delegate: KeyboardKey {
+                                required property string modelData
+                                key: modelData
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
