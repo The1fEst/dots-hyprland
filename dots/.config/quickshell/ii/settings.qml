@@ -37,6 +37,12 @@ ApplicationWindow {
             keywords: ["wifi", "wireless", "network", "internet", "connection", "password"]
         },
         {
+            name: Translation.tr("Network"),
+            icon: "lan",
+            component: "modules/settings/NetworkConfig.qml",
+            keywords: ["network", "ethernet", "wired", "vpn", "wireguard", "connection", "proxy"]
+        },
+        {
             name: Translation.tr("Displays"),
             icon: "monitor",
             component: "modules/settings/DisplaysConfig.qml",
