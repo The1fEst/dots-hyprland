@@ -46,25 +46,6 @@ ContentPage {
         DisplayOptions.applyTo(root.monitor, keys);
     }
 
-    component OptionSpinBox: ConfigSpinBox {
-        id: spin
-
-        required property real current
-
-        signal committed(real value)
-
-        onValueChanged: {
-            if (value !== spin.current)
-                spin.committed(value);
-        }
-
-        Binding {
-            target: spin
-            property: "value"
-            value: spin.current
-        }
-    }
-
     component RuleSpinBox: OptionSpinBox {
         required property string key
 

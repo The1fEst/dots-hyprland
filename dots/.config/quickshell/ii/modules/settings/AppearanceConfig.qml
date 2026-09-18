@@ -106,25 +106,6 @@ ContentPage {
 
     Component.onCompleted: DesktopAppearance.loadFamilies()
 
-    component OptionSpinBox: ConfigSpinBox {
-        id: spin
-
-        required property real current
-
-        signal committed(real value)
-
-        onValueChanged: {
-            if (value !== spin.current)
-                spin.committed(value);
-        }
-
-        Binding {
-            target: spin
-            property: "value"
-            value: spin.current
-        }
-    }
-
     ContentSection {
         icon: "palette"
         title: Translation.tr("Theme")
