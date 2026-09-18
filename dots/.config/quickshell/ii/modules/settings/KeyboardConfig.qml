@@ -72,6 +72,18 @@ ContentPage {
         root.chooserQuery = "";
     }
 
+    component OptionSwitch: ConfigSwitch {
+        id: toggle
+
+        required property string option
+
+        checked: HyprlandOptions.flag(toggle.option)
+        onCheckedChanged: {
+            if (checked !== HyprlandOptions.flag(toggle.option))
+                HyprlandOptions.set(toggle.option, checked);
+        }
+    }
+
     ContentSection {
         icon: "keyboard"
         title: Translation.tr("Input Sources")
@@ -236,6 +248,55 @@ ContentPage {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "keyboard_alt"
+        title: Translation.tr("Typing")
+
+        ContentSubsection {
+            title: Translation.tr("Key repeat")
+
+            ConfigRow {
+                uniform: true
+
+                OptionSpinBox {
+                    icon: "timer"
+                    text: Translation.tr("Delay (ms)")
+                    current: HyprlandOptions.number("input:repeat_delay")
+                    from: 100
+                    to: 2000
+                    stepSize: 25
+                    onCommitted: delay => HyprlandOptions.set("input:repeat_delay", delay)
+                }
+
+                OptionSpinBox {
+                    icon: "speed"
+                    text: Translation.tr("Rate (per second)")
+                    current: HyprlandOptions.number("input:repeat_rate")
+                    from: 1
+                    to: 100
+                    stepSize: 1
+                    onCommitted: rate => HyprlandOptions.set("input:repeat_rate", rate)
+                }
+            }
+        }
+
+        OptionSwitch {
+            buttonIcon: "pin"
+            text: Translation.tr("Num Lock when the session starts")
+            option: "input:numlock_by_default"
+        }
+
+        OptionSwitch {
+            buttonIcon: "language"
+            text: Translation.tr("Shortcuts follow the symbol on the key")
+            option: "input:resolve_binds_by_sym"
+
+            StyledToolTip {
+                text: Translation.tr("On: a shortcut is the letter it types, so it moves with the layout.\nOff: a shortcut is the place on the keyboard, so it stays put in any layout.")
             }
         }
     }
