@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Services.Pipewire
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
@@ -208,6 +209,41 @@ ContentPage {
                 text: Config.options.sounds.theme
                 onEditingFinished: {
                     Config.options.sounds.theme = text.trim();
+                }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "apps"
+        title: Translation.tr("Applications")
+
+        PwObjectTracker {
+            objects: Audio.outputAppNodes
+        }
+
+        StyledText {
+            visible: Audio.outputAppNodes.length === 0
+            Layout.leftMargin: 8
+            text: Translation.tr("Nothing is playing")
+            color: Appearance.colors.colSubtext
+        }
+
+        Repeater {
+            model: Audio.outputAppNodes
+
+            delegate: ConfigSlider {
+                id: appVolume
+                required property var modelData
+
+                text: Audio.appNodeDisplayName(appVolume.modelData)
+                buttonIcon: appVolume.modelData?.audio.muted ? "volume_off" : "volume_up"
+                from: 0
+                to: 100
+                value: Math.round((appVolume.modelData?.audio.volume ?? 0) * 100)
+                onMoved: newValue => {
+                    if (appVolume.modelData)
+                        appVolume.modelData.audio.volume = newValue / 100;
                 }
             }
         }
