@@ -426,15 +426,6 @@ ContentPage {
             }
         }
 
-        OptionSpinBox {
-            icon: "height"
-            text: Translation.tr("Cursor size")
-            current: DesktopAppearance.cursorSize
-            from: 8
-            to: 128
-            stepSize: 4
-            onCommitted: size => DesktopAppearance.setCursor(DesktopAppearance.cursorTheme, size)
-        }
     }
 
     ContentSection {
@@ -549,16 +540,6 @@ ContentPage {
 
         ContentSubsection {
             title: Translation.tr("Rendering")
-
-            ConfigSwitch {
-                buttonIcon: "animation"
-                text: Translation.tr("Animations")
-                checked: HyprlandOptions.flag("animations:enabled")
-                onCheckedChanged: {
-                    if (checked !== HyprlandOptions.flag("animations:enabled"))
-                        HyprlandOptions.set("animations:enabled", checked);
-                }
-            }
 
             ConfigSwitch {
                 buttonIcon: "screenshot_monitor"

@@ -112,10 +112,16 @@ ApplicationWindow {
             keywords: ["layout", "input", "source", "xkb", "shortcut", "hotkey", "compose", "character", "repeat"]
         },
         {
+            name: Translation.tr("Accessibility"),
+            icon: "accessibility_new",
+            component: "modules/settings/AccessibilityConfig.qml",
+            startsGroup: true,
+            keywords: ["accessibility", "a11y", "zoom", "magnifier", "cursor", "size", "animation", "motion", "repeat", "contrast"]
+        },
+        {
             name: Translation.tr("Privacy & Security"),
             icon: "lock",
             component: "modules/settings/PrivacyConfig.qml",
-            startsGroup: true,
             keywords: ["privacy", "security", "lock", "screen", "screenshot", "recording", "camera", "microphone", "clipboard", "safety"]
         },
         {
