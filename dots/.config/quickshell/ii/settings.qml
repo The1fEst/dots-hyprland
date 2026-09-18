@@ -49,6 +49,12 @@ ApplicationWindow {
             keywords: ["power", "sleep", "suspend", "battery", "blank", "idle", "dpms", "energy", "lock"]
         },
         {
+            name: Translation.tr("Multitasking"),
+            icon: "select_window_2",
+            component: "modules/settings/MultitaskingConfig.qml",
+            keywords: ["workspace", "tiling", "layout", "gaps", "snap", "gesture", "swipe", "overview", "window"]
+        },
+        {
             name: Translation.tr("Appearance"),
             icon: "palette",
             component: "modules/settings/AppearanceConfig.qml",
