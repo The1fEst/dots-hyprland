@@ -9,6 +9,8 @@ StyledFlickable {
     property bool forceWidth: false
     property real bottomContentPadding: 100
 
+    signal subpageRequested(string name, string component)
+
     default property alias contentData: contentColumn.data
 
     clip: true

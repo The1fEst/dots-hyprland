@@ -107,6 +107,32 @@ ContentPage {
     Component.onCompleted: DesktopAppearance.loadFamilies()
 
     ContentSection {
+        icon: "wallpaper"
+        title: Translation.tr("Desktop")
+
+        ContentLinkRow {
+            buttonIcon: "texture"
+            title: Translation.tr("Background")
+            subtitle: Translation.tr("Wallpaper, clock and the widgets on it")
+            onClicked: root.subpageRequested(title, "modules/settings/BackgroundConfig.qml")
+        }
+
+        ContentLinkRow {
+            buttonIcon: "toast"
+            title: Translation.tr("Bar")
+            subtitle: Translation.tr("What the bar shows and where it sits")
+            onClicked: root.subpageRequested(title, "modules/settings/BarConfig.qml")
+        }
+
+        ContentLinkRow {
+            buttonIcon: "bottom_app_bar"
+            title: Translation.tr("Panels")
+            subtitle: Translation.tr("Dock, sidebars and the things that pop up")
+            onClicked: root.subpageRequested(title, "modules/settings/PanelsConfig.qml")
+        }
+    }
+
+    ContentSection {
         icon: "palette"
         title: Translation.tr("Theme")
 

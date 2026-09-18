@@ -58,26 +58,7 @@ ApplicationWindow {
             name: Translation.tr("Appearance"),
             icon: "palette",
             component: "modules/settings/AppearanceConfig.qml",
-            keywords: ["style", "light", "dark", "theme", "colour", "color", "font", "rounding", "blur", "opacity", "animation"]
-        },
-        {
-            name: Translation.tr("Bar"),
-            icon: "toast",
-            iconRotation: 180,
-            component: "modules/settings/BarConfig.qml",
-            keywords: ["bar", "panel", "tray", "workspaces", "clock", "top", "status"]
-        },
-        {
-            name: Translation.tr("Panels"),
-            icon: "bottom_app_bar",
-            component: "modules/settings/PanelsConfig.qml",
-            keywords: ["dock", "sidebar", "overview", "launcher", "osd", "popup"]
-        },
-        {
-            name: Translation.tr("Background"),
-            icon: "texture",
-            component: "modules/settings/BackgroundConfig.qml",
-            keywords: ["wallpaper", "desktop", "clock", "weather", "parallax"]
+            keywords: ["style", "light", "dark", "theme", "colour", "color", "font", "rounding", "blur", "opacity", "animation", "wallpaper", "background", "bar", "panel", "dock", "sidebar"]
         },
         {
             name: Translation.tr("General"),
@@ -132,6 +113,9 @@ ApplicationWindow {
         }
     ]
     property int currentPage: 0
+    property var subpage: null
+    readonly property string shownComponent: root.subpage ? root.subpage.component : root.pages[root.currentPage].component
+    onCurrentPageChanged: root.subpage = null
     property string pageQuery: ""
     readonly property bool searching: root.pageQuery.trim().length > 0
     readonly property var shownPages: {
@@ -358,65 +342,114 @@ ApplicationWindow {
                 color: Appearance.m3colors.m3surfaceContainerLow
                 radius: Appearance.rounding.windowRounding - root.contentPadding
 
-                Loader {
-                    id: pageLoader
+                ColumnLayout {
                     anchors.fill: parent
-                    opacity: 1.0
+                    spacing: 0
 
-                    active: Config.ready
-                    Component.onCompleted: {
-                        source = root.pages[0].component
-                    }
+                    RowLayout {
+                        id: subpageHeader
 
-                    Connections {
-                        target: root
-                        function onCurrentPageChanged() {
-                            switchAnim.complete();
-                            switchAnim.start();
+                        visible: root.subpage !== null
+                        Layout.fillWidth: true
+                        Layout.margins: 10
+                        spacing: 8
+
+                        RippleButton {
+                            buttonRadius: Appearance.rounding.full
+                            implicitWidth: 35
+                            implicitHeight: 35
+                            onClicked: root.subpage = null
+                            contentItem: MaterialSymbol {
+                                anchors.centerIn: parent
+                                horizontalAlignment: Text.AlignHCenter
+                                text: "arrow_back"
+                                iconSize: 20
+                            }
+                        }
+
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: root.subpage?.name ?? ""
+                            font.pixelSize: Appearance.font.pixelSize.larger
+                            color: Appearance.colors.colOnLayer1
                         }
                     }
 
-                    SequentialAnimation {
-                        id: switchAnim
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
 
-                        NumberAnimation {
-                            target: pageLoader
-                            properties: "opacity"
-                            from: 1
-                            to: 0
-                            duration: 100
-                            easing.type: Appearance.animation.elementMoveExit.type
-                            easing.bezierCurve: Appearance.animationCurves.emphasizedFirstHalf
-                        }
-                        ParallelAnimation {
-                            PropertyAction {
-                                target: pageLoader
-                                property: "source"
-                                value: root.pages[root.currentPage].component
+                        Loader {
+                            id: pageLoader
+                            anchors.fill: parent
+                            opacity: 1.0
+
+                            active: Config.ready
+                            Component.onCompleted: {
+                                source = root.pages[0].component
                             }
-                            PropertyAction {
-                                target: pageLoader
-                                property: "anchors.topMargin"
-                                value: 20
+
+                            Connections {
+                                target: pageLoader.item
+                                function onSubpageRequested(name, component) {
+                                    root.subpage = {
+                                        name: name,
+                                        component: component
+                                    };
+                                }
                             }
-                        }
-                        ParallelAnimation {
-                            NumberAnimation {
-                                target: pageLoader
-                                properties: "opacity"
-                                from: 0
-                                to: 1
-                                duration: 200
-                                easing.type: Appearance.animation.elementMoveEnter.type
-                                easing.bezierCurve: Appearance.animationCurves.emphasizedLastHalf
+
+                            Connections {
+                                target: root
+                                function onShownComponentChanged() {
+                                    switchAnim.complete();
+                                    switchAnim.start();
+                                }
                             }
-                            NumberAnimation {
-                                target: pageLoader
-                                properties: "anchors.topMargin"
-                                to: 0
-                                duration: 200
-                                easing.type: Appearance.animation.elementMoveEnter.type
-                                easing.bezierCurve: Appearance.animationCurves.emphasizedLastHalf
+
+                            SequentialAnimation {
+                                id: switchAnim
+
+                                NumberAnimation {
+                                    target: pageLoader
+                                    properties: "opacity"
+                                    from: 1
+                                    to: 0
+                                    duration: 100
+                                    easing.type: Appearance.animation.elementMoveExit.type
+                                    easing.bezierCurve: Appearance.animationCurves.emphasizedFirstHalf
+                                }
+                                ParallelAnimation {
+                                    PropertyAction {
+                                        target: pageLoader
+                                        property: "source"
+                                        value: root.shownComponent
+                                    }
+                                    PropertyAction {
+                                        target: pageLoader
+                                        property: "anchors.topMargin"
+                                        value: 20
+                                    }
+                                }
+                                ParallelAnimation {
+                                    NumberAnimation {
+                                        target: pageLoader
+                                        properties: "opacity"
+                                        from: 0
+                                        to: 1
+                                        duration: 200
+                                        easing.type: Appearance.animation.elementMoveEnter.type
+                                        easing.bezierCurve: Appearance.animationCurves.emphasizedLastHalf
+                                    }
+                                    NumberAnimation {
+                                        target: pageLoader
+                                        properties: "anchors.topMargin"
+                                        to: 0
+                                        duration: 200
+                                        easing.type: Appearance.animation.elementMoveEnter.type
+                                        easing.bezierCurve: Appearance.animationCurves.emphasizedLastHalf
+                                    }
+                                }
                             }
                         }
                     }
