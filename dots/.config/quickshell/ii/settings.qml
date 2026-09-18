@@ -68,6 +68,12 @@ ApplicationWindow {
             keywords: ["application", "default", "preferred", "terminal", "browser", "language", "region"]
         },
         {
+            name: Translation.tr("Notifications"),
+            icon: "notifications",
+            component: "modules/settings/NotificationsConfig.qml",
+            keywords: ["notification", "banner", "message", "popup", "disturb", "osd"]
+        },
+        {
             name: Translation.tr("Mouse & Touchpad"),
             icon: "mouse",
             component: "modules/settings/MouseConfig.qml",

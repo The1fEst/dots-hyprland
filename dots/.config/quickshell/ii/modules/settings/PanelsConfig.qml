@@ -334,69 +334,6 @@ ContentPage {
         }
     }
 
-    ContentSection {
-        icon: "notifications"
-        title: Translation.tr("Notifications")
-
-        ConfigSpinBox {
-            icon: "av_timer"
-            text: Translation.tr("Timeout duration (if not defined by notification) (ms)")
-            value: Config.options.notifications.timeout
-            from: 1000
-            to: 60000
-            stepSize: 1000
-            onValueChanged: {
-                Config.options.notifications.timeout = value;
-            }
-        }
-
-        ContentSubsection {
-            title: Translation.tr("Placement")
-
-            ConfigSwitch {
-                buttonIcon: "monitor"
-                text: Translation.tr("Force specific monitor")
-                checked: Config.options.notifications.forceMonitor.enable
-                onCheckedChanged: {
-                    Config.options.notifications.forceMonitor.enable = checked;
-                }
-                StyledToolTip {
-                    text: Translation.tr("With multiple monitors, keeps notifications on the one picked below")
-                }
-            }
-
-            StyledComboBox {
-                enabled: Config.options.notifications.forceMonitor.enable
-                buttonIcon: "monitor"
-                textRole: "displayName"
-                model: HyprlandData.monitors.map(monitor => ({
-                            displayName: `${monitor.model || monitor.name} (${monitor.name})`,
-                            value: monitor.name
-                        }))
-                currentIndex: Math.max(0, model.findIndex(item => item.value === Config.options.notifications.forceMonitor.name))
-                onActivated: index => {
-                    Config.options.notifications.forceMonitor.name = model[index].value;
-                }
-            }
-        }
-    }
-
-    ContentSection {
-        icon: "voting_chip"
-        title: Translation.tr("On-screen display")
-
-        ConfigSpinBox {
-            icon: "av_timer"
-            text: Translation.tr("Timeout (ms)")
-            value: Config.options.osd.timeout
-            from: 100
-            to: 3000
-            stepSize: 100
-            onValueChanged: {
-                Config.options.osd.timeout = value;
-            }
-        }
-    }
 
     ContentSection {
         icon: "apps"
