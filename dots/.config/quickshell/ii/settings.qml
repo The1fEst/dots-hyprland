@@ -133,7 +133,11 @@ ApplicationWindow {
     ]
     property int currentPage: 0
     property var subpage: null
-    readonly property string shownComponent: root.subpage ? root.subpage.component : root.pages[root.currentPage].component
+    readonly property string shownComponent: root.subpage ? root.subpage.component : (root.pages[root.currentPage]?.component ?? root.pages[0].component)
+
+    function pageIndexOf(component: string): int {
+        return root.pages.findIndex(page => page.component === component);
+    }
     onCurrentPageChanged: root.subpage = null
     property string pageQuery: ""
     readonly property bool searching: root.pageQuery.trim().length > 0
@@ -327,14 +331,14 @@ ApplicationWindow {
                             id: tabArray
                             width: navRailScroll.width
                             height: implicitHeight
-                            currentIndex: root.shownPages.indexOf(root.pages[root.currentPage])
+                            currentIndex: root.shownPages.findIndex(page => page.component === root.pages[root.currentPage]?.component)
                             expanded: navRail.expanded
                             Repeater {
                                 model: root.shownPages
                                 NavigationRailButton {
                                     required property var index
                                     required property var modelData
-                                    readonly property int pageIndex: root.pages.indexOf(modelData)
+                                    readonly property int pageIndex: root.pageIndexOf(modelData.component)
                                     toggled: root.currentPage === pageIndex
                                     onPressed: root.currentPage = pageIndex;
                                     expanded: navRail.expanded
