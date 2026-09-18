@@ -26,6 +26,7 @@ Item {
     Rectangle {
         property real itemHeight: root.currentItem?.baseSize ?? 56
         property real highlightHeight: root.currentItem?.baseHighlightHeight ?? 56
+        visible: root.currentItem !== null
         anchors.left: tabBarColumn.left
         y: (root.currentItem?.y ?? 0) + (root.expanded ? 0 : ((itemHeight - highlightHeight) / 2))
         radius: Appearance.rounding.full

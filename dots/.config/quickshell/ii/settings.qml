@@ -26,74 +26,100 @@ ApplicationWindow {
         {
             name: Translation.tr("Quick"),
             icon: "instant_mix",
-            component: "modules/settings/QuickConfig.qml"
+            component: "modules/settings/QuickConfig.qml",
+            keywords: ["quick", "common", "frequent"]
         },
         {
             name: Translation.tr("Displays"),
             icon: "monitor",
             component: "modules/settings/DisplaysConfig.qml",
-            startsGroup: true
+            startsGroup: true,
+            keywords: ["screen", "resolution", "refresh", "monitor", "night", "light", "hdr", "scale", "arrange", "vrr"]
         },
         {
             name: Translation.tr("Sound"),
             icon: "volume_up",
-            component: "modules/settings/SoundConfig.qml"
+            component: "modules/settings/SoundConfig.qml",
+            keywords: ["card", "microphone", "volume", "balance", "headset", "audio", "output", "input"]
         },
         {
             name: Translation.tr("Appearance"),
             icon: "palette",
-            component: "modules/settings/AppearanceConfig.qml"
+            component: "modules/settings/AppearanceConfig.qml",
+            keywords: ["style", "light", "dark", "theme", "colour", "color", "font", "rounding", "blur", "opacity", "animation"]
         },
         {
             name: Translation.tr("Bar"),
             icon: "toast",
             iconRotation: 180,
-            component: "modules/settings/BarConfig.qml"
+            component: "modules/settings/BarConfig.qml",
+            keywords: ["bar", "panel", "tray", "workspaces", "clock", "top", "status"]
         },
         {
             name: Translation.tr("Panels"),
             icon: "bottom_app_bar",
-            component: "modules/settings/PanelsConfig.qml"
+            component: "modules/settings/PanelsConfig.qml",
+            keywords: ["dock", "sidebar", "overview", "launcher", "osd", "popup"]
         },
         {
             name: Translation.tr("Background"),
             icon: "texture",
-            component: "modules/settings/BackgroundConfig.qml"
+            component: "modules/settings/BackgroundConfig.qml",
+            keywords: ["wallpaper", "desktop", "clock", "weather", "parallax"]
         },
         {
             name: Translation.tr("General"),
             icon: "browse",
             component: "modules/settings/GeneralConfig.qml",
-            startsGroup: true
+            startsGroup: true,
+            keywords: ["application", "default", "preferred", "terminal", "browser", "language", "region"]
         },
         {
             name: Translation.tr("Lock screen"),
             icon: "lock",
             component: "modules/settings/LockConfig.qml",
-            startsGroup: true
+            startsGroup: true,
+            keywords: ["lock", "screen", "privacy", "security", "idle", "password"]
         },
         {
             name: Translation.tr("Capture"),
             icon: "screenshot_frame_2",
-            component: "modules/settings/CaptureConfig.qml"
+            component: "modules/settings/CaptureConfig.qml",
+            keywords: ["screenshot", "recording", "screen", "snip", "region", "annotation"]
         },
         {
             name: Translation.tr("Services"),
             icon: "settings",
-            component: "modules/settings/ServicesConfig.qml"
+            component: "modules/settings/ServicesConfig.qml",
+            keywords: ["service", "weather", "updates", "translation", "search", "ai"]
         },
         {
             name: Translation.tr("Advanced"),
             icon: "construction",
-            component: "modules/settings/AdvancedConfig.qml"
+            component: "modules/settings/AdvancedConfig.qml",
+            keywords: ["advanced", "developer", "hacks", "experimental", "policies"]
         },
         {
             name: Translation.tr("About"),
             icon: "info",
-            component: "modules/settings/About.qml"
+            component: "modules/settings/About.qml",
+            keywords: ["device", "system", "information", "details", "hostname", "memory", "processor", "version", "os"]
         }
     ]
     property int currentPage: 0
+    property string pageQuery: ""
+    readonly property bool searching: root.pageQuery.trim().length > 0
+    readonly property var shownPages: {
+        if (!root.searching)
+            return root.pages;
+        const terms = root.pageQuery.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+        const named = page => terms.every(term => page.name.toLowerCase().includes(term));
+        const known = page => {
+            const haystack = `${page.name} ${(page.keywords ?? []).join(" ")}`.toLowerCase();
+            return terms.every(term => haystack.includes(term));
+        };
+        return root.pages.filter(known).sort((a, b) => named(b) - named(a));
+    }
 
     visible: true
     onClosing: Qt.quit()
@@ -232,6 +258,17 @@ ApplicationWindow {
                         }
                     }
 
+                    MaterialTextField {
+                        id: pageSearch
+                        Layout.fillWidth: true
+                        Layout.leftMargin: 4
+                        Layout.rightMargin: 4
+                        visible: navRail.expanded
+                        placeholderText: Translation.tr("Search")
+                        onTextChanged: root.pageQuery = text
+                        onVisibleChanged: if (!visible) text = ""
+                    }
+
                     StyledFlickable {
                         id: navRailScroll
                         Layout.fillWidth: true
@@ -262,20 +299,21 @@ ApplicationWindow {
                             id: tabArray
                             width: navRailScroll.width
                             height: implicitHeight
-                            currentIndex: root.currentPage
+                            currentIndex: root.shownPages.indexOf(root.pages[root.currentPage])
                             expanded: navRail.expanded
                             Repeater {
-                                model: root.pages
+                                model: root.shownPages
                                 NavigationRailButton {
                                     required property var index
                                     required property var modelData
-                                    toggled: root.currentPage === index
-                                    onPressed: root.currentPage = index;
+                                    readonly property int pageIndex: root.pages.indexOf(modelData)
+                                    toggled: root.currentPage === pageIndex
+                                    onPressed: root.currentPage = pageIndex;
                                     expanded: navRail.expanded
                                     buttonIcon: modelData.icon
                                     buttonIconRotation: modelData.iconRotation || 0
                                     buttonText: modelData.name
-                                    startsGroup: modelData.startsGroup ?? false
+                                    startsGroup: root.searching ? false : (modelData.startsGroup ?? false)
                                     showLabel: navRail.expanded
                                     showToggledHighlight: false
 
