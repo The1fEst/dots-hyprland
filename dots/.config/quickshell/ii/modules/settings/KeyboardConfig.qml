@@ -122,16 +122,11 @@ ContentPage {
         root.chooserQuery = "";
     }
 
-    component OptionSwitch: ConfigSwitch {
-        id: toggle
-
+    component HyprlandSwitch: OptionSwitch {
         required property string option
 
-        checked: HyprlandOptions.flag(toggle.option)
-        onCheckedChanged: {
-            if (checked !== HyprlandOptions.flag(toggle.option))
-                HyprlandOptions.set(toggle.option, checked);
-        }
+        current: HyprlandOptions.flag(option)
+        onCommitted: value => HyprlandOptions.set(option, value)
     }
 
     ContentSection {
@@ -360,13 +355,13 @@ ContentPage {
             }
         }
 
-        OptionSwitch {
+        HyprlandSwitch {
             buttonIcon: "pin"
             text: Translation.tr("Num Lock when the session starts")
             option: "input:numlock_by_default"
         }
 
-        OptionSwitch {
+        HyprlandSwitch {
             buttonIcon: "language"
             text: Translation.tr("Shortcuts follow the symbol on the key")
             option: "input:resolve_binds_by_sym"
