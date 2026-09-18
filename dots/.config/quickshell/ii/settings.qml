@@ -119,7 +119,7 @@ ApplicationWindow {
             keywords: ["device", "system", "information", "details", "hostname", "memory", "processor", "version", "os"]
         }
     ]
-    property int currentPage: 8
+    property int currentPage: 0
     property string pageQuery: ""
     readonly property bool searching: root.pageQuery.trim().length > 0
     readonly property var shownPages: {
@@ -353,7 +353,7 @@ ApplicationWindow {
 
                     active: Config.ready
                     Component.onCompleted: {
-                        source = root.pages[root.currentPage].component
+                        source = root.pages[0].component
                     }
 
                     Connections {
