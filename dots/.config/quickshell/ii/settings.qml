@@ -43,6 +43,12 @@ ApplicationWindow {
             keywords: ["card", "microphone", "volume", "balance", "headset", "audio", "output", "input"]
         },
         {
+            name: Translation.tr("Power"),
+            icon: "battery_android_full",
+            component: "modules/settings/PowerConfig.qml",
+            keywords: ["power", "sleep", "suspend", "battery", "blank", "idle", "dpms", "energy", "lock"]
+        },
+        {
             name: Translation.tr("Appearance"),
             icon: "palette",
             component: "modules/settings/AppearanceConfig.qml",
