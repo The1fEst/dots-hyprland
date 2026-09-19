@@ -31,13 +31,119 @@ AbstractQuickPanel {
     // Toggles
     readonly property list<string> availableToggleTypes: ["network", "bluetooth", "idleInhibitor", "easyEffects", "nightLight", "darkMode", "cloudflareWarp", "wireGuard", "screenSnip", "colorPicker", "onScreenKeyboard", "mic", "audio", "notifications", "powerProfile"]
     readonly property int columns: Config.options.sidebar.quickToggles.android.columns
-    readonly property list<var> toggles: Config.ready ? Config.options.sidebar.quickToggles.android.toggles : []
+    readonly property list<var> storedToggles: Config.ready ? Config.options.sidebar.quickToggles.android.toggles : []
+    readonly property list<var> toggles: (QuickToggleDrag.active && QuickToggleDrag.targetList === "used") ? QuickToggleDrag.withInserted(root.storedToggles, QuickToggleDrag.type, QuickToggleDrag.targetIndex) : root.storedToggles
     readonly property list<var> toggleRows: toggleRowsForList(toggles)
     readonly property list<var> unusedToggles: {
-        const types = availableToggleTypes.filter(type => !toggles.some(toggle => (toggle && toggle.type === type)))
+        const types = availableToggleTypes.filter(type => !root.storedToggles.some(toggle => (toggle && toggle.type === type)))
         return types.map(type => { return { type: type, size: 1 } })
     }
     readonly property list<var> unusedToggleRows: toggleRowsForList(unusedToggles)
+
+    Connections {
+        target: QuickToggleDrag
+
+        function onPositionChanged() {
+            root.updateDropTarget();
+        }
+
+        function onActiveChanged() {
+            root.updateDropTarget();
+        }
+    }
+
+    function cellsIn(container: var): var {
+        const cells = [];
+        for (const row of (container?.children ?? [])) {
+            for (const cell of (row.groupData ?? [])) {
+                if (cell.buttonData !== undefined)
+                    cells.push(cell);
+            }
+        }
+        return cells;
+    }
+
+    function usedCells(): var {
+        return root.cellsIn(usedRows);
+    }
+
+    function cellTypeAt(item: Item, x: real, y: real): string {
+        for (const cell of [...root.usedCells(), ...root.cellsIn(unusedSection.item)]) {
+            const point = cell.mapFromItem(item, x, y);
+            if (point.x >= 0 && point.y >= 0 && point.x < cell.width && point.y < cell.height)
+                return cell.buttonData?.type ?? "";
+        }
+        return "";
+    }
+
+    function toggleSize(type: string): void {
+        const toggleList = Config.options.sidebar.quickToggles.android.toggles;
+        const index = (toggleList ?? []).findIndex(toggle => toggle && toggle.type === type);
+        if (index === -1)
+            return;
+        toggleList[index].size = 3 - toggleList[index].size;
+    }
+
+    function updateDropTarget(): void {
+        if (!QuickToggleDrag.active)
+            return;
+        if (!root.editMode) {
+            QuickToggleDrag.releaseTarget();
+            return;
+        }
+
+        const usedPoint = usedRows.mapFromItem(null, QuickToggleDrag.position.x, QuickToggleDrag.position.y);
+        if (usedPoint.x >= 0 && usedPoint.y >= 0 && usedPoint.x <= usedRows.width && usedPoint.y <= usedRows.height) {
+            for (const cell of root.usedCells()) {
+                if (cell.buttonData?.type !== QuickToggleDrag.type)
+                    continue;
+                const origin = usedRows.mapFromItem(cell, 0, 0);
+                if (usedPoint.x >= origin.x && usedPoint.x < origin.x + cell.width && usedPoint.y >= origin.y && usedPoint.y < origin.y + cell.height)
+                    return;
+            }
+            QuickToggleDrag.setTarget("used", root.insertionIndex(usedPoint));
+            return;
+        }
+
+        const unusedPoint = unusedSection.mapFromItem(null, QuickToggleDrag.position.x, QuickToggleDrag.position.y);
+        if (unusedSection.visible && unusedPoint.x >= 0 && unusedPoint.y >= 0 && unusedPoint.x <= unusedSection.width && unusedPoint.y <= unusedSection.height) {
+            QuickToggleDrag.setTarget("unused", -1);
+            return;
+        }
+
+        QuickToggleDrag.releaseTarget();
+    }
+
+    function insertionIndex(point: point): int {
+        const cells = root.usedCells().filter(cell => cell.buttonData?.type !== QuickToggleDrag.type).map(cell => {
+            const origin = usedRows.mapFromItem(cell, 0, 0);
+            return {
+                x: origin.x,
+                y: origin.y,
+                width: cell.width,
+                height: cell.height
+            };
+        });
+        cells.sort((first, second) => (first.y - second.y) || (first.x - second.x));
+
+        const step = root.baseCellHeight + root.spacing;
+        const pointRow = Math.floor(point.y / step);
+
+        let index = 0;
+        for (const cell of cells) {
+            const cellRow = Math.round(cell.y / step);
+            if (pointRow < cellRow)
+                break;
+            if (pointRow === cellRow) {
+                const fillsRow = cell.width >= usedRows.width - 1;
+                const passed = fillsRow ? point.y >= cell.y + cell.height / 2 : point.x >= cell.x + cell.width / 2;
+                if (!passed)
+                    break;
+            }
+            index++;
+        }
+        return index;
+    }
 
     function toggleRowsForList(togglesList) {
         var rows = [];
@@ -80,14 +186,6 @@ AbstractQuickPanel {
                     id: toggleRow
                     required property int index
                     property var modelData: root.toggleRows[index]
-                    property int startingIndex: {
-                        const rows = root.toggleRows;
-                        let sum = 0;
-                        for (let i = 0; i < index; i++) {
-                            sum += rows[i].length;
-                        }
-                        return sum;
-                    }
                     spacing: root.spacing
 
                     Repeater {
@@ -96,7 +194,6 @@ AbstractQuickPanel {
                             objectProp: "type"
                         }
                         delegate: AndroidToggleDelegateChooser {
-                            startingIndex: toggleRow.startingIndex
                             editMode: root.editMode
                             baseCellWidth: root.baseCellWidth
                             baseCellHeight: root.baseCellHeight
@@ -128,6 +225,7 @@ AbstractQuickPanel {
         }
 
         FadeLoader {
+            id: unusedSection
             shown: root.editMode
             sourceComponent: Column {
                 id: unusedRows
@@ -149,7 +247,6 @@ AbstractQuickPanel {
                                 objectProp: "type"
                             }
                             delegate: AndroidToggleDelegateChooser {
-                                startingIndex: -1
                                 editMode: root.editMode
                                 baseCellWidth: root.baseCellWidth
                                 baseCellHeight: root.baseCellHeight
@@ -159,6 +256,59 @@ AbstractQuickPanel {
                     }
                 }
             }
+        }
+    }
+
+    MouseArea {
+        id: editInteraction
+        anchors.fill: parent
+        visible: root.editMode
+        enabled: root.editMode
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        cursorShape: Qt.PointingHandCursor
+
+        property point pressPoint
+        property string pressedType: ""
+        property bool dragging: false
+
+        function finish(): void {
+            editInteraction.dragging = false;
+            editInteraction.pressedType = "";
+        }
+
+        onPressed: event => {
+            editInteraction.pressPoint = Qt.point(event.x, event.y);
+            editInteraction.pressedType = root.cellTypeAt(editInteraction, event.x, event.y);
+            editInteraction.dragging = false;
+            if (event.button === Qt.RightButton)
+                root.toggleSize(editInteraction.pressedType);
+        }
+        onPositionChanged: event => {
+            if (!(event.buttons & Qt.LeftButton) || editInteraction.pressedType.length === 0)
+                return;
+            const global = editInteraction.mapToItem(null, event.x, event.y);
+            if (!editInteraction.dragging && Math.hypot(event.x - editInteraction.pressPoint.x, event.y - editInteraction.pressPoint.y) > QuickToggleDrag.threshold) {
+                editInteraction.dragging = true;
+                QuickToggleDrag.begin(editInteraction.pressedType, global.x, global.y);
+            }
+            if (editInteraction.dragging)
+                QuickToggleDrag.moveTo(global.x, global.y);
+        }
+        onReleased: event => {
+            if (event.button !== Qt.LeftButton)
+                return;
+            if (editInteraction.dragging)
+                QuickToggleDrag.drop();
+            editInteraction.finish();
+        }
+        onCanceled: {
+            if (editInteraction.dragging)
+                QuickToggleDrag.cancel();
+            editInteraction.finish();
+        }
+        onPressAndHold: {
+            if (!editInteraction.dragging)
+                root.toggleSize(editInteraction.pressedType);
         }
     }
 }
