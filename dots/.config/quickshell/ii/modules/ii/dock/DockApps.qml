@@ -170,7 +170,7 @@ Item {
         id: previewPopup
         property var appTopLevel: root.lastHoveredButton?.appToplevel
 
-        property bool shouldShow: (popupMouseArea.containsMouse || root.buttonHovered) && appTopLevel && appTopLevel.toplevels && appTopLevel.toplevels.length > 0
+        property bool shouldShow: (popupMouseArea.containsMouse || root.buttonHovered) && (previewPopup.appTopLevel?.toplevels?.length ?? 0) > 0
 
         property bool show: false
         property real cachedCenterX: 0
