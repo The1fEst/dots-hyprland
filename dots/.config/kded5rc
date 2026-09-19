@@ -11,4 +11,4 @@ autoload=false
 autoload=false
 
 [Module-statusnotifierwatcher]
-autoload=false
+autoload=true
