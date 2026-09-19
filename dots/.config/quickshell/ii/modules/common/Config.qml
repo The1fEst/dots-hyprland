@@ -258,9 +258,6 @@ Singleton {
                         property bool showUnreadCount: false
                     }
                 }
-                property JsonObject tooltips: JsonObject {
-                    property bool clickToShow: false
-                }
             }
 
             property JsonObject battery: JsonObject {

@@ -15,7 +15,7 @@ MouseArea {
     readonly property bool isLow: percentage <= Config.options.battery.low / 100
 
     implicitHeight: batteryProgress.implicitHeight
-    hoverEnabled: !Config.options.bar.tooltips.clickToShow
+    hoverEnabled: true
 
     ClippedProgressBar {
         id: batteryProgress

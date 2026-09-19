@@ -42,7 +42,7 @@ Item {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
-        hoverEnabled: !Config.options.bar.tooltips.clickToShow && !GlobalStates.calendarOpen
+        hoverEnabled: !GlobalStates.calendarOpen
 
         onPressed: {
             GlobalStates.calendarOpen = !GlobalStates.calendarOpen;

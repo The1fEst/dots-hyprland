@@ -551,16 +551,4 @@ ContentPage {
         }
     }
 
-    ContentSection {
-        icon: "tooltip"
-        title: Translation.tr("Tooltips")
-        ConfigSwitch {
-            buttonIcon: "ads_click"
-            text: Translation.tr("Click to show")
-            checked: Config.options.bar.tooltips.clickToShow
-            onCheckedChanged: {
-                Config.options.bar.tooltips.clickToShow = checked;
-            }
-        }
-    }
 }
