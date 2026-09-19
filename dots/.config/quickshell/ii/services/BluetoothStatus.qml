@@ -23,6 +23,8 @@ Singleton {
             return;
         root.holdAgent(true);
         root.pairingAddress = device.address;
+        if (Bluetooth.defaultAdapter)
+            Bluetooth.defaultAdapter.discovering = false;
         pairDelay.device = device;
         pairDelay.restart();
         giveUpPairing.restart();
@@ -32,6 +34,7 @@ Singleton {
         id: giveUpPairing
         interval: 90000
         onTriggered: {
+            pairDelay.stop();
             root.pairingAddress = "";
             root.holdAgent(false);
         }
@@ -41,7 +44,13 @@ Singleton {
         id: pairDelay
         property BluetoothDevice device: null
         interval: 300
-        onTriggered: pairDelay.device?.pair()
+        repeat: true
+        onTriggered: {
+            if (Bluetooth.defaultAdapter?.discovering ?? false)
+                return;
+            pairDelay.stop();
+            pairDelay.device?.pair();
+        }
     }
 
     property string pairingAddress: ""

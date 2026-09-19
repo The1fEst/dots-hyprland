@@ -96,12 +96,17 @@ ContentPage {
         }
     }
 
-    readonly property bool lookingForDevices: BluetoothStatus.available && BluetoothStatus.enabled
+    readonly property bool settingUpDevice: BluetoothStatus.pairing || BluetoothStatus.pairedDevice !== null
+
+    readonly property bool lookingForDevices: BluetoothStatus.available && BluetoothStatus.enabled && !root.settingUpDevice
 
     function lookForDevices(look: bool): void {
         if (Bluetooth.defaultAdapter)
             Bluetooth.defaultAdapter.discovering = look;
     }
+
+    onLookingForDevicesChanged: if (!root.lookingForDevices)
+        root.lookForDevices(false)
 
     Component.onDestruction: root.lookForDevices(false)
 
