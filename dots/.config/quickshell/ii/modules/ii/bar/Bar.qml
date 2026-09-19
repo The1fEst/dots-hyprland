@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs
@@ -217,21 +216,6 @@ Scope {
         }
     }
 
-    IpcHandler {
-        target: "bar"
-
-        function toggle(): void {
-            GlobalStates.barOpen = !GlobalStates.barOpen
-        }
-
-        function close(): void {
-            GlobalStates.barOpen = false
-        }
-
-        function open(): void {
-            GlobalStates.barOpen = true
-        }
-    }
 
     GlobalShortcut {
         name: "barToggle"

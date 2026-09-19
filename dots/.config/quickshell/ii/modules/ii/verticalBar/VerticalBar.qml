@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Services.UPower
@@ -212,21 +211,6 @@ Scope {
         }
     }
 
-    IpcHandler {
-        target: "bar"
-
-        function toggle(): void {
-            GlobalStates.barOpen = !GlobalStates.barOpen
-        }
-
-        function close(): void {
-            GlobalStates.barOpen = false
-        }
-
-        function open(): void {
-            GlobalStates.barOpen = true
-        }
-    }
 
     GlobalShortcut {
         name: "barToggle"

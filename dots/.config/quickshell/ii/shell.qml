@@ -77,6 +77,22 @@ ShellRoot {
     PanelLoader { extraCondition: Config.options.bar.vertical; component: VerticalBar {} }
     PanelLoader { component: WallpaperSelector {} }
 
+    IpcHandler {
+        target: "bar"
+
+        function toggle(): void {
+            GlobalStates.barOpen = !GlobalStates.barOpen
+        }
+
+        function close(): void {
+            GlobalStates.barOpen = false
+        }
+
+        function open(): void {
+            GlobalStates.barOpen = true
+        }
+    }
+
     GlobalShortcut {
         name: "micMuteToggle"
         description: "Toggles the microphone"
