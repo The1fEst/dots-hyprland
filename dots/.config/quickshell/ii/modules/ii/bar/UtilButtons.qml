@@ -1,5 +1,7 @@
 import qs
+import qs.services
 import qs.modules.common
+import qs.modules.common.functions
 import qs.modules.common.widgets
 import QtQuick
 import QtQuick.Layouts
@@ -19,6 +21,30 @@ Item {
 
         spacing: 4
         anchors.centerIn: parent
+
+        Loader {
+            active: Config.options.bar.utilButtons.showUpdates && Updates.updateAdvised
+            visible: active
+            sourceComponent: CircleUtilButton {
+                id: updatesButton
+                Layout.alignment: Qt.AlignVCenter
+                onClicked: AppLaunch.shell(Config.options.apps.update)
+
+                MaterialSymbol {
+                    horizontalAlignment: Qt.AlignHCenter
+                    fill: 1
+                    text: "deployed_code_update"
+                    iconSize: Appearance.font.pixelSize.large
+                    color: Updates.updateStronglyAdvised ? Appearance.colors.colError : Appearance.colors.colOnLayer2
+
+                    StyledToolTip {
+                        extraVisibleCondition: false
+                        alternativeVisibleCondition: updatesButton.hovered
+                        text: Translation.tr("%1 packages can be updated").arg(Updates.count)
+                    }
+                }
+            }
+        }
 
         Loader {
             active: Config.options.bar.utilButtons.showScreenSnip

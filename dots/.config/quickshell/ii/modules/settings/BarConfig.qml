@@ -439,6 +439,18 @@ ContentPage {
                     Config.options.bar.utilButtons.showScreenRecord = checked;
                 }
             }
+            ConfigSwitch {
+                buttonIcon: "deployed_code_update"
+                text: Translation.tr("System updates")
+                checked: Config.options.bar.utilButtons.showUpdates
+                onCheckedChanged: {
+                    Config.options.bar.utilButtons.showUpdates = checked;
+                }
+
+                StyledToolTip {
+                    text: Translation.tr("Appears once enough packages are out of date. The threshold is under Services.")
+                }
+            }
         }
     }
 

@@ -222,6 +222,7 @@ Singleton {
                 }
                 property list<string> screenList: [] // List of names, like "eDP-1", find out with 'hyprctl monitors' command
                 property JsonObject utilButtons: JsonObject {
+                    property bool showUpdates: true
                     property bool showScreenSnip: true
                     property bool showColorPicker: false
                     property bool showMicToggle: false

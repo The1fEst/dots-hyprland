@@ -83,8 +83,14 @@ ContentPage {
                 Config.options.updates.enableCheck = checked;
             }
             StyledToolTip {
-                text: Translation.tr("Counts available packages. Nothing in the bar shows the count yet.")
+                text: Translation.tr("Counts the packages pacman could upgrade.\nThe bar shows a button once the count passes the threshold below.")
             }
+        }
+
+        NoticeBox {
+            visible: Config.options.updates.enableCheck && !Updates.available
+            Layout.fillWidth: true
+            text: Translation.tr("checkupdates is not installed, so nothing is counted. It comes with the pacman-contrib package.")
         }
 
         ConfigSpinBox {
