@@ -10,11 +10,11 @@ license=('MPL-2.0')
 depends=(
   gcc-libs
   glibc
-  wayland
 )
 makedepends=("git" "rust")
 provides=("stash")
 conflicts=("stash")
+options=(!lto)
 source=("git+${url}.git#tag=v${pkgver}")
 sha256sums=("SKIP")
 
