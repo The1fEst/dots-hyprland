@@ -156,10 +156,10 @@ Singleton {
 
     function shownModesOf(monitor: var, allResolutions: bool): list<var> {
         const out = root.scaledModesOf(monitor);
-        if (!allResolutions)
-            return out;
         const seen = new Set(out.map(entry => `${entry.width}x${entry.height}`));
-        for (const entry of root.panelModesOf(monitor)) {
+        const panel = root.panelModesOf(monitor);
+        const shown = allResolutions ? panel : panel.filter(entry => entry.mode.width === monitor?.width && entry.mode.height === monitor?.height);
+        for (const entry of shown) {
             const size = `${entry.width}x${entry.height}`;
             if (seen.has(size))
                 continue;
