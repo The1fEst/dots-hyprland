@@ -67,11 +67,7 @@ case "${SKIP_HYPRLAND}" in
       esac
     done
     for i in hypridle.conf ; do
-      if [[ "${INSTALL_VIA_NIX}" == true ]]; then
-        install_file__auto_backup "dots-extra/via-nix/$i" "${XDG_CONFIG_HOME}/hypr/$i"
-      else
-        install_file__auto_backup "dots/.config/hypr/$i" "${XDG_CONFIG_HOME}/hypr/$i"
-      fi
+      install_file__auto_backup "dots/.config/hypr/$i" "${XDG_CONFIG_HOME}/hypr/$i"
     done
     install_dir__ignore_existing "dots/.config/hypr/custom" "${XDG_CONFIG_HOME}/hypr/custom"
     ;;
