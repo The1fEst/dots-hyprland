@@ -1,12 +1,14 @@
 [Unit]
 Description=Quickshell
 PartOf=graphical-session.target
-After=graphical-session.target
+Wants=plasma-kded6.service
+After=graphical-session.target plasma-kded6.service
 StartLimitIntervalSec=300
 StartLimitBurst=20
 
 [Service]
 Type=simple
+ExecStartPre=-/usr/bin/gdbus wait --session --timeout 10 org.kde.StatusNotifierWatcher
 ExecStart=/usr/bin/qs -c ii
 Restart=always
 RestartSec=2

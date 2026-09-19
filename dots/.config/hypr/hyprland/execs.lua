@@ -10,12 +10,6 @@ hl.on("hyprland.start", function ()
         "dbus-update-activation-environment --systemd --all && systemctl --user start hyprland-session.target quickshell.service")
     hl.exec_cmd("$HOME/.config/hypr/custom/scripts/__restore_video_wallpaper.sh")
 
-    -- KDE's background daemon, for the device and disk notifications it sends.
-    -- Which of its modules run is decided in kded5rc, the name kded6 still reads.
-    if is_file_exists("/usr/bin/kded6") then
-        hl.exec_cmd("systemctl --user start plasma-kded6.service")
-    end
-
     -- Core components (authentication, lock screen, notification daemon)
     hl.exec_cmd("gnome-keyring-daemon --start --components=secrets")
     hl.exec_cmd("hypridle")
