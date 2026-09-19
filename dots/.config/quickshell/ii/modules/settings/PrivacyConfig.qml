@@ -53,12 +53,12 @@ ContentPage {
                     MaterialSymbol {
                         text: "mic"
                         iconSize: Appearance.font.pixelSize.larger
-                        color: Privacy.micActive.length > 0 ? Appearance.colors.colError : Appearance.colors.colSubtext
+                        color: Privacy.micActive ? Appearance.colors.colError : Appearance.colors.colSubtext
                     }
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: Privacy.micActive.length > 0 ? Translation.tr("Microphone in use") : Translation.tr("Microphone idle")
+                        text: Privacy.micActive ? Translation.tr("Microphone in use") : Translation.tr("Microphone idle")
                         color: Appearance.colors.colOnLayer2
                     }
                 }
@@ -81,12 +81,12 @@ ContentPage {
                     MaterialSymbol {
                         text: "screen_share"
                         iconSize: Appearance.font.pixelSize.larger
-                        color: Privacy.screenSharing.length > 0 ? Appearance.colors.colError : Appearance.colors.colSubtext
+                        color: Privacy.screenSharing ? Appearance.colors.colError : Appearance.colors.colSubtext
                     }
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: Privacy.screenSharing.length > 0 ? Translation.tr("Screen being shared") : Translation.tr("Screen not shared")
+                        text: Privacy.screenSharing ? Translation.tr("Screen being shared") : Translation.tr("Screen not shared")
                         color: Appearance.colors.colOnLayer2
                     }
                 }
