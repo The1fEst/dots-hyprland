@@ -80,6 +80,49 @@ Singleton {
 
     property BluetoothDevice pairedDevice: null
 
+    property BluetoothDevice connectingDevice: null
+
+    function connectDevice(device: BluetoothDevice): void {
+        if (!device)
+            return;
+        root.connectingDevice = device;
+        if (Bluetooth.defaultAdapter)
+            Bluetooth.defaultAdapter.discovering = false;
+        connectDelay.device = device;
+        connectDelay.restart();
+    }
+
+    Timer {
+        id: connectDelay
+        property BluetoothDevice device: null
+        interval: 300
+        repeat: true
+        onTriggered: {
+            if (Bluetooth.defaultAdapter?.discovering ?? false)
+                return;
+            connectDelay.stop();
+            connectDelay.device?.connect();
+            giveUpConnecting.restart();
+        }
+    }
+
+    Timer {
+        id: giveUpConnecting
+        interval: 15000
+        onTriggered: root.connectingDevice = null
+    }
+
+    Connections {
+        target: root.connectingDevice
+
+        function onStateChanged(): void {
+            if (root.connectingDevice?.state === BluetoothDeviceState.Connected) {
+                giveUpConnecting.stop();
+                root.connectingDevice = null;
+            }
+        }
+    }
+
     Timer {
         id: waitForBondingLinkToDrop
         interval: 5000

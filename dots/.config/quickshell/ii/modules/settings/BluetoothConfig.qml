@@ -17,6 +17,25 @@ ContentPage {
 
         readonly property bool pairing: BluetoothStatus.pairing && BluetoothStatus.pairingAddress === deviceRow.device?.address
 
+        readonly property bool connecting: deviceRow.device?.state === BluetoothDeviceState.Connecting
+
+        property bool asked: false
+        property bool refused: false
+
+        Connections {
+            target: deviceRow.device
+
+            function onStateChanged(): void {
+                if (deviceRow.device.state === BluetoothDeviceState.Connected) {
+                    deviceRow.asked = false;
+                    deviceRow.refused = false;
+                } else if (deviceRow.device.state === BluetoothDeviceState.Disconnected && deviceRow.asked) {
+                    deviceRow.asked = false;
+                    deviceRow.refused = true;
+                }
+            }
+        }
+
         Layout.fillWidth: true
         implicitHeight: 56
         radius: Appearance.rounding.small
@@ -52,14 +71,18 @@ ContentPage {
                     text: {
                         if (deviceRow.pairing)
                             return Translation.tr("Pairing…");
+                        if (deviceRow.connecting)
+                            return Translation.tr("Connecting…");
                         if (deviceRow.device?.connected)
                             return Translation.tr("Connected");
+                        if (deviceRow.refused)
+                            return Translation.tr("Could not connect. Wake the device and try again");
                         if (deviceRow.device?.paired)
                             return Translation.tr("Paired");
                         return Translation.tr("Not set up");
                     }
                     font.pixelSize: Appearance.font.pixelSize.smaller
-                    color: Appearance.colors.colSubtext
+                    color: deviceRow.refused ? Appearance.colors.colError : Appearance.colors.colSubtext
                 }
             }
 
@@ -71,7 +94,7 @@ ContentPage {
             }
 
             RippleButtonWithIcon {
-                enabled: !deviceRow.pairing
+                enabled: !deviceRow.pairing && !deviceRow.connecting
                 materialIcon: {
                     if (!deviceRow.device?.paired)
                         return "link";
@@ -87,16 +110,19 @@ ContentPage {
                         BluetoothStatus.pairDevice(deviceRow.device);
                         return;
                     }
-                    if (deviceRow.device.connected)
+                    if (deviceRow.device.connected) {
                         deviceRow.device.disconnect();
-                    else
-                        deviceRow.device.connect();
+                        return;
+                    }
+                    deviceRow.asked = true;
+                    deviceRow.refused = false;
+                    BluetoothStatus.connectDevice(deviceRow.device);
                 }
             }
         }
     }
 
-    readonly property bool settingUpDevice: BluetoothStatus.pairing || BluetoothStatus.pairedDevice !== null
+    readonly property bool settingUpDevice: BluetoothStatus.pairing || BluetoothStatus.pairedDevice !== null || BluetoothStatus.connectingDevice !== null
 
     readonly property bool lookingForDevices: BluetoothStatus.available && BluetoothStatus.enabled && !root.settingUpDevice
 
