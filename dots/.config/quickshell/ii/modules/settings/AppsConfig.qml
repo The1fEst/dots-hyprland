@@ -48,7 +48,7 @@ ContentPage {
                     buttonIcon: root.roleIcons[role.modelData.key] ?? "apps"
                     textRole: "name"
                     model: role.modelData.candidates
-                    currentIndex: Math.max(0, role.modelData.candidates.findIndex(candidate => candidate.entry === role.modelData.default))
+                    boundIndex: Math.max(0, role.modelData.candidates.findIndex(candidate => candidate.entry === role.modelData.default))
                     onActivated: index => DefaultApps.set(role.modelData.mime, role.modelData.candidates[index].entry)
                 }
             }
@@ -239,7 +239,7 @@ ContentPage {
                 buttonIcon: "rule"
                 textRole: "displayName"
                 model: root.ruleKinds
-                currentIndex: root.ruleIndex
+                boundIndex: root.ruleIndex
                 onActivated: index => root.ruleIndex = index
             }
 

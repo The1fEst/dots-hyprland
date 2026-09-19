@@ -31,7 +31,7 @@ ContentPage {
                         };
                     })]
 
-                currentIndex: {
+                boundIndex: {
                     const index = model.findIndex(item => item.value === Config.options.language.ui);
                     return index !== -1 ? index : 0;
                 }

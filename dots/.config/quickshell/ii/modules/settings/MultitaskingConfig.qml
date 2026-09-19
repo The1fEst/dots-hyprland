@@ -161,7 +161,7 @@ ContentPage {
                 buttonIcon: "open_with"
                 textRole: "displayName"
                 model: root.masterPlaces
-                currentIndex: root.indexOfValue(root.masterPlaces, HyprlandOptions.text("master:new_status") || "slave")
+                boundIndex: root.indexOfValue(root.masterPlaces, HyprlandOptions.text("master:new_status") || "slave")
                 onActivated: index => HyprlandOptions.set("master:new_status", root.masterPlaces[index].value)
             }
 
@@ -169,7 +169,7 @@ ContentPage {
                 buttonIcon: "chevron_left"
                 textRole: "displayName"
                 model: root.masterSides
-                currentIndex: root.indexOfValue(root.masterSides, HyprlandOptions.text("master:orientation") || "left")
+                boundIndex: root.indexOfValue(root.masterSides, HyprlandOptions.text("master:orientation") || "left")
                 onActivated: index => HyprlandOptions.set("master:orientation", root.masterSides[index].value)
             }
 

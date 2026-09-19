@@ -304,7 +304,7 @@ ContentPage {
             buttonIcon: combo.buttonIcon
             textRole: "displayName"
             model: combo.choices
-            currentIndex: root.indexOfOption(combo.choices, root.optionPrefix(combo.group))
+            boundIndex: root.indexOfOption(combo.choices, root.optionPrefix(combo.group))
             onActivated: index => XkbLayouts.setOption(root.optionPrefix(combo.group), combo.choices[index].value)
         }
     }

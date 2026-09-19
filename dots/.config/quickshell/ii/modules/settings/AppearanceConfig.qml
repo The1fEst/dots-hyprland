@@ -143,7 +143,7 @@ ContentPage {
                 buttonIcon: "web_asset"
                 textRole: "displayName"
                 model: root.named(DesktopAppearance.gtkThemes)
-                currentIndex: root.indexOfValue(model, DesktopAppearance.gtkTheme)
+                boundIndex: root.indexOfValue(model, DesktopAppearance.gtkTheme)
                 onActivated: index => DesktopAppearance.setThemes(model[index].value, DesktopAppearance.qtStyle)
             }
         }
@@ -155,7 +155,7 @@ ContentPage {
                 buttonIcon: "format_paint"
                 textRole: "displayName"
                 model: root.named(DesktopAppearance.qtStyles)
-                currentIndex: root.indexOfValue(model, DesktopAppearance.qtStyle)
+                boundIndex: root.indexOfValue(model, DesktopAppearance.qtStyle)
                 onActivated: index => DesktopAppearance.setThemes(DesktopAppearance.gtkTheme, model[index].value)
             }
         }
@@ -168,7 +168,7 @@ ContentPage {
                 buttonIcon: "imagesmode"
                 textRole: "displayName"
                 model: root.named(DesktopAppearance.iconThemes)
-                currentIndex: root.indexOfValue(model, DesktopAppearance.iconTheme)
+                boundIndex: root.indexOfValue(model, DesktopAppearance.iconTheme)
                 onActivated: index => DesktopAppearance.setIcons(model[index].value)
             }
         }
@@ -296,7 +296,7 @@ ContentPage {
                         buttonIcon: "font_download"
                         textRole: "displayName"
                         model: root.familyOptions(fontRole.font.family)
-                        currentIndex: root.indexOfValue(model, fontRole.font.family)
+                        boundIndex: root.indexOfValue(model, fontRole.font.family)
                         onActivated: index => root.setFamily(fontRole.modelData.role, fontRole.modelData.shellKeys, model[index].value)
                     }
 
@@ -348,7 +348,7 @@ ContentPage {
                     buttonIcon: "font_download"
                     textRole: "displayName"
                     model: root.familyOptions(root.bulkFamily)
-                    currentIndex: root.indexOfValue(model, root.bulkFamily)
+                    boundIndex: root.indexOfValue(model, root.bulkFamily)
                     onActivated: index => {
                         root.bulkFamily = model[index].value;
                     }
@@ -399,7 +399,7 @@ ContentPage {
                         buttonIcon: "font_download"
                         textRole: "displayName"
                         model: root.familyOptions(shellFont.family)
-                        currentIndex: root.indexOfValue(model, shellFont.family)
+                        boundIndex: root.indexOfValue(model, shellFont.family)
                         onActivated: index => {
                             Config.options.appearance.fonts[shellFont.modelData.key] = model[index].value;
                         }
@@ -421,7 +421,7 @@ ContentPage {
                 buttonIcon: "mouse"
                 textRole: "displayName"
                 model: root.named(DesktopAppearance.cursorThemes)
-                currentIndex: root.indexOfValue(model, DesktopAppearance.cursorTheme)
+                boundIndex: root.indexOfValue(model, DesktopAppearance.cursorTheme)
                 onActivated: index => DesktopAppearance.setCursor(model[index].value, DesktopAppearance.cursorSize)
             }
         }

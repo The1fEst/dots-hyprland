@@ -7,6 +7,12 @@ import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.functions
 
+/**
+ * `boundIndex` is the entry the thing behind the box is on, `currentIndex` the one the
+ * box draws. Picking an entry sets `currentIndex` on its own, so the box is put back on
+ * `boundIndex` afterwards and only moves once the pick has actually taken effect.
+ * A box left with `boundIndex` below zero keeps a plain ComboBox's own behaviour.
+ */
 ComboBox {
     id: root
 
@@ -15,6 +21,17 @@ ComboBox {
     property color colBackground: Appearance.colors.colSecondaryContainer
     property color colBackgroundHover: Appearance.colors.colSecondaryContainerHover
     property color colBackgroundActive: Appearance.colors.colSecondaryContainerActive
+    property int boundIndex: -1
+
+    function showBoundIndex(): void {
+        if (root.boundIndex >= 0)
+            root.currentIndex = root.boundIndex;
+    }
+
+    Component.onCompleted: root.showBoundIndex()
+    onBoundIndexChanged: root.showBoundIndex()
+    onModelChanged: root.showBoundIndex()
+    onActivated: root.showBoundIndex()
 
     implicitHeight: 40
     Layout.fillWidth: true

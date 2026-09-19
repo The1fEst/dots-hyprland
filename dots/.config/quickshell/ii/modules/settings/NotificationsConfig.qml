@@ -63,7 +63,7 @@ ContentPage {
                             displayName: `${monitor.model || monitor.name} (${monitor.name})`,
                             value: monitor.name
                         }))
-                currentIndex: Math.max(0, model.findIndex(item => item.value === Config.options.notifications.forceMonitor.name))
+                boundIndex: Math.max(0, model.findIndex(item => item.value === Config.options.notifications.forceMonitor.name))
                 onActivated: index => {
                     Config.options.notifications.forceMonitor.name = model[index].value;
                 }

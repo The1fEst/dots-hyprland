@@ -41,7 +41,7 @@ ContentPage {
                 buttonIcon: "speaker"
                 textRole: "displayName"
                 model: root.deviceOptions(Audio.outputDevices)
-                currentIndex: root.indexOfDevice(model, Audio.sink)
+                boundIndex: root.indexOfDevice(model, Audio.sink)
                 onActivated: index => Audio.setDefaultSink(model[index].value)
             }
         }
@@ -80,7 +80,7 @@ ContentPage {
                 buttonIcon: "mic"
                 textRole: "displayName"
                 model: root.deviceOptions(Audio.inputDevices)
-                currentIndex: root.indexOfDevice(model, Audio.source)
+                boundIndex: root.indexOfDevice(model, Audio.source)
                 onActivated: index => Audio.setDefaultSource(model[index].value)
             }
         }
@@ -200,7 +200,7 @@ ContentPage {
                     buttonIcon: "tune"
                     textRole: "label"
                     model: card.modelData.profiles
-                    currentIndex: Math.max(0, card.modelData.profiles.findIndex(profile => profile.value === card.modelData.active))
+                    boundIndex: Math.max(0, card.modelData.profiles.findIndex(profile => profile.value === card.modelData.active))
                     onActivated: index => AudioCards.setProfile(card.modelData.name, card.modelData.profiles[index].value)
                 }
             }

@@ -44,13 +44,13 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.bottomMargin: 6
         model: root.devices.map(node => Audio.friendlyDeviceName(node))
-        currentIndex: root.devices.findIndex(item => {
+        boundIndex: Math.max(0, root.devices.findIndex(item => {
             if (root.isSink) {
                 return item.id === Pipewire.defaultAudioSink?.id
             } else {
                 return item.id === Pipewire.defaultAudioSource?.id
             }
-        })
+        }))
         onActivated: (index) => {
             print(index)
             const item = root.devices[index]

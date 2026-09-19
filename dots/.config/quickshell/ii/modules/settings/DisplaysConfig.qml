@@ -111,7 +111,7 @@ ContentPage {
                             value: other.name
                         }))
                 ]
-                currentIndex: {
+                boundIndex: {
                     const current = DisplayOptions.primary === root.name ? "main" : (root.others.find(other => other.name === root.monitor?.mirrorOf)?.name ?? "extend");
                     return root.indexOfValue(model, current);
                 }
@@ -141,7 +141,7 @@ ContentPage {
                             value: `${mode.width}x${mode.height}`,
                             mode: mode
                         }))
-                currentIndex: root.indexOfValue(model, `${root.logicalWidth}x${root.logicalHeight}`)
+                boundIndex: root.indexOfValue(model, `${root.logicalWidth}x${root.logicalHeight}`)
                 onActivated: index => {
                     const mode = model[index].mode;
                     root.apply({
@@ -170,7 +170,7 @@ ContentPage {
                             displayName: Translation.tr("%1 Hz").arg(Math.round(rate)),
                             value: Math.round(rate)
                         }))
-                currentIndex: root.indexOfValue(model, Math.round(root.monitor?.refreshRate ?? 0))
+                boundIndex: root.indexOfValue(model, Math.round(root.monitor?.refreshRate ?? 0))
                 onActivated: index => root.apply({
                         rate: model[index].value
                     })
@@ -217,7 +217,7 @@ ContentPage {
                         value: 7
                     }
                 ]
-                currentIndex: root.indexOfValue(model, root.monitor?.transform ?? 0)
+                boundIndex: root.indexOfValue(model, root.monitor?.transform ?? 0)
                 onActivated: index => root.apply({
                         transform: model[index].value
                     })
@@ -252,7 +252,7 @@ ContentPage {
                         value: 3
                     }
                 ]
-                currentIndex: root.indexOfValue(model, DisplayOptions.numberOf(root.name, "vrr"))
+                boundIndex: root.indexOfValue(model, DisplayOptions.numberOf(root.name, "vrr"))
                 onActivated: index => root.apply({
                         vrr: model[index].value
                     })
@@ -274,7 +274,7 @@ ContentPage {
                             displayName: profile.label,
                             value: profile.value
                         }))
-                currentIndex: root.indexOfValue(model, DisplayOptions.colorProfileOf(root.monitor))
+                boundIndex: root.indexOfValue(model, DisplayOptions.colorProfileOf(root.monitor))
                 onActivated: index => DisplayOptions.setColorProfile(root.monitor, model[index].value)
             }
         }
@@ -295,7 +295,7 @@ ContentPage {
                         value: 10
                     }
                 ]
-                currentIndex: root.indexOfValue(model, DisplayOptions.numberOf(root.name, "bitdepth"))
+                boundIndex: root.indexOfValue(model, DisplayOptions.numberOf(root.name, "bitdepth"))
                 onActivated: index => root.apply({
                         bitdepth: model[index].value
                     })
@@ -309,7 +309,7 @@ ContentPage {
                 buttonIcon: "invert_colors"
                 textRole: "displayName"
                 model: root.forced
-                currentIndex: root.indexOfValue(model, DisplayOptions.numberOf(root.name, "supports_wide_color"))
+                boundIndex: root.indexOfValue(model, DisplayOptions.numberOf(root.name, "supports_wide_color"))
                 onActivated: index => root.apply({
                         supports_wide_color: model[index].value
                     })
@@ -324,7 +324,7 @@ ContentPage {
                 buttonIcon: "hdr_on"
                 textRole: "displayName"
                 model: root.forced
-                currentIndex: root.indexOfValue(model, DisplayOptions.numberOf(root.name, "supports_hdr"))
+                boundIndex: root.indexOfValue(model, DisplayOptions.numberOf(root.name, "supports_hdr"))
                 onActivated: index => root.apply({
                         supports_hdr: model[index].value
                     })
@@ -359,7 +359,7 @@ ContentPage {
                         value: "gamma22force"
                     }
                 ]
-                currentIndex: root.indexOfValue(model, DisplayOptions.valueOf(root.name, "sdr_eotf"))
+                boundIndex: root.indexOfValue(model, DisplayOptions.valueOf(root.name, "sdr_eotf"))
                 onActivated: index => root.apply({
                         sdr_eotf: model[index].value
                     })
@@ -382,7 +382,7 @@ ContentPage {
                             value: path
                         }))
                 ]
-                currentIndex: root.indexOfValue(model, DisplayOptions.valueOf(root.name, "icc"))
+                boundIndex: root.indexOfValue(model, DisplayOptions.valueOf(root.name, "icc"))
                 onActivated: index => root.apply({
                         icc: model[index].value
                     })

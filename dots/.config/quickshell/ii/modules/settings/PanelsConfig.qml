@@ -390,7 +390,7 @@ ContentPage {
                 readonly property var layoutNames: Object.keys(OskLayouts.byName)
 
                 model: layoutNames
-                currentIndex: {
+                boundIndex: {
                     const index = layoutNames.indexOf(Config.options.osk.layout);
                     return index !== -1 ? index : 0;
                 }

@@ -106,7 +106,7 @@ ContentPage {
                 buttonIcon: "mouse"
                 textRole: "displayName"
                 model: root.scrollMethods
-                currentIndex: root.indexOfValue(root.scrollMethods, HyprlandOptions.text("input:scroll_method"))
+                boundIndex: root.indexOfValue(root.scrollMethods, HyprlandOptions.text("input:scroll_method"))
                 onActivated: index => HyprlandOptions.set("input:scroll_method", root.scrollMethods[index].value)
             }
 
@@ -153,7 +153,7 @@ ContentPage {
                 model: DeviceOptions.mice.map(name => ({
                             displayName: name
                         }))
-                currentIndex: root.deviceIndex
+                boundIndex: root.deviceIndex
                 onActivated: index => root.deviceIndex = index
             }
 
