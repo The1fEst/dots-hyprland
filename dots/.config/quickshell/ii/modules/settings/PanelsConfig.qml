@@ -227,6 +227,7 @@ ContentPage {
             ConfigSwitch {
                 buttonIcon: "highlight_mouse_cursor"
                 text: Translation.tr("Hover to trigger")
+                enabled: Config.options.sidebar.cornerOpen.enable
                 checked: Config.options.sidebar.cornerOpen.clickless
                 onCheckedChanged: {
                     Config.options.sidebar.cornerOpen.clickless = checked;
@@ -238,7 +239,7 @@ ContentPage {
             }
             Row {
                 ConfigSwitch {
-                    enabled: !Config.options.sidebar.cornerOpen.clickless
+                    enabled: Config.options.sidebar.cornerOpen.enable && !Config.options.sidebar.cornerOpen.clickless
                     text: Translation.tr("Force hover open at absolute corner")
                     checked: Config.options.sidebar.cornerOpen.clicklessCornerEnd
                     onCheckedChanged: {
@@ -252,6 +253,7 @@ ContentPage {
                 ConfigSpinBox {
                     icon: "arrow_cool_down"
                     text: Translation.tr("with vertical offset")
+                    enabled: Config.options.sidebar.cornerOpen.enable && !Config.options.sidebar.cornerOpen.clickless
                     value: Config.options.sidebar.cornerOpen.clicklessCornerVerticalOffset
                     from: 0
                     to: 20
@@ -270,6 +272,7 @@ ContentPage {
                 ConfigSwitch {
                     buttonIcon: "vertical_align_bottom"
                     text: Translation.tr("Place at bottom")
+                    enabled: Config.options.sidebar.cornerOpen.enable
                     checked: Config.options.sidebar.cornerOpen.bottom
                     onCheckedChanged: {
                         Config.options.sidebar.cornerOpen.bottom = checked;
@@ -282,6 +285,7 @@ ContentPage {
                 ConfigSwitch {
                     buttonIcon: "unfold_more_double"
                     text: Translation.tr("Value scroll")
+                    enabled: Config.options.sidebar.cornerOpen.enable
                     checked: Config.options.sidebar.cornerOpen.valueScroll
                     onCheckedChanged: {
                         Config.options.sidebar.cornerOpen.valueScroll = checked;
@@ -295,6 +299,7 @@ ContentPage {
             ConfigSwitch {
                 buttonIcon: "visibility"
                 text: Translation.tr("Visualize region")
+                enabled: Config.options.sidebar.cornerOpen.enable
                 checked: Config.options.sidebar.cornerOpen.visualize
                 onCheckedChanged: {
                     Config.options.sidebar.cornerOpen.visualize = checked;
@@ -304,6 +309,7 @@ ContentPage {
                 ConfigSpinBox {
                     icon: "arrow_range"
                     text: Translation.tr("Region width")
+                    enabled: Config.options.sidebar.cornerOpen.enable
                     value: Config.options.sidebar.cornerOpen.cornerRegionWidth
                     from: 1
                     to: 300
@@ -315,6 +321,7 @@ ContentPage {
                 ConfigSpinBox {
                     icon: "height"
                     text: Translation.tr("Region height")
+                    enabled: Config.options.sidebar.cornerOpen.enable
                     value: Config.options.sidebar.cornerOpen.cornerRegionHeight
                     from: 1
                     to: 300
