@@ -53,7 +53,7 @@ v remove_deprecated_dependencies
 # Issue #363
 case $SKIP_SYSUPDATE in
   true) true;;
-  *) v sudo pacman -Syu;;
+  *) $ask && v sudo pacman -Syu || v sudo pacman -Syu --noconfirm;;
 esac
 
 # Use paru as AUR helper
