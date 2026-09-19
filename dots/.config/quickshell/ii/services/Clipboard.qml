@@ -53,6 +53,15 @@ Singleton {
         return !!(/^\d+\t\[\[ binary data .* image\/[^ ]+ \]\]$/.test(entry));
     }
 
+    /**
+     * Entries the watcher took from an application that offered no type it could read:
+     * a vendor blob such as an editor's own copy metadata. There is nothing to show and
+     * nothing worth pasting, and the same copy is in the history as text anyway.
+     */
+    function entryIsUnreadable(entry) {
+        return !!(/^\d+\t\[\[ binary data [^\]]*\]\]$/.test(entry)) && !root.entryIsImage(entry);
+    }
+
     function refresh() {
         readProc.buffer = [];
         readProc.running = true;
@@ -132,7 +141,7 @@ Singleton {
 
         onExited: (exitCode, exitStatus) => {
             if (exitCode === 0) {
-                root.entries = readProc.buffer;
+                root.entries = readProc.buffer.filter(entry => !root.entryIsUnreadable(entry));
             } else {
                 console.error("[Clipboard] Failed to refresh with code", exitCode, "and status", exitStatus);
             }
