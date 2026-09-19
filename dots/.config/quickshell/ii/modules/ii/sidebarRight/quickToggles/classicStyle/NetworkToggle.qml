@@ -14,7 +14,7 @@ QuickToggleButton {
     buttonIcon: Network.materialSymbol
     onClicked: Network.toggleWifi()
     altAction: () => {
-        AppLaunch.shell(Network.ethernet ? Config.options.apps.networkEthernet : Config.options.apps.network)
+        Session.openSettings(Network.ethernet ? "modules/settings/NetworkConfig.qml" : "modules/settings/WifiConfig.qml")
         GlobalStates.sidebarRightOpen = false
     }
     StyledToolTip {

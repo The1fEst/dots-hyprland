@@ -18,7 +18,7 @@ QuickToggleButton {
         Bluetooth.defaultAdapter.enabled = !Bluetooth.defaultAdapter?.enabled
     }
     altAction: () => {
-        AppLaunch.shell(Config.options.apps.bluetooth)
+        Session.openSettings("modules/settings/BluetoothConfig.qml")
         GlobalStates.sidebarRightOpen = false
     }
     StyledToolTip {

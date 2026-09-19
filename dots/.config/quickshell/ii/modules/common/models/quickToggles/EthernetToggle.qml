@@ -12,5 +12,5 @@ QuickToggleModel {
     icon: Network.ethernet ? "lan" : "settings_ethernet"
 
     toggled: Network.ethernet
-    mainAction: () => AppLaunch.shell(Config.options.apps.networkEthernet)
+    mainAction: () => Session.openSettings("modules/settings/NetworkConfig.qml")
 }

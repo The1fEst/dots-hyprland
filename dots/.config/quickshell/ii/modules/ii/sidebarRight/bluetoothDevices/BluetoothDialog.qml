@@ -60,7 +60,7 @@ WindowDialog {
         DialogButton {
             buttonText: Translation.tr("Details")
             onClicked: {
-                AppLaunch.shell(Config.options.apps.bluetooth);
+                Session.openSettings("modules/settings/BluetoothConfig.qml");
                 GlobalStates.sidebarRightOpen = false;
             }
         }

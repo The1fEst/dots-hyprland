@@ -51,7 +51,7 @@ WindowDialog {
         DialogButton {
             buttonText: Translation.tr("Details")
             onClicked: {
-                AppLaunch.shell(Network.ethernet ? Config.options.apps.networkEthernet : Config.options.apps.network);
+                Session.openSettings(Network.ethernet ? "modules/settings/NetworkConfig.qml" : "modules/settings/WifiConfig.qml");
                 GlobalStates.sidebarRightOpen = false;
             }
         }

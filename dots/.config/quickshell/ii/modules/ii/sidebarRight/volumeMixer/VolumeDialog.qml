@@ -32,7 +32,7 @@ WindowDialog {
         DialogButton {
             buttonText: Translation.tr("Details")
             onClicked: {
-                AppLaunch.shell(Config.options.apps.volumeMixer);
+                Session.openSettings("modules/settings/SoundConfig.qml");
                 GlobalStates.sidebarRightOpen = false;
             }
         }

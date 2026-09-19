@@ -285,34 +285,10 @@ ContentPage {
             }
             MaterialTextField {
                 Layout.fillWidth: true
-                placeholderText: Translation.tr("Volume mixer")
-                text: Config.options.apps.volumeMixer
-                onEditingFinished: {
-                    Config.options.apps.volumeMixer = text;
-                }
-            }
-            MaterialTextField {
-                Layout.fillWidth: true
-                placeholderText: Translation.tr("Bluetooth settings")
-                text: Config.options.apps.bluetooth
-                onEditingFinished: {
-                    Config.options.apps.bluetooth = text;
-                }
-            }
-            MaterialTextField {
-                Layout.fillWidth: true
-                placeholderText: Translation.tr("Network settings")
+                placeholderText: Translation.tr("Network connection editor")
                 text: Config.options.apps.network
                 onEditingFinished: {
                     Config.options.apps.network = text;
-                }
-            }
-            MaterialTextField {
-                Layout.fillWidth: true
-                placeholderText: Translation.tr("Ethernet settings")
-                text: Config.options.apps.networkEthernet
-                onEditingFinished: {
-                    Config.options.apps.networkEthernet = text;
                 }
             }
             MaterialTextField {

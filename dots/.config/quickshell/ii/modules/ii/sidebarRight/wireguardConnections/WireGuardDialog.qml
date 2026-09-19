@@ -141,7 +141,7 @@ WindowDialog {
         DialogButton {
             buttonText: Translation.tr("New Connection")
             onClicked: {
-                AppLaunch.shell(Config.options.apps.network);
+                Session.openSettings("modules/settings/NetworkConfig.qml");
                 GlobalStates.sidebarRightOpen = false;
             }
         }
