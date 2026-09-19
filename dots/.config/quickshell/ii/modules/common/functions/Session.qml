@@ -1,5 +1,6 @@
 pragma Singleton
 import Quickshell
+import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.functions
@@ -15,6 +16,11 @@ Singleton {
 
     function changePassword() {
         AppLaunch.shell(Config.options.apps.changePassword);
+    }
+
+    function openSettings(page = "") {
+        GlobalStates.settingsPage = page;
+        GlobalStates.settingsOpen = true;
     }
 
     function lock() {

@@ -30,6 +30,7 @@ import qs.modules.ii.polkit
 import qs.modules.ii.regionSelector
 import qs.modules.ii.screenCorners
 import qs.modules.ii.sessionScreen
+import qs.modules.ii.settings
 import qs.modules.ii.sidebarRight
 import qs.modules.ii.verticalBar
 import qs.modules.ii.wallpaperSelector
@@ -69,6 +70,7 @@ ShellRoot {
     PanelLoader { component: RegionSelector {} }
     PanelLoader { component: ScreenCorners {} }
     PanelLoader { component: SessionScreen {} }
+    PanelLoader { component: SettingsWindow {} }
     PanelLoader { component: SidebarRight {} }
     PanelLoader { extraCondition: Config.options.bar.vertical; component: VerticalBar {} }
     PanelLoader { component: WallpaperSelector {} }

@@ -1,22 +1,16 @@
-//@ pragma UseQApplication
-//@ pragma Env QS_NO_RELOAD_POPUP=1
-//@ pragma Env QT_QUICK_CONTROLS_STYLE=Basic
-//@ pragma Env QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000
-
-// Adjust this to make the app smaller or larger
-//@ pragma Env QT_SCALE_FACTOR=1
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import Quickshell
+import Quickshell.Io
+import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.functions as CF
 
-ApplicationWindow {
+FloatingWindow {
     id: root
     property string firstRunFilePath: CF.FileUtils.trimFileProtocol(`${Directories.state}/user/first_run.txt`)
     property string firstRunFileContent: "This file is just here to confirm you've been greeted :>"
@@ -134,6 +128,39 @@ ApplicationWindow {
     property int currentPage: 0
     property var subpage: null
     readonly property string shownComponent: root.subpage ? root.subpage.component : (root.pages[root.currentPage]?.component ?? root.pages[0].component)
+    readonly property url shownSource: Qt.resolvedUrl(Quickshell.shellPath(root.shownComponent))
+
+    Connections {
+        target: GlobalStates
+        function onSettingsPageChanged() {
+            const index = root.pageIndexOf(GlobalStates.settingsPage);
+            if (index === -1)
+                return;
+            root.subpage = null;
+            root.currentPage = index;
+        }
+    }
+
+    IpcHandler {
+        target: "settings"
+
+        function open(): void {
+            GlobalStates.settingsOpen = true;
+        }
+
+        function openPage(page: string): void {
+            GlobalStates.settingsPage = page;
+            GlobalStates.settingsOpen = true;
+        }
+
+        function close(): void {
+            GlobalStates.settingsOpen = false;
+        }
+
+        function toggle(): void {
+            GlobalStates.settingsOpen = !GlobalStates.settingsOpen;
+        }
+    }
 
     function pageIndexOf(component: string): int {
         return root.pages.findIndex(page => page.component === component);
@@ -153,19 +180,13 @@ ApplicationWindow {
         return root.pages.filter(known).sort((a, b) => named(b) - named(a));
     }
 
-    visible: true
-    onClosing: Qt.quit()
+    visible: GlobalStates.settingsOpen
+    onClosed: GlobalStates.settingsOpen = false
     title: "illogical-impulse Settings"
 
-    Component.onCompleted: {
-        MaterialThemeLoader.reapplyTheme()
-        Config.readWriteDelay = 0 // Settings app always only sets one var at a time so delay isn't needed
-    }
-
-    minimumWidth: 750
-    minimumHeight: 500
-    width: 1100
-    height: 750
+    minimumSize: Qt.size(750, 500)
+    implicitWidth: 1100
+    implicitHeight: 750
     color: Appearance.m3colors.m3background
 
     ColumnLayout {
@@ -224,7 +245,7 @@ ApplicationWindow {
                     buttonRadius: Appearance.rounding.full
                     implicitWidth: 35
                     implicitHeight: 35
-                    onClicked: root.close()
+                    onClicked: GlobalStates.settingsOpen = false
                     contentItem: MaterialSymbol {
                         anchors.centerIn: parent
                         horizontalAlignment: Text.AlignHCenter
@@ -409,7 +430,7 @@ ApplicationWindow {
 
                             active: Config.ready
                             Component.onCompleted: {
-                                source = root.pages[0].component
+                                source = root.shownSource
                             }
 
                             Connections {
@@ -446,7 +467,7 @@ ApplicationWindow {
                                     PropertyAction {
                                         target: pageLoader
                                         property: "source"
-                                        value: root.shownComponent
+                                        value: root.shownSource
                                     }
                                     PropertyAction {
                                         target: pageLoader

@@ -22,7 +22,6 @@ Item {
     id: root
     property int sidebarWidth: Appearance.sizes.sidebarWidth
     property int sidebarPadding: 10
-    property string settingsQmlPath: Quickshell.shellPath("settings.qml")
     property bool showAudioOutputDialog: false
     property bool showAudioInputDialog: false
     property bool showBluetoothDialog: false
@@ -291,7 +290,7 @@ Item {
                 buttonIcon: "settings"
                 onClicked: {
                     GlobalStates.sidebarRightOpen = false;
-                    Quickshell.execDetached(["qs", "-p", root.settingsQmlPath]);
+                    Session.openSettings();
                 }
                 StyledToolTip {
                     text: Translation.tr("Settings")
