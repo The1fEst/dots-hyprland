@@ -20,6 +20,7 @@ Singleton {
     property var workspaceById: ({})
     property var activeWorkspace: null
     property var monitors: []
+    property var monitorsAll: []
     property var layers: ({})
 
     // Convenient stuff
@@ -56,6 +57,7 @@ Singleton {
 
     function updateMonitors() {
         getMonitors.running = true;
+        getMonitorsAll.running = true;
     }
 
     function updateWorkspaces() {
@@ -118,6 +120,17 @@ Singleton {
             id: monitorsCollector
             onStreamFinished: {
                 root.monitors = JSON.parse(monitorsCollector.text);
+            }
+        }
+    }
+
+    Process {
+        id: getMonitorsAll
+        command: ["hyprctl", "monitors", "all", "-j"]
+        stdout: StdioCollector {
+            id: monitorsAllCollector
+            onStreamFinished: {
+                root.monitorsAll = JSON.parse(monitorsAllCollector.text).filter(monitor => !monitor.disabled);
             }
         }
     }

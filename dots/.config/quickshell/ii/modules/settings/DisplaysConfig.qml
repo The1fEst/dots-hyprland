@@ -13,9 +13,16 @@ ContentPage {
     property string selectedOutput: ""
     property bool allResolutions: false
 
-    readonly property list<var> monitors: HyprlandData.monitors
+    readonly property list<var> monitors: HyprlandData.monitorsAll
     readonly property var monitor: root.monitors.find(m => m.name === root.selectedOutput) ?? root.monitors[0] ?? null
     readonly property list<var> others: root.monitors.filter(m => m.name !== root.monitor?.name)
+
+    readonly property string mirrorTarget: {
+        const target = root.monitor?.mirrorOf ?? "none";
+        if (target === "none")
+            return "";
+        return root.monitors.find(m => String(m.id) === String(target))?.name ?? String(target);
+    }
 
     readonly property string name: root.monitor?.name ?? ""
 
@@ -112,7 +119,7 @@ ContentPage {
                         }))
                 ]
                 boundIndex: {
-                    const current = DisplayOptions.primary === root.name ? "main" : (root.others.find(other => other.name === root.monitor?.mirrorOf)?.name ?? "extend");
+                    const current = DisplayOptions.primary === root.name ? "main" : (root.others.find(other => other.name === root.mirrorTarget)?.name ?? "extend");
                     return root.indexOfValue(model, current);
                 }
                 onActivated: index => {
