@@ -82,6 +82,10 @@ Singleton {
     }
 
     function connectToWifiNetwork(accessPoint: WifiAccessPoint, password = ""): void {
+        if (password.length === 0 && accessPoint.isSecure && !root.isSavedWifiNetwork(accessPoint.ssid)) {
+            accessPoint.askingPassword = true;
+            return;
+        }
         accessPoint.askingPassword = false;
         root.wifiConnectTarget = accessPoint;
         if (password.length > 0) {
@@ -217,13 +221,14 @@ Singleton {
         stderr: SplitParser {
             onRead: line => {
                 // print("err:", line)
-                if (line.includes("Secrets were required")) {
+                if (line.includes("Secrets were required") && root.wifiConnectTarget) {
                     root.wifiConnectTarget.askingPassword = true
                 }
             }
         }
         onExited: (exitCode, exitStatus) => {
-            root.wifiConnectTarget.askingPassword = (exitCode !== 0)
+            if (root.wifiConnectTarget)
+                root.wifiConnectTarget.askingPassword = (exitCode !== 0)
             root.wifiConnectTarget = null
         }
     }
@@ -261,6 +266,7 @@ Singleton {
         updateNetworkName.running = true;
         updateNetworkStrength.running = true;
         savedWifiProc.running = true;
+        getNetworks.running = true;
     }
 
     Process {
