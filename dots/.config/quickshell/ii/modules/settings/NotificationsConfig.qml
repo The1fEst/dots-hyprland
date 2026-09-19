@@ -10,9 +10,6 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
-        icon: "notifications"
-        title: Translation.tr("Notifications")
-
         ConfigSwitch {
             buttonIcon: "notifications_paused"
             text: Translation.tr("Do not disturb")

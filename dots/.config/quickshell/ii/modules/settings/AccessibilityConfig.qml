@@ -23,39 +23,14 @@ ContentPage {
             onCommitted: size => DesktopAppearance.setCursor(DesktopAppearance.cursorTheme, size)
         }
 
-        ContentSubsection {
-            title: Translation.tr("Screen zoom")
-            tooltip: Translation.tr("The whole screen, magnified around the pointer. 100% is no magnification.")
-
-            OptionSpinBox {
-                icon: "zoom_in"
-                text: Translation.tr("Magnification (%)")
-                current: Math.round(HyprlandOptions.number("cursor:zoom_factor") * 100)
-                from: 100
-                to: 500
-                stepSize: 10
-                onCommitted: zoom => HyprlandOptions.set("cursor:zoom_factor", zoom / 100)
-            }
-
-            HyprlandSwitch {
-                buttonIcon: "grid_on"
-                text: Translation.tr("Keep the magnified image sharp")
-                option: "cursor:zoom_rigid"
-            }
-        }
-    }
-
-    ContentSection {
-        icon: "animation"
-        title: Translation.tr("Motion")
-
-        HyprlandSwitch {
+        OptionSwitch {
             buttonIcon: "animation"
-            text: Translation.tr("Animations")
-            option: "animations:enabled"
+            text: Translation.tr("Reduced motion")
+            current: !HyprlandOptions.flag("animations:enabled")
+            onCommitted: reduced => HyprlandOptions.set("animations:enabled", !reduced)
 
             StyledToolTip {
-                text: Translation.tr("Turning animations off makes windows and workspaces appear at once instead of moving.")
+                text: Translation.tr("Windows and workspaces appear at once instead of moving.")
             }
         }
 
@@ -76,11 +51,59 @@ ContentPage {
         icon: "keyboard"
         title: Translation.tr("Typing")
 
-        ContentLinkRow {
-            buttonIcon: "keyboard"
-            title: Translation.tr("Key repeat")
-            subtitle: Translation.tr("How long a held key waits and how fast it repeats")
-            onClicked: root.subpageRequested(title, "modules/settings/KeyboardConfig.qml")
+        ContentSubsection {
+            title: Translation.tr("Repeat keys")
+            tooltip: Translation.tr("Key presses repeat when the key is held down")
+
+            ConfigRow {
+                uniform: true
+
+                OptionSpinBox {
+                    icon: "timer"
+                    text: Translation.tr("Delay (ms)")
+                    current: HyprlandOptions.number("input:repeat_delay")
+                    from: 100
+                    to: 2000
+                    stepSize: 25
+                    onCommitted: delay => HyprlandOptions.set("input:repeat_delay", delay)
+                }
+
+                OptionSpinBox {
+                    icon: "speed"
+                    text: Translation.tr("Rate (per second)")
+                    current: HyprlandOptions.number("input:repeat_rate")
+                    from: 1
+                    to: 100
+                    stepSize: 1
+                    onCommitted: rate => HyprlandOptions.set("input:repeat_rate", rate)
+                }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "zoom_in"
+        title: Translation.tr("Zoom")
+
+        ContentSubsection {
+            title: Translation.tr("Magnifier")
+            tooltip: Translation.tr("The whole screen, magnified around the pointer. 100% is no magnification.")
+
+            OptionSpinBox {
+                icon: "zoom_in"
+                text: Translation.tr("Magnification (%)")
+                current: Math.round(HyprlandOptions.number("cursor:zoom_factor") * 100)
+                from: 100
+                to: 500
+                stepSize: 10
+                onCommitted: zoom => HyprlandOptions.set("cursor:zoom_factor", zoom / 100)
+            }
+
+            HyprlandSwitch {
+                buttonIcon: "grid_on"
+                text: Translation.tr("Keep the magnified image sharp")
+                option: "cursor:zoom_rigid"
+            }
         }
     }
 }

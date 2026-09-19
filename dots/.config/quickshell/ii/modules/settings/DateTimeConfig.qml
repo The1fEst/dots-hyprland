@@ -12,23 +12,8 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
-        icon: "nest_clock_farsight_analog"
-        title: Translation.tr("Time & date")
-
-        ConfigSwitch {
-            buttonIcon: "pace"
-            text: Translation.tr("Second precision")
-            checked: Config.options.time.secondPrecision
-            onCheckedChanged: {
-                Config.options.time.secondPrecision = checked;
-            }
-            StyledToolTip {
-                text: Translation.tr("Enable if you want clocks to show seconds accurately")
-            }
-        }
-
         ContentSubsection {
-            title: Translation.tr("Format")
+            title: Translation.tr("Time Format")
 
             ConfigSelectionArray {
                 currentValue: Config.options.time.format
@@ -55,6 +40,23 @@ ContentPage {
                         value: "h:mm AP"
                     },
                 ]
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "nest_clock_farsight_analog"
+        title: Translation.tr("Clock & Calendar")
+
+        ConfigSwitch {
+            buttonIcon: "pace"
+            text: Translation.tr("Seconds")
+            checked: Config.options.time.secondPrecision
+            onCheckedChanged: {
+                Config.options.time.secondPrecision = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Enable if you want clocks to show seconds accurately")
             }
         }
 
@@ -87,58 +89,59 @@ ContentPage {
                 }
             }
         }
+    }
 
-        ContentSubsection {
-            title: Translation.tr("Pomodoro")
+    ContentSection {
+        icon: "timer"
+        title: Translation.tr("Pomodoro")
 
-            ConfigRow {
-                uniform: true
-                ConfigSpinBox {
-                    icon: "target"
-                    text: Translation.tr("Focus (min)")
-                    value: Math.round(Config.options.time.pomodoro.focus / 60)
-                    from: 1
-                    to: 180
-                    stepSize: 5
-                    onValueChanged: {
-                        Config.options.time.pomodoro.focus = value * 60;
-                    }
-                }
-                ConfigSpinBox {
-                    icon: "coffee"
-                    text: Translation.tr("Break (min)")
-                    value: Math.round(Config.options.time.pomodoro.breakTime / 60)
-                    from: 1
-                    to: 60
-                    stepSize: 1
-                    onValueChanged: {
-                        Config.options.time.pomodoro.breakTime = value * 60;
-                    }
+        ConfigRow {
+            uniform: true
+            ConfigSpinBox {
+                icon: "target"
+                text: Translation.tr("Focus (min)")
+                value: Math.round(Config.options.time.pomodoro.focus / 60)
+                from: 1
+                to: 180
+                stepSize: 5
+                onValueChanged: {
+                    Config.options.time.pomodoro.focus = value * 60;
                 }
             }
-            ConfigRow {
-                uniform: true
-                ConfigSpinBox {
-                    icon: "airline_seat_recline_extra"
-                    text: Translation.tr("Long break (min)")
-                    value: Math.round(Config.options.time.pomodoro.longBreak / 60)
-                    from: 1
-                    to: 120
-                    stepSize: 5
-                    onValueChanged: {
-                        Config.options.time.pomodoro.longBreak = value * 60;
-                    }
+            ConfigSpinBox {
+                icon: "coffee"
+                text: Translation.tr("Break (min)")
+                value: Math.round(Config.options.time.pomodoro.breakTime / 60)
+                from: 1
+                to: 60
+                stepSize: 1
+                onValueChanged: {
+                    Config.options.time.pomodoro.breakTime = value * 60;
                 }
-                ConfigSpinBox {
-                    icon: "repeat"
-                    text: Translation.tr("Cycles before long break")
-                    value: Config.options.time.pomodoro.cyclesBeforeLongBreak
-                    from: 1
-                    to: 12
-                    stepSize: 1
-                    onValueChanged: {
-                        Config.options.time.pomodoro.cyclesBeforeLongBreak = value;
-                    }
+            }
+        }
+        ConfigRow {
+            uniform: true
+            ConfigSpinBox {
+                icon: "airline_seat_recline_extra"
+                text: Translation.tr("Long break (min)")
+                value: Math.round(Config.options.time.pomodoro.longBreak / 60)
+                from: 1
+                to: 120
+                stepSize: 5
+                onValueChanged: {
+                    Config.options.time.pomodoro.longBreak = value * 60;
+                }
+            }
+            ConfigSpinBox {
+                icon: "repeat"
+                text: Translation.tr("Cycles before long break")
+                value: Config.options.time.pomodoro.cyclesBeforeLongBreak
+                from: 1
+                to: 12
+                stepSize: 1
+                onValueChanged: {
+                    Config.options.time.pomodoro.cyclesBeforeLongBreak = value;
                 }
             }
         }

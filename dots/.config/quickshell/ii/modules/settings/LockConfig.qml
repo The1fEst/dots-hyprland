@@ -8,8 +8,14 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
-        icon: "lock"
-        title: Translation.tr("Lock screen")
+        IdleTimeoutRow {
+            title: Translation.tr("Automatic Screen Lock")
+            tooltip: Translation.tr("Locks the session after a period of inactivity")
+            what: "lock"
+            switchIcon: "lock_clock"
+            switchText: Translation.tr("Lock the session")
+            fallbackMinutes: 30
+        }
 
         ConfigSwitch {
             buttonIcon: "water_drop"

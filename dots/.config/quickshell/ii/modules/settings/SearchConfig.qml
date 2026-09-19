@@ -10,9 +10,6 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
-        icon: "search"
-        title: Translation.tr("Search")
-
         ConfigSwitch {
             text: Translation.tr("Use Levenshtein distance-based algorithm instead of fuzzy")
             checked: Config.options.search.sloppy

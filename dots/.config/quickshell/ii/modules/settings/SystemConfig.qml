@@ -10,14 +10,11 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
-        icon: "settings_applications"
-        title: Translation.tr("System")
-
         ContentLinkRow {
-            buttonIcon: "person"
-            title: Translation.tr("Users")
-            subtitle: UserAccount.displayName
-            onClicked: root.subpageRequested(title, "modules/settings/GeneralConfig.qml")
+            buttonIcon: "language"
+            title: Translation.tr("Region & Language")
+            subtitle: Translation.tr("Interface language and the calendar's locale")
+            onClicked: root.subpageRequested(title, "modules/settings/RegionConfig.qml")
         }
 
         ContentLinkRow {
@@ -28,10 +25,10 @@ ContentPage {
         }
 
         ContentLinkRow {
-            buttonIcon: "language"
-            title: Translation.tr("Region & Language")
-            subtitle: Translation.tr("Interface language and the calendar's locale")
-            onClicked: root.subpageRequested(title, "modules/settings/RegionConfig.qml")
+            buttonIcon: "person"
+            title: Translation.tr("Users")
+            subtitle: UserAccount.displayName
+            onClicked: root.subpageRequested(title, "modules/settings/GeneralConfig.qml")
         }
 
         ContentLinkRow {

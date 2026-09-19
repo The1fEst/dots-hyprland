@@ -310,8 +310,8 @@ ContentPage {
     }
 
     ContentSection {
-        icon: "keyboard_alt"
-        title: Translation.tr("Typing")
+        icon: "swap_horiz"
+        title: Translation.tr("Input Source Switching")
 
         OptionCombo {
             title: Translation.tr("Switch between layouts with")
@@ -320,48 +320,10 @@ ContentPage {
             noneLabel: Translation.tr("Only the shell shortcut")
         }
 
-        ContentSubsection {
-            title: Translation.tr("Key repeat")
-
-            ConfigRow {
-                uniform: true
-
-                OptionSpinBox {
-                    icon: "timer"
-                    text: Translation.tr("Delay (ms)")
-                    current: HyprlandOptions.number("input:repeat_delay")
-                    from: 100
-                    to: 2000
-                    stepSize: 25
-                    onCommitted: delay => HyprlandOptions.set("input:repeat_delay", delay)
-                }
-
-                OptionSpinBox {
-                    icon: "speed"
-                    text: Translation.tr("Rate (per second)")
-                    current: HyprlandOptions.number("input:repeat_rate")
-                    from: 1
-                    to: 100
-                    stepSize: 1
-                    onCommitted: rate => HyprlandOptions.set("input:repeat_rate", rate)
-                }
-            }
-        }
-
         HyprlandSwitch {
             buttonIcon: "pin"
             text: Translation.tr("Num Lock when the session starts")
             option: "input:numlock_by_default"
-        }
-
-        HyprlandSwitch {
-            buttonIcon: "language"
-            text: Translation.tr("Shortcuts follow the symbol on the key")
-            option: "input:resolve_binds_by_sym"
-
-            StyledToolTip {
-                text: Translation.tr("On: a shortcut is the letter it types, so it moves with the layout.\nOff: a shortcut is the place on the keyboard, so it stays put in any layout.")
-            }
         }
     }
 
@@ -391,6 +353,16 @@ ContentPage {
     ContentSection {
         icon: "shortcut"
         title: Translation.tr("Keyboard Shortcuts")
+
+        HyprlandSwitch {
+            buttonIcon: "language"
+            text: Translation.tr("Shortcuts follow the symbol on the key")
+            option: "input:resolve_binds_by_sym"
+
+            StyledToolTip {
+                text: Translation.tr("On: a shortcut is the letter it types, so it moves with the layout.\nOff: a shortcut is the place on the keyboard, so it stays put in any layout.")
+            }
+        }
 
         MaterialTextField {
             Layout.fillWidth: true

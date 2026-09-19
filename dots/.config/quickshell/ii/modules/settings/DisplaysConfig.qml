@@ -58,9 +58,17 @@ ContentPage {
     }
 
     ContentSection {
-        icon: "monitor"
-        title: Translation.tr("Display")
+        visible: root.monitors.length > 1
 
+        MonitorArrangement {
+            Layout.fillWidth: true
+            selected: root.name
+            onPicked: name => root.selectedOutput = name
+            onMoved: (name, x, y) => DisplayOptions.moveTo(name, x, y)
+        }
+    }
+
+    ContentSection {
         ConfigSelectionArray {
             currentValue: root.name
             onSelected: newValue => root.selectedOutput = newValue
@@ -557,15 +565,4 @@ ContentPage {
         }
     }
 
-    ContentSection {
-        icon: "widgets"
-        title: Translation.tr("Arrangement")
-
-        MonitorArrangement {
-            Layout.fillWidth: true
-            selected: root.name
-            onPicked: name => root.selectedOutput = name
-            onMoved: (name, x, y) => DisplayOptions.moveTo(name, x, y)
-        }
-    }
 }

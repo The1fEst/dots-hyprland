@@ -11,8 +11,8 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
-        icon: "lock"
-        title: Translation.tr("Privacy")
+        icon: "tune"
+        title: Translation.tr("System")
 
         ContentLinkRow {
             buttonIcon: "lock"
@@ -31,7 +31,7 @@ ContentPage {
 
     ContentSection {
         icon: "sensors"
-        title: Translation.tr("In use right now")
+        title: Translation.tr("Devices")
 
         ConfigRow {
             uniform: true

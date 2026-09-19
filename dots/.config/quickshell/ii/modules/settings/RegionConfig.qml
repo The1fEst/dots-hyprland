@@ -10,11 +10,8 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
-        icon: "language"
-        title: Translation.tr("Region & Language")
-
         ContentSubsection {
-            title: Translation.tr("Interface Language")
+            title: Translation.tr("Language")
             tooltip: Translation.tr("Select the language for the user interface.\n\"Auto\" will use your system's locale.")
 
             StyledComboBox {
