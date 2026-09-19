@@ -4,6 +4,12 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+/**
+ * A labelled switch. `checked` stays bound to whatever the page bound it to: a click
+ * flips it only long enough for the page's handler to run, then hands the property
+ * back to that binding, so the switch keeps showing the setting rather than the last
+ * click when a write is rejected or the setting changes elsewhere.
+ */
 RippleButton {
     id: root
     property string buttonIcon
@@ -12,8 +18,20 @@ RippleButton {
     Layout.fillWidth: true
     implicitHeight: contentItem.implicitHeight + 8 * 2
     font.pixelSize: Appearance.font.pixelSize.small
-    
-    onClicked: checked = !checked
+
+    onClicked: {
+        flip.value = !root.checked;
+        flip.when = true;
+        flip.when = false;
+    }
+
+    Binding {
+        id: flip
+        target: root
+        property: "checked"
+        when: false
+        restoreMode: Binding.RestoreBindingOrValue
+    }
 
     contentItem: RowLayout {
         spacing: 10

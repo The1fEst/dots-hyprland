@@ -13,7 +13,8 @@ ConfigSwitch {
 
     signal committed(bool value)
 
-    onClicked: root.committed(root.checked)
+    onCheckedChanged: if (root.checked !== root.current)
+        root.committed(root.checked)
 
     Binding {
         target: root
