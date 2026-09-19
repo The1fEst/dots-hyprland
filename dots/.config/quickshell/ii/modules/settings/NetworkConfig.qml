@@ -48,8 +48,10 @@ ContentPage {
             }
 
             StyledSwitch {
+                id: activeSwitch
                 checked: connectionRow.connection.active
                 onClicked: {
+                    activeSwitch.checked = Qt.binding(() => connectionRow.connection.active);
                     if (connectionRow.connection.active)
                         NetworkConnections.deactivate(connectionRow.connection.name);
                     else
