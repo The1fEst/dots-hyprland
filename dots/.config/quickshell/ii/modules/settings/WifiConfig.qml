@@ -28,6 +28,18 @@ ContentPage {
                     Network.enableWifi(checked);
             }
         }
+
+        ContentLinkRow {
+            buttonIcon: "bookmark"
+            title: Translation.tr("Saved Networks")
+            onClicked: root.subpageRequested(title, "modules/settings/SavedNetworksConfig.qml")
+        }
+
+        ContentLinkRow {
+            buttonIcon: "wifi_password"
+            title: Translation.tr("Connect to Hidden Network…")
+            onClicked: root.subpageRequested(title, "modules/settings/HiddenNetworkConfig.qml")
+        }
     }
 
     ContentPlaceholder {
