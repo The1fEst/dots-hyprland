@@ -13,16 +13,7 @@ ConfigSwitch {
 
     signal committed(bool value)
 
-    property bool showsCurrent: false
-
-    onCheckedChanged: {
-        if (root.checked === root.current) {
-            root.showsCurrent = true;
-            return;
-        }
-        if (root.showsCurrent)
-            root.committed(root.checked);
-    }
+    onClicked: root.committed(root.checked)
 
     Binding {
         target: root

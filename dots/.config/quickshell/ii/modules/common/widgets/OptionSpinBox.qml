@@ -15,6 +15,9 @@ ConfigSpinBox {
 
     property bool showsCurrent: false
 
+    Component.onCompleted: if (root.value === root.current) root.showsCurrent = true
+    onCurrentChanged: if (root.value === root.current) root.showsCurrent = true
+
     onValueChanged: {
         if (root.value === root.current) {
             root.showsCurrent = true;
