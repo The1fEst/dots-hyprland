@@ -56,18 +56,6 @@ ContentPage {
                 text: Translation.tr("Conflicting daemons like dunst or mako are killed silently instead of showing a dialog")
             }
         }
-
-        ConfigSwitch {
-            buttonIcon: "shelf_auto_hide"
-            text: Translation.tr("Kill tray hosts without asking")
-            checked: Config.options.conflictKiller.autoKillTrays
-            onCheckedChanged: {
-                Config.options.conflictKiller.autoKillTrays = checked;
-            }
-            StyledToolTip {
-                text: Translation.tr("Other panels holding the system tray are killed silently instead of showing a dialog")
-            }
-        }
     }
 
 
