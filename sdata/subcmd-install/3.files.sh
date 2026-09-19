@@ -228,9 +228,9 @@ esac
 if [[ ! -z $(systemctl --version) ]]; then
   x systemctl --user daemon-reload
   if [[ ! -z "${DBUS_SESSION_BUS_ADDRESS}" ]]; then
-    v systemctl --user enable quickshell.service stash.service
+    v systemctl --user enable quickshell.service stash-text.service stash-image.service
   else
-    v sudo systemctl --machine=$(whoami)@.host --user enable quickshell.service stash.service
+    v sudo systemctl --machine=$(whoami)@.host --user enable quickshell.service stash-text.service stash-image.service
   fi
 fi
 

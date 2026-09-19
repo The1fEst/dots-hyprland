@@ -1,5 +1,5 @@
 [Unit]
-Description=Clipboard history
+Description=Clipboard history for images
 PartOf=graphical-session.target
 After=graphical-session.target
 StartLimitIntervalSec=300
@@ -7,7 +7,7 @@ StartLimitBurst=20
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/stash watch --persist
+ExecStart=/usr/bin/stash --min-size 512 watch --persist --mime-type image
 Restart=always
 RestartSec=2
 Slice=session.slice
