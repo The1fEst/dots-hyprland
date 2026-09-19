@@ -41,19 +41,5 @@ ContentPage {
                 }
             }
         }
-
-        ContentSubsection {
-            title: Translation.tr("Calendar locale")
-            tooltip: Translation.tr("Determines the first day of week")
-
-            MaterialTextField {
-                Layout.fillWidth: true
-                placeholderText: Translation.tr("e.g. en-GB")
-                text: Config.options.calendar.locale
-                onEditingFinished: {
-                    Config.options.calendar.locale = text.trim();
-                }
-            }
-        }
     }
 }

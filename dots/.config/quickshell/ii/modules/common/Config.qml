@@ -130,7 +130,6 @@ Singleton {
                 property string changePassword: "kitty -1 --hold=yes fish -i -c 'passwd'"
                 property string display: "nwg-displays"
                 property string network: "kcmshell6 kcm_networkmanagement"
-                property string manageUser: "kcmshell6 kcm_users"
                 property string networkEthernet: "kcmshell6 kcm_networkmanagement"
                 property string taskManager: "plasma-systemmonitor --page-name Processes"
                 property string terminal: "kitty -1" // This is only for shell actions
@@ -262,10 +261,6 @@ Singleton {
                 property int full: 101
                 property bool automaticSuspend: true
                 property int suspend: 3
-            }
-
-            property JsonObject calendar: JsonObject {
-                property string locale: "en-GB"
             }
 
             property JsonObject cheatsheet: JsonObject {

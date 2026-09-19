@@ -317,14 +317,6 @@ ContentPage {
             }
             MaterialTextField {
                 Layout.fillWidth: true
-                placeholderText: Translation.tr("User management")
-                text: Config.options.apps.manageUser
-                onEditingFinished: {
-                    Config.options.apps.manageUser = text;
-                }
-            }
-            MaterialTextField {
-                Layout.fillWidth: true
                 placeholderText: Translation.tr("Change password")
                 text: Config.options.apps.changePassword
                 onEditingFinished: {
