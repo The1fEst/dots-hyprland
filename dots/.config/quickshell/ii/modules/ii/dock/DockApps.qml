@@ -24,7 +24,98 @@ Item {
 
     Layout.fillHeight: true
     Layout.topMargin: Appearance.sizes.hyprlandGapsOut
-    implicitWidth: listView.implicitWidth
+    implicitWidth: appRow.implicitWidth
+
+    readonly property list<var> apps: TaskbarApps.apps
+    readonly property real spacing: 2
+
+    property int dragIndex: -1
+    property int dropIndex: -1
+    property real dragX: 0
+
+    readonly property var restOrder: {
+        const rest = [];
+        for (let i = 0; i < root.apps.length; i++) {
+            if (i !== root.dragIndex)
+                rest.push(i);
+        }
+        return rest;
+    }
+
+    readonly property var order: {
+        if (root.dragIndex < 0 || root.dropIndex < 0)
+            return [...Array(root.apps.length).keys()];
+        const arranged = [...root.restOrder];
+        arranged.splice(Math.min(root.dropIndex, arranged.length), 0, root.dragIndex);
+        return arranged;
+    }
+
+    readonly property var layout: {
+        const positions = new Array(root.apps.length).fill(0);
+        if (appRepeater.count < root.apps.length)
+            return {
+                positions: positions,
+                width: 0
+            };
+        let cursor = 0;
+        for (const index of root.order) {
+            positions[index] = cursor;
+            cursor += (appRepeater.itemAt(index)?.implicitWidth ?? 0) + root.spacing;
+        }
+        return {
+            positions: positions,
+            width: Math.max(0, cursor - root.spacing)
+        };
+    }
+
+    function dropPositionFor(x: real): int {
+        let position = 0;
+        let acc = 0;
+        for (const index of root.restOrder) {
+            const slot = appRepeater.itemAt(index)?.implicitWidth ?? 0;
+            if (x < acc + slot / 2)
+                break;
+            acc += slot + root.spacing;
+            position++;
+        }
+        return position;
+    }
+
+    function beginDrag(index: int): void {
+        root.dragIndex = index;
+        root.dropIndex = -1;
+    }
+
+    function updateDrag(rowX: real): void {
+        root.dragX = rowX;
+        root.dropIndex = root.dropPositionFor(rowX);
+    }
+
+    function cancelDrag(): void {
+        root.dragIndex = -1;
+        root.dropIndex = -1;
+    }
+
+    function pinnableId(entry: var): string {
+        return entry.toplevels[0]?.appId ?? entry.appId;
+    }
+
+    function commitDrag(): void {
+        if (root.dragIndex < 0 || root.dropIndex < 0) {
+            root.cancelDrag();
+            return;
+        }
+        const arranged = root.order;
+        const separatorAt = arranged.findIndex(index => root.apps[index].appId === "SEPARATOR");
+        if (separatorAt >= 0) {
+            const pinned = [];
+            for (let position = 0; position < separatorAt; position++) {
+                pinned.push(root.pinnableId(root.apps[arranged[position]]));
+            }
+            Config.options.dock.pinnedApps = pinned;
+        }
+        root.cancelDrag();
+    }
 
     function popupCenterXForButton(button) {
         if (!button || !root.QsWindow)
@@ -32,31 +123,34 @@ Item {
         return root.QsWindow.mapFromItem(button, button.width / 2, 0).x;
     }
 
-    StyledListView {
-        id: listView
-        spacing: 2
-        orientation: ListView.Horizontal
+    Item {
+        id: appRow
         anchors {
             top: parent.top
             bottom: parent.bottom
         }
-        implicitWidth: contentWidth
+        implicitWidth: root.layout.width
 
         Behavior on implicitWidth {
             animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
         }
 
-        model: ScriptModel {
-            objectProp: "appId"
-            values: TaskbarApps.apps
-        }
-        delegate: DockAppButton {
-            required property var modelData
-            appToplevel: modelData
-            appListRoot: root
+        Repeater {
+            id: appRepeater
+            model: ScriptModel {
+                objectProp: "appId"
+                values: root.apps
+            }
+            delegate: DockAppButton {
+                required property var modelData
+                required property int index
+                appToplevel: modelData
+                appListRoot: root
+                itemIndex: index
 
-            topInset: Appearance.sizes.hyprlandGapsOut + root.buttonPadding
-            bottomInset: Appearance.sizes.hyprlandGapsOut + root.buttonPadding
+                topInset: Appearance.sizes.hyprlandGapsOut + root.buttonPadding
+                bottomInset: Appearance.sizes.hyprlandGapsOut + root.buttonPadding
+            }
         }
     }
 

@@ -11,7 +11,9 @@ DockButton {
     id: root
     property var appToplevel
     property var appListRoot
+    property int itemIndex: -1
     property int lastFocused: -1
+    readonly property bool dragged: appListRoot.dragIndex === root.itemIndex
     property real iconSize: 35
     property real countDotWidth: 10
     property real countDotHeight: 4
@@ -21,6 +23,36 @@ DockButton {
     property var desktopEntry: DesktopEntries.heuristicLookup(appToplevel.appId)
     enabled: !isSeparator
     implicitWidth: isSeparator ? 1 : implicitHeight - topInset - bottomInset
+
+    x: root.dragged ? appListRoot.dragX - width / 2 : (appListRoot.layout.positions[root.itemIndex] ?? 0)
+    z: root.dragged ? 1 : 0
+    opacity: root.dragged ? 0.85 : (root.enabled ? 1 : 0.4)
+
+    Behavior on x {
+        enabled: !root.dragged
+        animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+    }
+
+    DragHandler {
+        id: dragHandler
+        enabled: !root.isSeparator
+        target: null
+        yAxis.enabled: false
+        cursorShape: Qt.ClosedHandCursor
+
+        onActiveChanged: {
+            if (dragHandler.active) {
+                root.appListRoot.beginDrag(root.itemIndex);
+            } else {
+                root.appListRoot.commitDrag();
+            }
+        }
+        onCentroidChanged: {
+            if (!dragHandler.active)
+                return;
+            root.appListRoot.updateDrag(root.parent.mapFromItem(null, dragHandler.centroid.scenePosition.x, 0).x);
+        }
+    }
 
     Connections {
         target: DesktopEntries
