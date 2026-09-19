@@ -21,28 +21,25 @@ Singleton {
 
     function load() {}
     function refresh() {
-        if (!available) return;
         print("[Updates] Checking for system updates")
-        checkUpdatesProc.running = true;
+        checkAvailabilityProc.running = true;
     }
 
     Timer {
         interval: Config.options.updates.checkInterval * 60 * 1000
         repeat: true
+        triggeredOnStart: true
         running: Config.ready && Config.options.updates.enableCheck
-        onTriggered: {
-            print("[Updates] Periodic update check due")
-            root.refresh();
-        }
+        onTriggered: root.refresh()
     }
 
     Process {
         id: checkAvailabilityProc
-        running: Config.ready && Config.options.updates.enableCheck
         command: ["which", "checkupdates"]
         onExited: (exitCode, exitStatus) => {
             root.available = (exitCode === 0);
-            root.refresh();
+            if (root.available)
+                checkUpdatesProc.running = true;
         }
     }
 
