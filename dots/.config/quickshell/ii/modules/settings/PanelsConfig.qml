@@ -259,15 +259,8 @@ ContentPage {
                     onValueChanged: {
                         Config.options.sidebar.cornerOpen.clicklessCornerVerticalOffset = value;
                     }
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        acceptedButtons: Qt.NoButton
-                        StyledToolTip {
-                            extraVisibleCondition: mouseArea.containsMouse
-                            text: Translation.tr("Why this is cool:\nFor non-0 values, it won't trigger when you reach the\nscreen corner along the horizontal edge, but it will when\nyou do along the vertical edge")
-                        }
+                    StyledToolTip {
+                        text: Translation.tr("Why this is cool:\nFor non-0 values, it won't trigger when you reach the\nscreen corner along the horizontal edge, but it will when\nyou do along the vertical edge")
                     }
                 }
             }
