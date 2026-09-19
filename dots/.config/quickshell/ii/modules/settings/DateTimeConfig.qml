@@ -143,6 +143,9 @@ ContentPage {
                 onValueChanged: {
                     Config.options.time.pomodoro.cyclesBeforeLongBreak = value;
                 }
+                StyledToolTip {
+                    text: Translation.tr("Cycles before long break")
+                }
             }
         }
     }
