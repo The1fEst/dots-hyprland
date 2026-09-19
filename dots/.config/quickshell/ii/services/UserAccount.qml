@@ -28,6 +28,59 @@ Singleton {
         writeProc.exec(["busctl", "call", "org.freedesktop.Accounts", root.object, "org.freedesktop.Accounts.User", `Set${property}`, signature, value]);
     }
 
+    property bool changingPassword: false
+    property string passwordError: ""
+    signal passwordAccepted()
+
+    property string passwordAnswers: ""
+    property string passwordOutput: ""
+
+    function changePassword(current: string, next: string): void {
+        if (passwdProc.running)
+            return;
+        root.passwordError = "";
+        root.passwordOutput = "";
+        root.passwordAnswers = `${current}\n${next}\n${next}\n`;
+        root.changingPassword = true;
+        passwdProc.running = true;
+    }
+
+    Process {
+        id: passwdProc
+        command: ["passwd"]
+        stdinEnabled: true
+        environment: ({
+            LC_ALL: "C",
+            LANG: "C"
+        })
+
+        onStarted: {
+            passwdProc.write(root.passwordAnswers);
+            root.passwordAnswers = "";
+        }
+
+        stdout: StdioCollector {
+            onStreamFinished: root.passwordOutput += this.text
+        }
+
+        stderr: StdioCollector {
+            onStreamFinished: root.passwordOutput += this.text
+        }
+
+        onExited: {
+            const output = root.passwordOutput;
+            root.passwordAnswers = "";
+            root.passwordOutput = "";
+            root.changingPassword = false;
+            if (output.includes("updated successfully")) {
+                root.passwordAccepted();
+                return;
+            }
+            const complaints = output.split("passwd:").slice(1).map(part => part.split("\n")[0].trim()).filter(line => line.length > 0 && line !== "password unchanged");
+            root.passwordError = complaints.pop() ?? "Could not change the password";
+        }
+    }
+
     Process {
         running: true
         command: ["id", "-u"]

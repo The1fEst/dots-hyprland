@@ -293,14 +293,6 @@ ContentPage {
             }
             MaterialTextField {
                 Layout.fillWidth: true
-                placeholderText: Translation.tr("Change password")
-                text: Config.options.apps.changePassword
-                onEditingFinished: {
-                    Config.options.apps.changePassword = text;
-                }
-            }
-            MaterialTextField {
-                Layout.fillWidth: true
                 placeholderText: Translation.tr("System update")
                 text: Config.options.apps.update
                 onEditingFinished: {

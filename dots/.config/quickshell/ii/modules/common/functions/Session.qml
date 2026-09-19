@@ -14,10 +14,6 @@ Singleton {
         });
     }
 
-    function changePassword() {
-        AppLaunch.shell(Config.options.apps.changePassword);
-    }
-
     function openSettings(page = "") {
         GlobalStates.settingsPage = page;
         GlobalStates.settingsOpen = true;
