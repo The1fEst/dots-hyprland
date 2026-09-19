@@ -342,6 +342,7 @@ Singleton {
             }
 
             property JsonObject notifications: JsonObject {
+                property bool silent: false
                 property int timeout: 7000
                 property JsonObject forceMonitor: JsonObject {
                     property bool enable: false

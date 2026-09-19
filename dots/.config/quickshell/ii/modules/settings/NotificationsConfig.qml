@@ -16,7 +16,7 @@ ContentPage {
             checked: Notifications.silent
             onCheckedChanged: {
                 if (Notifications.silent !== checked)
-                    Notifications.silent = checked;
+                    Notifications.setSilent(checked);
             }
 
             StyledToolTip {

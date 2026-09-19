@@ -77,7 +77,10 @@ Singleton {
         }
     }
 
-    property bool silent: false
+    readonly property bool silent: Config.options.notifications.silent
+    function setSilent(value: bool): void {
+        Config.options.notifications.silent = value;
+    }
     property int unread: 0
     property var filePath: Directories.notificationsPath
     property list<Notif> list: []
