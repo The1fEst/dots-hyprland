@@ -34,6 +34,9 @@ Singleton {
 
     property bool wifiConnecting: connectProc.running
     property WifiAccessPoint wifiConnectTarget
+
+    readonly property bool hiddenConnecting: hiddenConnectProc.running
+    property string hiddenConnectStatus: ""
     readonly property list<WifiAccessPoint> wifiNetworks: []
     readonly property WifiAccessPoint active: wifiNetworks.find(n => n.active) ?? null
     readonly property list<var> friendlyWifiNetworks: [...wifiNetworks].sort((a, b) => {
@@ -110,6 +113,7 @@ Singleton {
     }
 
     function connectToHiddenNetwork(ssid: string, password: string, security: string): void {
+        root.hiddenConnectStatus = "";
         hiddenConnectProc.exec({
             environment: {
                 SSID: ssid,
@@ -169,7 +173,14 @@ Singleton {
 
     Process {
         id: hiddenConnectProc
-        onExited: root.update()
+        property string lastError: ""
+        stderr: StdioCollector {
+            onStreamFinished: hiddenConnectProc.lastError = this.text.trim()
+        }
+        onExited: exitCode => {
+            root.hiddenConnectStatus = exitCode === 0 ? "ok" : (hiddenConnectProc.lastError.length > 0 ? hiddenConnectProc.lastError : qsTr("Could not connect"));
+            root.update();
+        }
     }
 
     Process {

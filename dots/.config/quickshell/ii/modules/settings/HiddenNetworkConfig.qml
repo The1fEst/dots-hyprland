@@ -49,10 +49,19 @@ ContentPage {
 
         RippleButtonWithIcon {
             Layout.topMargin: 4
-            enabled: ssidField.text.trim().length > 0
+            enabled: ssidField.text.trim().length > 0 && !Network.hiddenConnecting
             materialIcon: "wifi_add"
-            mainText: Translation.tr("Connect")
+            mainText: Network.hiddenConnecting ? Translation.tr("Connecting…") : Translation.tr("Connect")
             onClicked: root.join()
+        }
+
+        StyledText {
+            Layout.fillWidth: true
+            Layout.leftMargin: 8
+            visible: !Network.hiddenConnecting && Network.hiddenConnectStatus.length > 0
+            wrapMode: Text.Wrap
+            text: Network.hiddenConnectStatus === "ok" ? Translation.tr("Connected") : Network.hiddenConnectStatus
+            color: Network.hiddenConnectStatus === "ok" ? Appearance.colors.colSubtext : Appearance.colors.colError
         }
     }
 }
