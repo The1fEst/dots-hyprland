@@ -55,9 +55,9 @@ ContentPage {
         }
     }
 
-    property string ruleClass: ""
+    property alias ruleClass: classField.text
     property int ruleIndex: 0
-    property string ruleValue: ""
+    property alias ruleValue: valueField.text
 
     readonly property var ruleKinds: [
         {
@@ -143,6 +143,7 @@ ContentPage {
             WindowRules.add(root.ruleClass, kind.rule, String(Math.max(1, Math.min(100, Number(root.ruleValue) || 100)) / 100));
         else
             WindowRules.add(root.ruleClass, kind.rule, root.ruleValue);
+        root.ruleClass = "";
         root.ruleValue = "";
     }
 
@@ -219,10 +220,9 @@ ContentPage {
             tooltip: Translation.tr("The application is matched by its window class, which is what hyprctl clients calls class")
 
             MaterialTextField {
+                id: classField
                 Layout.fillWidth: true
                 placeholderText: Translation.tr("Window class")
-                text: root.ruleClass
-                onTextChanged: root.ruleClass = text
             }
 
             StyledComboBox {
@@ -244,11 +244,10 @@ ContentPage {
             }
 
             MaterialTextField {
+                id: valueField
                 Layout.fillWidth: true
                 visible: root.chosenRule.kind !== "flag"
                 placeholderText: root.chosenRule.kind === "percent" ? Translation.tr("100") : Translation.tr("e.g. 3 or special:magic")
-                text: root.ruleValue
-                onTextChanged: root.ruleValue = text
             }
 
             RippleButtonWithIcon {
