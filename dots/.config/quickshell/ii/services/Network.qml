@@ -17,6 +17,7 @@ Singleton {
     property bool wifi: true
     property bool ethernet: false
 
+    property bool wifiAvailable: false
     property bool wifiEnabled: false
     property bool wifiScanning: false
 
@@ -154,6 +155,7 @@ Singleton {
 
     Process {
         id: enableWifiProc
+        onExited: root.update()
     }
 
     Process {
@@ -352,7 +354,9 @@ Singleton {
         })
         stdout: StdioCollector {
             onStreamFinished: {
-                root.wifiEnabled = text.trim() === "enabled";
+                const state = text.trim();
+                root.wifiAvailable = state === "enabled" || state === "disabled";
+                root.wifiEnabled = state === "enabled";
             }
         }
     }

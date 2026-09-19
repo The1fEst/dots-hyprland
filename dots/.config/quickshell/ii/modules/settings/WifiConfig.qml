@@ -19,14 +19,13 @@ ContentPage {
     }
 
     ContentSection {
-        ConfigSwitch {
+        visible: Network.wifiAvailable
+
+        OptionSwitch {
             buttonIcon: "wifi"
             text: Translation.tr("Wi-Fi")
-            checked: Network.wifiEnabled
-            onCheckedChanged: {
-                if (checked !== Network.wifiEnabled)
-                    Network.enableWifi(checked);
-            }
+            current: Network.wifiEnabled
+            onCommitted: wanted => Network.enableWifi(wanted)
         }
 
         ContentLinkRow {
@@ -43,7 +42,14 @@ ContentPage {
     }
 
     ContentPlaceholder {
-        visible: !Network.wifiEnabled
+        visible: !Network.wifiAvailable
+        icon: "signal_wifi_off"
+        title: Translation.tr("No Wi-Fi Found")
+        description: Translation.tr("Plug in an adapter and make sure NetworkManager is running")
+    }
+
+    ContentPlaceholder {
+        visible: Network.wifiAvailable && !Network.wifiEnabled
         icon: "signal_wifi_off"
         title: Translation.tr("Wi-Fi Off")
         description: Translation.tr("Turn on to use Wi-Fi")
