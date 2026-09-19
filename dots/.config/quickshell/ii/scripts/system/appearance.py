@@ -325,8 +325,15 @@ def set_icons(theme):
     set_lua_env('QS_ICON_THEME', theme)
 
 
+def variations(pango):
+    """The ` @axis=value,...` tail a variable font carries in a Pango description."""
+    marker = pango.rfind('@')
+    return ' ' + pango[marker:] if marker > 0 else ''
+
+
 def set_font(role, family=None, style=None, size=None, installed=None):
     current = read_font(role, families() if installed is None else installed)
+    same_family = family is None or family == current['family']
     family = current['family'] if family is None else family
     style = current['style'] if style is None else style
     size = current['size'] if size is None else size
@@ -338,11 +345,13 @@ def set_font(role, family=None, style=None, size=None, installed=None):
 
     # The roles GTK has an equivalent for; the rest are Qt's alone.
     if role == 'general':
-        gsettings('font-name', pango)
+        axes = variations(gsettings('font-name')) if same_family else ''
+        gsettings('font-name', pango + axes)
         for path in GTK_SETTINGS:
-            set_ini_key(path, 'gtk-font-name', pango)
+            set_ini_key(path, 'gtk-font-name', pango + axes)
     elif role == 'fixed':
-        gsettings('monospace-font-name', pango)
+        axes = variations(gsettings('monospace-font-name')) if same_family else ''
+        gsettings('monospace-font-name', pango + axes)
 
 
 def set_theme(gtk, qt):
