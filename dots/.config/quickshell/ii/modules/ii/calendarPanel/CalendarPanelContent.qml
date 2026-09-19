@@ -13,7 +13,7 @@ Rectangle {
     radius: Appearance.rounding.normal
     color: Appearance.colors.colLayer1
     clip: true
-    implicitHeight: 350
+    implicitHeight: Math.max(350, tabStack.implicitHeight)
     property int selectedTab: Persistent.states.calendarPanel.tab
     property int previousIndex: -1
     property var tabs: [

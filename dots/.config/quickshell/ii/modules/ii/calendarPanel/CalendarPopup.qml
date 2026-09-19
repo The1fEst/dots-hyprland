@@ -96,16 +96,18 @@ LazyLoader {
                 fill: parent
                 margins: Appearance.sizes.elevationMargin
             }
+            readonly property real contentPadding: 10
             implicitWidth: 420
-            implicitHeight: 350
+            implicitHeight: panelContent.implicitHeight + popupBackground.contentPadding * 2
             color: Appearance.colors.colLayer0
             radius: Appearance.rounding.normal
             border.width: 1
             border.color: Appearance.colors.colLayer0Border
 
             CalendarPanelContent {
+                id: panelContent
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: popupBackground.contentPadding
                 focus: true
 
                 Keys.onPressed: event => {
