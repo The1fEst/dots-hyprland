@@ -15,6 +15,10 @@ Item {
     id: root
 
     readonly property string clockStyle: Config.options.background.widgets.clock.style
+    readonly property string dialStyle: Config.options.background.widgets.clock.cookie.dialNumberStyle
+
+    readonly property bool hourMarks: Config.options.background.widgets.clock.cookie.hourMarks && (root.dialStyle === "dots" || root.dialStyle === "full")
+    readonly property bool timeIndicators: Config.options.background.widgets.clock.cookie.timeIndicators && root.dialStyle !== "numbers"
 
     property real implicitSize: 230
 
@@ -89,7 +93,7 @@ Item {
     FadeLoader {
         id: hourMarksLoader
         anchors.centerIn: parent
-        shown: Config.options.background.widgets.clock.cookie.hourMarks
+        shown: root.hourMarks
         sourceComponent: HourMarks {
             implicitSize: 135 * (1.75 - 0.75 * hourMarksLoader.opacity)
             color: root.colOnBackground
@@ -101,7 +105,7 @@ Item {
     FadeLoader {
         id: timeColumnLoader
         anchors.centerIn: parent
-        shown: Config.options.background.widgets.clock.cookie.timeIndicators
+        shown: root.timeIndicators
         scale: 1.4 - 0.4 * timeColumnLoader.shown
         Behavior on scale {
             animation: Appearance.animation.elementResize.numberAnimation.createObject(this)
@@ -109,6 +113,7 @@ Item {
 
         sourceComponent: TimeColumn {
             color: root.colBackgroundInfo
+            hourMarksEnabled: root.hourMarks
         }
     }
 
