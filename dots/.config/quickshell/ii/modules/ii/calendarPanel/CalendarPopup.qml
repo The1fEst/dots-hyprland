@@ -12,11 +12,14 @@ LazyLoader {
 
     property Item anchorItem
     readonly property bool onFocusedMonitor: (root.QsWindow?.window?.screen?.name ?? "") === (Hyprland.focusedMonitor?.name ?? "")
+    readonly property bool anchorReady: (root.QsWindow?.window ?? null) !== null && (root.anchorItem?.width ?? 0) > 0
+    readonly property bool shown: GlobalStates.calendarOpen && root.onFocusedMonitor
 
-    active: GlobalStates.calendarOpen && root.onFocusedMonitor
+    active: root.shown || Config.options.sidebar.keepRightSidebarLoaded
 
     component: PanelWindow {
         id: popupWindow
+        visible: root.shown
         color: "transparent"
 
         function hide(): void {
@@ -37,21 +40,23 @@ LazyLoader {
 
         exclusionMode: ExclusionMode.Ignore
         exclusiveZone: 0
+
+        property real anchorLeft: 0
+        property real anchorTop: 0
+
+        function reposition(): void {
+            if (!root.anchorReady)
+                return;
+            const origin = root.QsWindow.mapFromItem(root.anchorItem,
+                (root.anchorItem.width - popupBackground.implicitWidth) / 2,
+                (root.anchorItem.height - popupBackground.implicitHeight) / 2);
+            popupWindow.anchorLeft = origin.x;
+            popupWindow.anchorTop = origin.y;
+        }
+
         margins {
-            left: {
-                if (!Config.options.bar.vertical) return root.QsWindow?.mapFromItem(
-                    root.anchorItem,
-                    (root.anchorItem.width - popupBackground.implicitWidth) / 2, 0
-                ).x;
-                return Appearance.sizes.verticalBarWidth
-            }
-            top: {
-                if (!Config.options.bar.vertical) return Appearance.sizes.barHeight;
-                return root.QsWindow?.mapFromItem(
-                    root.anchorItem,
-                    (root.anchorItem.height - popupBackground.implicitHeight) / 2, 0
-                ).y;
-            }
+            left: Config.options.bar.vertical ? Appearance.sizes.verticalBarWidth : popupWindow.anchorLeft
+            top: Config.options.bar.vertical ? popupWindow.anchorTop : Appearance.sizes.barHeight
             right: Appearance.sizes.verticalBarWidth
             bottom: Appearance.sizes.barHeight
         }
@@ -59,7 +64,20 @@ LazyLoader {
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
-        Component.onCompleted: GlobalFocusGrab.addDismissable(popupWindow)
+        onVisibleChanged: {
+            if (popupWindow.visible) {
+                popupWindow.reposition();
+                GlobalFocusGrab.addDismissable(popupWindow);
+            } else {
+                GlobalFocusGrab.removeDismissable(popupWindow);
+            }
+        }
+        Component.onCompleted: {
+            if (!popupWindow.visible)
+                return;
+            popupWindow.reposition();
+            GlobalFocusGrab.addDismissable(popupWindow);
+        }
         Component.onDestruction: GlobalFocusGrab.removeDismissable(popupWindow)
         Connections {
             target: GlobalFocusGrab
