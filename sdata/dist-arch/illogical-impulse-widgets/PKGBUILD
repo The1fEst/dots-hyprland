@@ -1,7 +1,7 @@
 groups=(illogical-impulse)
 pkgname=illogical-impulse-widgets
 pkgver=1.0
-pkgrel=7
+pkgrel=8
 pkgdesc='Illogical Impulse Widget Dependencies'
 arch=(any)
 license=(None)
@@ -16,4 +16,8 @@ depends=(
   translate-shell
   wlogout
   libqalculate
+)
+optdepends=(
+  'mpvpaper: video wallpapers'
+  'ffmpeg: thumbnails for video wallpapers'
 )

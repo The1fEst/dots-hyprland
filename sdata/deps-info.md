@@ -12,6 +12,8 @@ Tips:
 ## illogical-impulse-audio
 - `cava`
   - Used in Quickshell config.
+- `libpulse`
+  - Provides `pactl`, which the sound card profiles and the recording script use.
 - `pavucontrol-qt`
   - Used in Hyprland and Quickshell config.
 - `wireplumber`
@@ -46,8 +48,16 @@ Tips:
   - Not sure where been used.
 - `jq`
   - Widely used.
+- `libnotify`
+  - Provides `notify-send`, which almost every shipped script reports through.
+- `pacman-contrib`
+  - Provides `checkupdates`, which the update counter in the bar reads.
+- `python`
+  - Runs `quickshell/ii/scripts/system/*.py`, which the settings app writes Hyprland and hypridle config through.
 - `xdg-user-dirs`
   - Used in Hyprland and Quickshell config.
+- `xdg-utils`
+  - Provides `xdg-open`, used to hand files and links to whatever handles them.
 - `rsync`
   - Used in install script.
 - `go-yq`
@@ -146,6 +156,8 @@ Tips:
   - Not explicitly used.
 
 ## illogical-impulse-screencapture
+- `grim`
+  - Used in Quickshell config to grab a whole screen.
 - `hyprshot`
   - Used in Hyprland `keybinds.conf` as fallback.
 - `slurp`
@@ -157,6 +169,8 @@ Tips:
 
 
 ## illogical-impulse-toolkit
+- `bluez-utils`
+  - Provides `bluetoothctl`, which runs the pairing agent the Bluetooth page needs.
 - `upower`
   - Used in Quickshell config.
 - `wtype`
@@ -187,6 +201,12 @@ Tips:
   - Used in Hyprland config.
 - `libqalculate`
   - Used in Quickshell config, providing math ability in searchbar.
+
+Optional:
+- `mpvpaper`
+  - Plays video wallpapers; `scripts/colors/switchwall.sh` falls back to a still image without it.
+- `ffmpeg`
+  - Makes the thumbnail for a video wallpaper.
   - Note that `qalc` is the needed executable. In Arch Linux [libqalculate](https://archlinux.org/packages/extra/x86_64/libqalculate) provides it, but in Fedora [qalculate](https://packages.fedoraproject.org/pkgs/libqalculate/qalculate/fedora-43.html#files) does and [libqalculate](https://packages.fedoraproject.org/pkgs/libqalculate/libqalculate/fedora-43.html#files) does not.
 
 

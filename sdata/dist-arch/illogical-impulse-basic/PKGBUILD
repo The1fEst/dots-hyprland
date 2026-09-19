@@ -1,7 +1,7 @@
 groups=(illogical-impulse)
 pkgname=illogical-impulse-basic
 pkgver=1.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Illogical Impulse Basic Dependencies'
 arch=(any)
 license=(None)
@@ -14,7 +14,11 @@ depends=(
   wget
   ripgrep
   jq
+  libnotify
+  pacman-contrib
+  python
   xdg-user-dirs
+  xdg-utils
   # Used in install script
   rsync
   go-yq # https://github.com/mikefarah/yq
