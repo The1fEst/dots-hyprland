@@ -234,10 +234,8 @@ if [[ ! -z $(systemctl --version) ]]; then
   fi
 fi
 
-if [[ ! "$OS_GROUP_ID" == "fedora" ]]; then
-  showfun install_google_sans_flex
-  v install_google_sans_flex
-fi
+showfun install_google_sans_flex
+v install_google_sans_flex
 
 #####################################################################################
 

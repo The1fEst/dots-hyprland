@@ -124,23 +124,6 @@ function sudo_stop_keepalive(){
     SUDO_KEEPALIVE_PID=""
   fi
 }
-function git_auto_unshallow(){
-# We need this function for latest_commit_hash to work properly
-  if [[ -f "$(git rev-parse --git-dir)/shallow" ]]; then
-    echo "Shallow clone detected. Unshallowing..."
-    git fetch --unshallow
-  fi
-}
-function latest_commit_timestamp(){
-  local target_path="$1"
-  local result=$(git log -1 --format="%ct" -- "$target_path" 2>/dev/null)
-  if [[ -z "$result" ]]; then
-    echo "[latest_commit_timestamp] The timestamp of \"$target_path\" is empty. Aborting..." >&2
-    return 1
-  fi
-  echo "$result"
-}
-
 function log_info() {
   echo -e "${STY_BLUE}[INFO]${STY_RST} $1"
 }
@@ -414,17 +397,6 @@ function install_cmds(){
       done
       v sudo apt update -y
       v sudo apt install -y "${pkgs[@]}"
-      ;;
-    "fedora")
-      local pkgs=()
-      for cmd in "$@";do
-        # For package name which is not cmd name, use "case" syntax to replace
-        case $cmd in
-          ip) pkgs+=(iproute);;
-          *) pkgs+=($cmd) ;;
-        esac
-      done
-      v sudo dnf install -y "${pkgs[@]}"
       ;;
     "suse")
       local pkgs=()

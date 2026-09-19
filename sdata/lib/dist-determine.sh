@@ -19,20 +19,6 @@ function print_os_group_id_alike(){
     printf "=============\n\n"
     printf "${STY_RST}"
 }
-function print_os_group_id_unofficial(){
-    printf "${STY_PURPLE}"
-    printf "===NOTICE===\n"
-    printf "The support for your distro is provided by the community.\n"
-    printf "It is not officially supported by github:end-4/dots-hyprland .\n"
-    printf "${STY_BOLD}"
-    printf "If you find out any problems about it, PR is welcomed if you are able to address it.\n"
-    printf "Or, create a discussion about it, but please do not submit issue, \n"
-    printf "because the developers do not use this distro, therefore they cannot help.${STY_RST}\n"
-    printf "${STY_PURPLE}"
-    printf "Proceed only at your own risk.\n"
-    printf "============\n\n"
-    printf "${STY_RST}"
-}
 function print_os_group_id_unsupported(){
     printf "${STY_RED}"
     printf "===CAUTION===\n"
@@ -91,18 +77,6 @@ if [[ "$OS_DISTRO_ID" =~ ^(arch|endeavouros|cachyos)$ ]]; then
 elif [[ "$OS_DISTRO_ID_LIKE" == "arch" ]]; then
   OS_GROUP_ID="arch"
   print_os_group_id_functions=(print_os_group_id{,_alike})
-elif [[ "$OS_DISTRO_ID" == "gentoo" ]]; then
-  OS_GROUP_ID="gentoo"
-  print_os_group_id_functions=(print_os_group_id{,_unofficial})
-elif [[ "$OS_DISTRO_ID_LIKE" == "gentoo" ]]; then
-  OS_GROUP_ID="gentoo"
-  print_os_group_id_functions=(print_os_group_id{,_alike,_unofficial})
-elif [[ "$OS_DISTRO_ID" == "fedora" ]]; then
-  OS_GROUP_ID="fedora"
-  print_os_group_id_functions=(print_os_group_id{,_unofficial})
-elif [[ "$OS_DISTRO_ID_LIKE" == "fedora" ]]; then
-  OS_GROUP_ID="fedora"
-  print_os_group_id_functions=(print_os_group_id{,_alike,_unofficial})
 elif [[ "$OS_DISTRO_ID" =~ ^(opensuse-leap|opensuse-tumbleweed)$ ]] || [[ "$OS_DISTRO_ID_LIKE" =~ ^(opensuse|suse)(\ (opensuse|suse))?$ ]]; then
   OS_GROUP_ID="suse"
   INSTALL_VIA_NIX=true
