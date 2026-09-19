@@ -83,8 +83,8 @@ upstream doesn't have, and rewrites some of the media and bar code. Everything e
   - **WireGuard** — quick toggle plus a connections dialog in the right sidebar
   - **Settings app** — a large pass over all seven pages, exposing options that previously could
     only be edited by hand in `config.json`. New sections include applications and commands,
-    calendar and date formats, pomodoro, panel family and shell style, waffle panel and action
-    center toggles, bar auto-hide, monitors, resources and warning thresholds, launcher and
+    calendar and date formats, pomodoro, panel family and shell style,
+    bar auto-hide, monitors, resources and warning thresholds, launcher and
     pinned apps, night light, annotation, on-screen keyboard, conflict killer, and update checks
   - **Reboot to Windows** — a session screen button in place of the task manager one, backed by
     `scripts/system/boot-next-windows.sh`. It arms a one-shot UEFI `BootNext` at the Windows Boot

@@ -34,9 +34,10 @@ ShellRoot {
 
 
     // Panel families
-    property list<string> families: ["ii", "waffle"]
+    property list<string> families: ["ii"]
+    readonly property string family: families.includes(Config.options.panelFamily) ? Config.options.panelFamily : families[0]
     function cyclePanelFamily() {
-        const currentIndex = families.indexOf(Config.options.panelFamily)
+        const currentIndex = families.indexOf(root.family)
         const nextIndex = (currentIndex + 1) % families.length
         Config.options.panelFamily = families[nextIndex]
     }
@@ -44,17 +45,12 @@ ShellRoot {
     component PanelFamilyLoader: LazyLoader {
         required property string identifier
         property bool extraCondition: true
-        active: Config.ready && Config.options.panelFamily === identifier && extraCondition
+        active: Config.ready && root.family === identifier && extraCondition
     }
     
     PanelFamilyLoader {
         identifier: "ii"
         component: IllogicalImpulseFamily {}
-    }
-
-    PanelFamilyLoader {
-        identifier: "waffle"
-        component: WaffleFamily {}
     }
 
 

@@ -83,7 +83,7 @@ ContentPage {
                 Config.options.updates.enableCheck = checked;
             }
             StyledToolTip {
-                text: Translation.tr("Only the Waffle panel shows an update indicator; the ii bar doesn't have one")
+                text: Translation.tr("Counts available packages. Nothing in the bar shows the count yet.")
             }
         }
 
