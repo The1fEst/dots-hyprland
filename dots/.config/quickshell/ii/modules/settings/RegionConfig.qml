@@ -9,6 +9,13 @@ ContentPage {
 
     forceWidth: true
 
+    function languageName(code: string): string {
+        const native = Qt.locale(code).nativeLanguageName;
+        if (native.length === 0)
+            return code;
+        return `${native.charAt(0).toUpperCase()}${native.slice(1)} (${code})`;
+    }
+
     ContentSection {
         ContentSubsection {
             title: Translation.tr("Language")
@@ -26,7 +33,7 @@ ContentPage {
                     },
                     ...Translation.allAvailableLanguages.map(lang => {
                         return {
-                            displayName: lang,
+                            displayName: root.languageName(lang),
                             value: lang
                         };
                     })]

@@ -13,7 +13,7 @@ ContentPage {
         ContentLinkRow {
             buttonIcon: "language"
             title: Translation.tr("Region & Language")
-            subtitle: Translation.tr("Interface language and the calendar's locale")
+            subtitle: Translation.tr("What language the interface is in")
             onClicked: root.subpageRequested(title, "modules/settings/RegionConfig.qml")
         }
 
