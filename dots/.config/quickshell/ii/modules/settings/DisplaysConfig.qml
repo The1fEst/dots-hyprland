@@ -82,7 +82,7 @@ ContentPage {
             materialIcon: "refresh"
             mainText: Translation.tr("Rescan displays")
             onClicked: {
-                Quickshell.execDetached(["hyprctl", "dispatch", "forcerendererreload"]);
+                Quickshell.execDetached(["hyprctl", "dispatch", "hl.dsp.force_renderer_reload()"]);
                 DisplayOptions.reload();
             }
             StyledToolTip {
