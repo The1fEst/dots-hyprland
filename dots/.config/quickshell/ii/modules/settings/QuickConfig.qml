@@ -132,6 +132,7 @@ ContentPage {
             currentValue: Config.options.appearance.palette.type
             onSelected: newValue => {
                 Config.options.appearance.palette.type = newValue;
+                Config.flush();
                 Quickshell.execDetached(["bash", "-c", `${Directories.wallpaperSwitchScriptPath} --noswitch`]);
             }
             options: [
@@ -182,6 +183,7 @@ ContentPage {
             text: Config.options.appearance.palette.accentColor
             onEditingFinished: {
                 Config.options.appearance.palette.accentColor = text.trim();
+                Config.flush();
                 Quickshell.execDetached(["bash", "-c", `${Directories.wallpaperSwitchScriptPath} --noswitch`]);
             }
         }

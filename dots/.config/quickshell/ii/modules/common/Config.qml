@@ -13,6 +13,19 @@ Singleton {
     property int readWriteDelay: 50 // milliseconds
     property bool blockWrites: false
 
+    /**
+     * Put the options on disk right now, for the moment before handing over to a
+     * script that reads the file itself: the ordinary write is delayed, and such a
+     * script would otherwise read the values it is meant to replace.
+     */
+    function flush(): void {
+        fileWriteTimer.stop();
+        const wasBlocking = root.blockWrites;
+        root.blockWrites = true;
+        configFileView.writeAdapter();
+        root.blockWrites = wasBlocking;
+    }
+
     function setNestedValue(nestedKey, value) {
         let keys = nestedKey.split(".");
         let obj = root.options;
