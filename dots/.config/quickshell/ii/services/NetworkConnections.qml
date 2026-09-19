@@ -30,6 +30,22 @@ Singleton {
         readProc.running = true;
     }
 
+    function splitTerse(line: string): var {
+        const fields = [];
+        let field = "";
+        for (let index = 0; index < line.length; index++) {
+            if (line[index] === "\\" && index + 1 < line.length)
+                field += line[++index];
+            else if (line[index] === ":") {
+                fields.push(field);
+                field = "";
+            } else
+                field += line[index];
+        }
+        fields.push(field);
+        return fields;
+    }
+
     Process {
         id: readProc
         running: true
@@ -41,7 +57,7 @@ Singleton {
                 for (const line of this.text.split("\n")) {
                     if (line.trim().length === 0)
                         continue;
-                    const fields = line.split(":");
+                    const fields = root.splitTerse(line);
                     if (fields.length < 3 || fields[1] === "loopback")
                         continue;
                     found.push({
