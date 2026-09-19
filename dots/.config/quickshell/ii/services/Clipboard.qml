@@ -50,7 +50,7 @@ Singleton {
     }
 
     function entryIsImage(entry) {
-        return !!(/^\d+\t\[\[.*binary data.*\d+x\d+.*\]\]$/.test(entry));
+        return !!(/^\d+\t\[\[ binary data .* image\/[^ ]+ \]\]$/.test(entry));
     }
 
     function refresh() {

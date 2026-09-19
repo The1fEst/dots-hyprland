@@ -26,20 +26,12 @@ Rectangle {
         const match = root.entry.match(/^(\d+)\t/);
         return match ? parseInt(match[1]) : 0;
     }
-    property int imageWidth: {
-        if (!root.entry)
+    readonly property int imageWidth: image.sourceSize.width
+    readonly property int imageHeight: image.sourceSize.height
+    readonly property real scale: {
+        if (root.imageWidth <= 0 || root.imageHeight <= 0)
             return 0;
-        const match = root.entry.match(/(\d+)x(\d+)/);
-        return match ? parseInt(match[1]) : 0;
-    }
-    property int imageHeight: {
-        if (!root.entry)
-            return 0;
-        const match = root.entry.match(/(\d+)x(\d+)/);
-        return match ? parseInt(match[2]) : 0;
-    }
-    property real scale: {
-        return Math.min(root.maxWidth / imageWidth, root.maxHeight / imageHeight, 1);
+        return Math.min(root.maxWidth / root.imageWidth, root.maxHeight / root.imageHeight, 1);
     }
 
     color: Appearance.colors.colLayer1
@@ -85,9 +77,6 @@ Rectangle {
         fillMode: Image.PreserveAspectFit
         antialiasing: true
         asynchronous: true
-
-        width: root.imageWidth * root.scale
-        height: root.imageHeight * root.scale
     }
 
     Loader {
