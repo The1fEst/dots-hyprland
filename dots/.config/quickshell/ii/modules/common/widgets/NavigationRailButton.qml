@@ -18,6 +18,7 @@ TabButton {
     property bool startsGroup: false
     readonly property real groupSpacing: 13
     readonly property real visualWidth: root.expanded ? root.baseSize + 20 + itemText.implicitWidth : root.baseSize
+    readonly property real highlightWidth: root.expanded ? Math.max(root.width, root.visualWidth) : root.baseSize
 
     property real baseSize: 56
     property real baseHighlightHeight: 32
@@ -66,7 +67,7 @@ TabButton {
             anchors.top: itemIconBackground.top
             anchors.left: itemIconBackground.left
             anchors.bottom: itemIconBackground.bottom
-            implicitWidth: root.visualWidth
+            implicitWidth: root.highlightWidth
             radius: Appearance.rounding.full
             color: toggled ? 
                 root.showToggledHighlight ?
@@ -85,7 +86,7 @@ TabButton {
                 }
                 PropertyChanges {
                     target: itemBackground
-                    implicitWidth: root.visualWidth
+                    implicitWidth: root.highlightWidth
                 }
             }
             transitions: Transition {

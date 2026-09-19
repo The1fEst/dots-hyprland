@@ -32,7 +32,7 @@ Item {
         radius: Appearance.rounding.full
         color: Appearance.colors.colSecondaryContainer
         implicitHeight: root.expanded ? itemHeight : highlightHeight
-        implicitWidth: root.currentItem?.visualWidth ?? 100
+        implicitWidth: root.currentItem?.highlightWidth ?? 100
 
         Behavior on y {
             NumberAnimation {
