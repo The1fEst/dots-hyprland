@@ -51,6 +51,7 @@ Singleton {
                         device: fields[3] ?? ""
                     });
                 }
+                found.sort((first, second) => first.name.localeCompare(second.name));
                 root.connections = found;
             }
         }
