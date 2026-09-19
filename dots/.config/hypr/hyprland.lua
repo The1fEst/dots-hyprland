@@ -15,7 +15,9 @@ end
 require("hyprland.execs")
 require("hyprland.general")
 require("hyprland.rules")
-require("hyprland.colors")
+if is_file_exists(HOME .. "/.config/hypr/hyprland/colors.lua") then
+    require("hyprland.colors")
+end
 require("hyprland.keybinds")
 
 -- What the settings app writes, between the defaults it overrides and the custom
