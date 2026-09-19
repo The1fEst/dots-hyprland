@@ -78,8 +78,6 @@ Singleton {
         JsonAdapter {
             id: configOptionsJsonAdapter
 
-            property string panelFamily: "ii"
-
             property JsonObject policies: JsonObject {}
 
             property JsonObject appearance: JsonObject {
