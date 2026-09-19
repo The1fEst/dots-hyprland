@@ -258,14 +258,12 @@ ContentPage {
                 }
             }
 
-            MaterialTextArea {
+            OptionTextArea {
                 Layout.fillWidth: true
                 placeholderText: Translation.tr("Font family")
-                text: Config.options.background.widgets.clock.digital.font.family
+                current: Config.options.background.widgets.clock.digital.font.family
                 wrapMode: TextEdit.Wrap
-                onTextChanged: {
-                    Config.options.background.widgets.clock.digital.font.family = text;
-                }
+                onCommitted: value => Config.options.background.widgets.clock.digital.font.family = value
             }
 
             ConfigSlider {
@@ -585,14 +583,12 @@ ContentPage {
                     Config.options.background.widgets.clock.quote.enable = checked;
                 }
             }
-            MaterialTextArea {
+            OptionTextArea {
                 Layout.fillWidth: true
                 placeholderText: Translation.tr("Quote")
-                text: Config.options.background.widgets.clock.quote.text
+                current: Config.options.background.widgets.clock.quote.text
                 wrapMode: TextEdit.Wrap
-                onTextChanged: {
-                    Config.options.background.widgets.clock.quote.text = text;
-                }
+                onCommitted: value => Config.options.background.widgets.clock.quote.text = value
             }
         }
     }

@@ -50,63 +50,51 @@ ContentPage {
 
             ConfigRow {
                 uniform: true
-                MaterialTextArea {
+                OptionTextArea {
                     Layout.fillWidth: true
                     placeholderText: Translation.tr("Apps")
-                    text: Config.options.search.prefix.app
+                    current: Config.options.search.prefix.app
                     wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.app = text;
-                    }
+                    onCommitted: value => Config.options.search.prefix.app = value
                 }
-                MaterialTextArea {
+                OptionTextArea {
                     Layout.fillWidth: true
                     placeholderText: Translation.tr("Action")
-                    text: Config.options.search.prefix.action
+                    current: Config.options.search.prefix.action
                     wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.action = text;
-                    }
+                    onCommitted: value => Config.options.search.prefix.action = value
                 }
-                MaterialTextArea {
+                OptionTextArea {
                     Layout.fillWidth: true
                     placeholderText: Translation.tr("Clipboard")
-                    text: Config.options.search.prefix.clipboard
+                    current: Config.options.search.prefix.clipboard
                     wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.clipboard = text;
-                    }
+                    onCommitted: value => Config.options.search.prefix.clipboard = value
                 }
-                MaterialTextArea {
+                OptionTextArea {
                     Layout.fillWidth: true
                     placeholderText: Translation.tr("Emojis")
-                    text: Config.options.search.prefix.emojis
+                    current: Config.options.search.prefix.emojis
                     wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.emojis = text;
-                    }
+                    onCommitted: value => Config.options.search.prefix.emojis = value
                 }
             }
 
             ConfigRow {
                 uniform: true
-                MaterialTextArea {
+                OptionTextArea {
                     Layout.fillWidth: true
                     placeholderText: Translation.tr("Math")
-                    text: Config.options.search.prefix.math
+                    current: Config.options.search.prefix.math
                     wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.math = text;
-                    }
+                    onCommitted: value => Config.options.search.prefix.math = value
                 }
-                MaterialTextArea {
+                OptionTextArea {
                     Layout.fillWidth: true
                     placeholderText: Translation.tr("Shell command")
-                    text: Config.options.search.prefix.shellCommand
+                    current: Config.options.search.prefix.shellCommand
                     wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.shellCommand = text;
-                    }
+                    onCommitted: value => Config.options.search.prefix.shellCommand = value
                 }
             }
         }

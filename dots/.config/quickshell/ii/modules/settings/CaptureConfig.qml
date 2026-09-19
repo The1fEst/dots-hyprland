@@ -15,28 +15,24 @@ ContentPage {
             title: Translation.tr("Screenshots")
             tooltip: Translation.tr("Leave empty to only copy to the clipboard")
 
-            MaterialTextArea {
+            OptionTextArea {
                 Layout.fillWidth: true
                 placeholderText: Translation.tr("e.g. ~/Pictures/Screenshots")
-                text: Config.options.screenSnip.savePath
+                current: Config.options.screenSnip.savePath
                 wrapMode: TextEdit.Wrap
-                onTextChanged: {
-                    Config.options.screenSnip.savePath = text;
-                }
+                onCommitted: value => Config.options.screenSnip.savePath = value
             }
         }
 
         ContentSubsection {
             title: Translation.tr("Screen recordings")
 
-            MaterialTextArea {
+            OptionTextArea {
                 Layout.fillWidth: true
                 placeholderText: Translation.tr("e.g. ~/Videos/Recordings")
-                text: Config.options.screenRecord.savePath
+                current: Config.options.screenRecord.savePath
                 wrapMode: TextEdit.Wrap
-                onTextChanged: {
-                    Config.options.screenRecord.savePath = text;
-                }
+                onCommitted: value => Config.options.screenRecord.savePath = value
             }
         }
     }

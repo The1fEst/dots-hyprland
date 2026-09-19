@@ -149,14 +149,12 @@ ContentPage {
             }
         }
         
-        MaterialTextArea {
+        OptionTextArea {
             Layout.fillWidth: true
             placeholderText: Translation.tr("City name")
-            text: Config.options.bar.weather.city
+            current: Config.options.bar.weather.city
             wrapMode: TextEdit.Wrap
-            onTextChanged: {
-                Config.options.bar.weather.city = text;
-            }
+            onCommitted: value => Config.options.bar.weather.city = value
         }
         ConfigSpinBox {
             icon: "av_timer"
