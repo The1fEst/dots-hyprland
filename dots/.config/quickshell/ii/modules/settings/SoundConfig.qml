@@ -109,6 +109,79 @@ ContentPage {
     }
 
     ContentSection {
+        icon: "tune"
+        title: Translation.tr("Volume Levels")
+
+        PwObjectTracker {
+            objects: Audio.outputAppNodes
+        }
+
+        StyledText {
+            visible: Audio.outputAppNodes.length === 0
+            Layout.leftMargin: 8
+            text: Translation.tr("Nothing is playing")
+            color: Appearance.colors.colSubtext
+        }
+
+        Repeater {
+            model: Audio.outputAppNodes
+
+            delegate: ConfigSlider {
+                id: appVolume
+                required property var modelData
+
+                text: Audio.appNodeDisplayName(appVolume.modelData)
+                buttonIcon: appVolume.modelData?.audio.muted ? "volume_off" : "volume_up"
+                from: 0
+                to: 100
+                value: Math.round((appVolume.modelData?.audio.volume ?? 0) * 100)
+                onMoved: newValue => {
+                    if (appVolume.modelData)
+                        appVolume.modelData.audio.volume = newValue / 100;
+                }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "notification_sound"
+        title: Translation.tr("Alert Sound")
+
+        ConfigRow {
+            uniform: true
+            ConfigSwitch {
+                buttonIcon: "battery_android_full"
+                text: Translation.tr("Battery")
+                checked: Config.options.sounds.battery
+                onCheckedChanged: {
+                    Config.options.sounds.battery = checked;
+                }
+            }
+            ConfigSwitch {
+                buttonIcon: "av_timer"
+                text: Translation.tr("Pomodoro")
+                checked: Config.options.sounds.pomodoro
+                onCheckedChanged: {
+                    Config.options.sounds.pomodoro = checked;
+                }
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Sound theme")
+
+            MaterialTextField {
+                Layout.fillWidth: true
+                placeholderText: Translation.tr("e.g. freedesktop")
+                text: Config.options.sounds.theme
+                onEditingFinished: {
+                    Config.options.sounds.theme = text.trim();
+                }
+            }
+        }
+    }
+
+    ContentSection {
         icon: "speaker"
         title: Translation.tr("Sound cards")
 
@@ -176,76 +249,4 @@ ContentPage {
         }
     }
 
-    ContentSection {
-        icon: "notification_sound"
-        title: Translation.tr("Event sounds")
-
-        ConfigRow {
-            uniform: true
-            ConfigSwitch {
-                buttonIcon: "battery_android_full"
-                text: Translation.tr("Battery")
-                checked: Config.options.sounds.battery
-                onCheckedChanged: {
-                    Config.options.sounds.battery = checked;
-                }
-            }
-            ConfigSwitch {
-                buttonIcon: "av_timer"
-                text: Translation.tr("Pomodoro")
-                checked: Config.options.sounds.pomodoro
-                onCheckedChanged: {
-                    Config.options.sounds.pomodoro = checked;
-                }
-            }
-        }
-
-        ContentSubsection {
-            title: Translation.tr("Sound theme")
-
-            MaterialTextField {
-                Layout.fillWidth: true
-                placeholderText: Translation.tr("e.g. freedesktop")
-                text: Config.options.sounds.theme
-                onEditingFinished: {
-                    Config.options.sounds.theme = text.trim();
-                }
-            }
-        }
-    }
-
-    ContentSection {
-        icon: "apps"
-        title: Translation.tr("Applications")
-
-        PwObjectTracker {
-            objects: Audio.outputAppNodes
-        }
-
-        StyledText {
-            visible: Audio.outputAppNodes.length === 0
-            Layout.leftMargin: 8
-            text: Translation.tr("Nothing is playing")
-            color: Appearance.colors.colSubtext
-        }
-
-        Repeater {
-            model: Audio.outputAppNodes
-
-            delegate: ConfigSlider {
-                id: appVolume
-                required property var modelData
-
-                text: Audio.appNodeDisplayName(appVolume.modelData)
-                buttonIcon: appVolume.modelData?.audio.muted ? "volume_off" : "volume_up"
-                from: 0
-                to: 100
-                value: Math.round((appVolume.modelData?.audio.volume ?? 0) * 100)
-                onMoved: newValue => {
-                    if (appVolume.modelData)
-                        appVolume.modelData.audio.volume = newValue / 100;
-                }
-            }
-        }
-    }
 }
