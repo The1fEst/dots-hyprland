@@ -30,9 +30,9 @@ MouseArea {
     }
 
     function handleFilePasting(event) {
-        const currentClipboardEntry = Cliphist.entries[0];
+        const currentClipboardEntry = Clipboard.entries[0];
         if (/^\d+\tfile:\/\/\S+/.test(currentClipboardEntry)) {
-            const url = StringUtils.cleanCliphistEntry(currentClipboardEntry);
+            const url = StringUtils.cleanClipboardEntry(currentClipboardEntry);
             Wallpapers.setDirectory(FileUtils.trimFileProtocol(decodeURIComponent(url)));
             event.accepted = true;
         } else {

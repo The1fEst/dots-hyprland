@@ -44,7 +44,7 @@ ShellRoot {
         Hyprsunset.load()
         FirstRunExperience.load()
         ConflictKiller.load()
-        Cliphist.refresh()
+        Clipboard.refresh()
         Wallpapers.load()
         Updates.load()
     }

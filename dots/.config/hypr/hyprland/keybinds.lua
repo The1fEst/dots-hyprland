@@ -56,7 +56,7 @@ hl.bind("CTRL + SUPER + R", hl.dsp.exec_cmd("killall ydotool; systemctl --user r
 --##! Utilities
 --# Screenshot, Record, OCR, Color picker, Clipboard history
 hl.bind("SUPER + V", hl.dsp.exec_cmd(
-        qsIsAlive .. " || pkill fuzzel || cliphist list | fuzzel --match-mode fzf --dmenu | cliphist decode | wl-copy"),
+        qsIsAlive .. " || pkill fuzzel || stash list --format tsv | fuzzel --match-mode fzf --dmenu | cut -f1 | xargs stash decode | wl-copy"),
     { description = "Utilities: Clipboard history >> clipboard" })
 hl.bind("SUPER + Period", hl.dsp.exec_cmd(
         qsIsAlive .. " || pkill fuzzel || " .. hyprScripts .. "/fuzzel-emoji.sh copy"),

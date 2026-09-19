@@ -235,11 +235,11 @@ Singleton {
     }
 
     /**
-     * Cleans a cliphist entry by removing leading digits and tab.
+     * Cleans a clipboard history entry by removing leading digits and tab.
      * @param { string } str
      * @returns { string }
      */
-    function cleanCliphistEntry(str: string): string {
+    function cleanClipboardEntry(str: string): string {
         return str.replace(/^\d+\t/, "");
     }
 

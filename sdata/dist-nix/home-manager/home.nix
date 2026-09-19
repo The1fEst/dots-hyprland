@@ -72,7 +72,7 @@ quickshell, home_attrs, ... }:
       ### illogical-impulse-basic
       bc #bc
       uutils-coreutils-noprefix #coreutils
-      cliphist #cliphist
+      stash-clipboard #stash
       cmake #cmake
       curlFull #curl
       wget #wget

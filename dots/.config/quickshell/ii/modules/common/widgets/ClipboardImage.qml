@@ -15,7 +15,7 @@ Rectangle {
     property bool blur: false
     property string blurText: "Image hidden"
 
-    property string imageDecodePath: Directories.cliphistDecode
+    property string imageDecodePath: Directories.clipboardDecode
     property string imageDecodeFileName: `${entryNumber}`
     property string imageDecodeFilePath: `${imageDecodePath}/${imageDecodeFileName}`
     property string source
@@ -53,12 +53,12 @@ Rectangle {
 
     Process {
         id: decodeImageProcess
-        command: ["bash", "-c", `[ -f ${imageDecodeFilePath} ] || echo '${StringUtils.shellSingleQuoteEscape(root.entry)}' | ${Cliphist.cliphistBinary} decode > '${imageDecodeFilePath}'`]
+        command: ["bash", "-c", `[ -f ${imageDecodeFilePath} ] || ${Clipboard.binary} decode ${root.entryNumber} > '${imageDecodeFilePath}'`]
         onExited: (exitCode, exitStatus) => {
             if (exitCode === 0) {
                 root.source = imageDecodeFilePath;
             } else {
-                console.error("[CliphistImage] Failed to decode image for entry:", root.entry);
+                console.error("[ClipboardImage] Failed to decode image for entry:", root.entry);
                 root.source = "";
             }
         }

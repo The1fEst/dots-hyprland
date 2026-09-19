@@ -91,7 +91,7 @@ Singleton {
                 const syntaxMatch = /^(?:(\d+)(i)?)/.exec(args.trim());
                 const count = syntaxMatch[1] ? parseInt(syntaxMatch[1]) : 1;
                 const isImage = !!syntaxMatch[2];
-                Cliphist.superpaste(count, isImage);
+                Clipboard.superpaste(count, isImage);
             }
         },
         {
@@ -109,7 +109,7 @@ Singleton {
         {
             action: "wipeclipboard",
             execute: () => {
-                Cliphist.wipe();
+                Clipboard.wipe();
             }
         },
     ]
@@ -168,8 +168,8 @@ Singleton {
         if (root.query.startsWith(Config.options.search.prefix.clipboard)) {
             // Clipboard
             const searchString = StringUtils.cleanPrefix(root.query, Config.options.search.prefix.clipboard);
-            return Cliphist.fuzzyQuery(searchString).map((entry, index, array) => {
-                const mightBlurImage = Cliphist.entryIsImage(entry) && root.clipboardWorkSafetyActive;
+            return Clipboard.fuzzyQuery(searchString).map((entry, index, array) => {
+                const mightBlurImage = Clipboard.entryIsImage(entry) && root.clipboardWorkSafetyActive;
                 let shouldBlurImage = mightBlurImage;
                 if (mightBlurImage) {
                     shouldBlurImage = shouldBlurImage && (root.containsUnsafeLink(array[index - 1]) || root.containsUnsafeLink(array[index + 1]));
@@ -177,25 +177,25 @@ Singleton {
                 const type = `#${entry.match(/^\s*(\S+)/)?.[1] || ""}`;
                 return resultComp.createObject(null, {
                     rawValue: entry,
-                    name: StringUtils.cleanCliphistEntry(entry),
+                    name: StringUtils.cleanClipboardEntry(entry),
                     verb: "",
                     type: type,
                     execute: () => {
-                        Cliphist.copy(entry);
+                        Clipboard.copy(entry);
                     },
                     actions: [resultComp.createObject(null, {
                             name: Translation.tr("Copy"),
                             iconName: "content_copy",
                             iconType: LauncherSearchResult.IconType.Material,
                             execute: () => {
-                                Cliphist.copy(entry);
+                                Clipboard.copy(entry);
                             }
                         }), resultComp.createObject(null, {
                             name: Translation.tr("Delete"),
                             iconName: "delete",
                             iconType: LauncherSearchResult.IconType.Material,
                             execute: () => {
-                                Cliphist.deleteEntry(entry);
+                                Clipboard.deleteEntry(entry);
                             }
                         })],
                     blurImage: shouldBlurImage

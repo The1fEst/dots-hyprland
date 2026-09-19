@@ -36,8 +36,6 @@ Tips:
   - Used in `quickshell/ii/scripts/colors/switchwall.sh` for example.
 - `coreutils`
   - Too many executables involved, not sure where been used.
-- `cliphist`
-  - Used in Hyprland and Quickshell config.
 - `cmake`
   - Used in building quickshell and MicroTeX.
 - `curl`
@@ -246,3 +244,9 @@ Extra dependencies.
 ## illogical-impulse-microtex-git
 - [source](https://github.com/NanoMichael/MicroTeX)
 - This package will be installed as `/opt/MicroTeX`.
+
+## illogical-impulse-stash
+- [source](https://github.com/NotAShelf/stash)
+- Built from the tag matching `pkgver`, because no repository or AUR package ships it.
+- Provides `stash`, which keeps the clipboard history the launcher searches. Hyprland starts
+  `stash watch --persist` at login.
