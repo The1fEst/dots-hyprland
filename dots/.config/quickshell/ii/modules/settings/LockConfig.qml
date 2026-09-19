@@ -112,6 +112,7 @@ ContentPage {
             ConfigSpinBox {
                 icon: "loupe"
                 text: Translation.tr("Extra wallpaper zoom (%)")
+                enabled: Config.options.lock.blur.enable
                 value: Config.options.lock.blur.extraZoom * 100
                 from: 1
                 to: 150
