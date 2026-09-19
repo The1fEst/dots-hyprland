@@ -27,14 +27,18 @@ Singleton {
         return root.settings.filter(setting => setting.device === device).length;
     }
 
+    property var pending: []
+
     function set(device: string, key: string, value: string): void {
         if (device.length === 0)
             return;
-        writeProc.exec(["python3", root.tool, root.file, "--set", device, key, value]);
+        root.pending.push(["--set", device, key, value]);
+        writeTimer.restart();
     }
 
     function unset(device: string, key: string): void {
-        writeProc.exec(["python3", root.tool, root.file, "--unset", device, key]);
+        root.pending.push(["--unset", device, key]);
+        writeTimer.restart();
     }
 
     function reload(): void {
@@ -71,6 +75,22 @@ Singleton {
                 root.mice = (devices.mice ?? []).map(mouse => mouse.name);
                 root.keyboards = (devices.keyboards ?? []).map(keyboard => keyboard.name);
             }
+        }
+    }
+
+    Timer {
+        id: writeTimer
+        interval: 50
+        onTriggered: {
+            if (writeProc.running) {
+                writeTimer.restart();
+                return;
+            }
+            if (root.pending.length === 0)
+                return;
+            const operations = root.pending;
+            root.pending = [];
+            writeProc.exec(["python3", root.tool, root.file].concat(...operations));
         }
     }
 
