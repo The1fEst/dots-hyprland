@@ -15,6 +15,8 @@ ContentPage {
 
         required property var device
 
+        readonly property bool pairing: BluetoothStatus.pairing && BluetoothStatus.pairingAddress === deviceRow.device?.address
+
         Layout.fillWidth: true
         implicitHeight: 56
         radius: Appearance.rounding.small
@@ -48,11 +50,13 @@ ContentPage {
                 StyledText {
                     Layout.fillWidth: true
                     text: {
+                        if (deviceRow.pairing)
+                            return Translation.tr("Pairing…");
                         if (deviceRow.device?.connected)
                             return Translation.tr("Connected");
                         if (deviceRow.device?.paired)
                             return Translation.tr("Paired");
-                        return deviceRow.device?.address ?? "";
+                        return Translation.tr("Not set up");
                     }
                     font.pixelSize: Appearance.font.pixelSize.smaller
                     color: Appearance.colors.colSubtext
@@ -67,10 +71,23 @@ ContentPage {
             }
 
             RippleButtonWithIcon {
-                materialIcon: deviceRow.device?.connected ? "bluetooth_disabled" : "bluetooth"
-                mainText: deviceRow.device?.connected ? Translation.tr("Disconnect") : Translation.tr("Connect")
+                enabled: !deviceRow.pairing
+                materialIcon: {
+                    if (!deviceRow.device?.paired)
+                        return "link";
+                    return deviceRow.device?.connected ? "bluetooth_disabled" : "bluetooth";
+                }
+                mainText: {
+                    if (!deviceRow.device?.paired)
+                        return Translation.tr("Pair");
+                    return deviceRow.device?.connected ? Translation.tr("Disconnect") : Translation.tr("Connect");
+                }
                 onClicked: {
-                    if (deviceRow.device?.connected)
+                    if (!deviceRow.device?.paired) {
+                        BluetoothStatus.pairDevice(deviceRow.device);
+                        return;
+                    }
+                    if (deviceRow.device.connected)
                         deviceRow.device.disconnect();
                     else
                         deviceRow.device.connect();
@@ -86,9 +103,15 @@ ContentPage {
             Bluetooth.defaultAdapter.discovering = look;
     }
 
-    onLookingForDevicesChanged: root.lookForDevices(root.lookingForDevices)
-    Component.onCompleted: root.lookForDevices(root.lookingForDevices)
     Component.onDestruction: root.lookForDevices(false)
+
+    Timer {
+        running: root.lookingForDevices && !(Bluetooth.defaultAdapter?.discovering ?? false)
+        interval: 1000
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: root.lookForDevices(true)
+    }
 
     ContentSection {
         visible: BluetoothStatus.available

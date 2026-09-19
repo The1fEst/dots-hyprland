@@ -25,6 +25,16 @@ Singleton {
         root.pairingAddress = device.address;
         pairDelay.device = device;
         pairDelay.restart();
+        giveUpPairing.restart();
+    }
+
+    Timer {
+        id: giveUpPairing
+        interval: 90000
+        onTriggered: {
+            root.pairingAddress = "";
+            root.holdAgent(false);
+        }
     }
 
     Timer {
@@ -45,6 +55,7 @@ Singleton {
         root.pairedDevice = root.pairingDevice;
         root.pairedDevice.trusted = true;
         root.pairingAddress = "";
+        giveUpPairing.stop();
         waitForBondingLinkToDrop.restart();
     }
 
@@ -74,6 +85,7 @@ Singleton {
         onTriggered: {
             if (!root.pairedDevice || root.pairedDevice.connected || attempts >= 4) {
                 root.pairedDevice = null;
+                root.holdAgent(false);
                 stop();
                 return;
             }
