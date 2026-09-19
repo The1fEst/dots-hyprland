@@ -35,6 +35,7 @@ ComboBox {
 
     implicitHeight: 40
     Layout.fillWidth: true
+    opacity: root.enabled ? 1 : 0.4
 
     background: Rectangle {
         radius: root.buttonRadius
