@@ -239,7 +239,7 @@ ContentPage {
 
         ContentSubsection {
             title: Translation.tr("Monitors")
-            tooltip: Translation.tr("Which monitors get a bar. With none picked it shows on all of them.")
+            tooltip: Translation.tr("Which monitors get a bar. At least one always has it.")
 
             Repeater {
                 model: HyprlandData.monitors
@@ -250,14 +250,17 @@ ContentPage {
                     required property var modelData
 
                     readonly property var picked: Config.options.bar.screenList ?? []
+                    readonly property var shownOn: barScreen.picked.length > 0 ? barScreen.picked : HyprlandData.monitors.map(monitor => monitor.name)
 
                     buttonIcon: "monitor"
                     text: `${barScreen.modelData.model || barScreen.modelData.name} (${barScreen.modelData.name})`
-                    checked: barScreen.picked.includes(barScreen.modelData.name)
+                    checked: barScreen.shownOn.includes(barScreen.modelData.name)
                     onCheckedChanged: {
-                        if (checked === barScreen.picked.includes(barScreen.modelData.name))
+                        if (checked === barScreen.shownOn.includes(barScreen.modelData.name))
                             return;
-                        Config.options.bar.screenList = checked ? [...barScreen.picked, barScreen.modelData.name] : barScreen.picked.filter(name => name !== barScreen.modelData.name);
+                        const wanted = checked ? [...barScreen.shownOn, barScreen.modelData.name] : barScreen.shownOn.filter(name => name !== barScreen.modelData.name);
+                        if (wanted.length > 0)
+                            Config.options.bar.screenList = wanted;
                     }
                 }
             }
