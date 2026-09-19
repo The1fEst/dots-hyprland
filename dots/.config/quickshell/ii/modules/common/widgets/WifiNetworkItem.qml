@@ -9,6 +9,7 @@ import QtQuick.Layouts
 DialogListItem {
     id: root
     required property WifiAccessPoint wifiNetwork
+    property bool showActions: false
     enabled: !(Network.wifiConnectTarget === root.wifiNetwork && !wifiNetwork?.active)
 
     active: (wifiNetwork?.askingPassword || wifiNetwork?.active) ?? false
@@ -42,6 +43,20 @@ DialogListItem {
                 text: root.wifiNetwork?.ssid ?? Translation.tr("Unknown")
                 textFormat: Text.PlainText
             }
+            RippleButtonWithIcon {
+                visible: root.showActions && (root.wifiNetwork?.active ?? false)
+                materialIcon: "link_off"
+                mainText: Translation.tr("Disconnect")
+                onClicked: Network.disconnectWifiNetwork()
+            }
+
+            RippleButtonWithIcon {
+                visible: root.showActions && Network.isSavedWifiNetwork(root.wifiNetwork?.ssid ?? "")
+                materialIcon: "delete"
+                mainText: Translation.tr("Forget")
+                onClicked: Network.forgetWifiNetwork(root.wifiNetwork?.ssid ?? "")
+            }
+
             MaterialSymbol {
                 visible: (root.wifiNetwork?.isSecure || root.wifiNetwork?.active) ?? false
                 text: root.wifiNetwork?.active ? "check" : Network.wifiConnectTarget === root.wifiNetwork ? "settings_ethernet" : "lock"

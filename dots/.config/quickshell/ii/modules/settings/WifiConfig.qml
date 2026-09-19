@@ -10,10 +10,15 @@ ContentPage {
 
     forceWidth: true
 
-    ContentSection {
-        icon: "wifi"
-        title: Translation.tr("Wi-Fi")
+    Timer {
+        running: Network.wifiEnabled
+        interval: 15000
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: Network.rescanWifi()
+    }
 
+    ContentSection {
         ConfigSwitch {
             buttonIcon: "wifi"
             text: Translation.tr("Wi-Fi")
@@ -23,67 +28,38 @@ ContentPage {
                     Network.enableWifi(checked);
             }
         }
+    }
 
-        ContentSubsection {
-            visible: Network.wifiEnabled
-            title: Translation.tr("Networks")
+    ContentPlaceholder {
+        visible: !Network.wifiEnabled
+        icon: "signal_wifi_off"
+        title: Translation.tr("Wi-Fi Off")
+        description: Translation.tr("Turn on to use Wi-Fi")
+    }
 
-            RowLayout {
-                Layout.fillWidth: true
+    ContentSection {
+        visible: Network.wifiEnabled
+        icon: "wifi_find"
+        title: Translation.tr("Visible Networks")
+        busy: Network.wifiScanning
 
-                StyledText {
-                    Layout.fillWidth: true
-                    text: Network.wifiScanning ? Translation.tr("Looking for networks…") : Translation.tr("%1 in range").arg(Network.friendlyWifiNetworks.length)
-                    color: Appearance.colors.colSubtext
-                    font.pixelSize: Appearance.font.pixelSize.smaller
-                }
-
-                RippleButtonWithIcon {
-                    materialIcon: "refresh"
-                    mainText: Translation.tr("Scan again")
-                    enabled: !Network.wifiScanning
-                    onClicked: Network.rescanWifi()
-                }
-            }
-
-            Repeater {
-                model: Network.friendlyWifiNetworks
-
-                delegate: WifiNetworkItem {
-                    required property WifiAccessPoint modelData
-
-                    Layout.fillWidth: true
-                    implicitHeight: 56 + (modelData?.askingPassword ? 110 : 0)
-                    wifiNetwork: modelData
-                }
-            }
+        StyledText {
+            visible: Network.friendlyWifiNetworks.length === 0
+            Layout.leftMargin: 8
+            text: Translation.tr("Searching for networks…")
+            color: Appearance.colors.colSubtext
         }
 
-        ContentSubsection {
-            visible: Network.wifiEnabled && Network.active !== null
-            title: Translation.tr("Connected network")
+        Repeater {
+            model: Network.friendlyWifiNetworks
 
-            RowLayout {
+            delegate: WifiNetworkItem {
+                required property WifiAccessPoint modelData
+
                 Layout.fillWidth: true
-                spacing: 8
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: Network.active?.ssid ?? ""
-                    color: Appearance.colors.colOnLayer1
-                }
-
-                RippleButtonWithIcon {
-                    materialIcon: "link_off"
-                    mainText: Translation.tr("Disconnect")
-                    onClicked: Network.disconnectWifiNetwork()
-                }
-
-                RippleButtonWithIcon {
-                    materialIcon: "delete"
-                    mainText: Translation.tr("Forget")
-                    onClicked: Network.forgetWifiNetwork(Network.active?.ssid ?? "")
-                }
+                implicitHeight: 56 + (modelData?.askingPassword ? 110 : 0)
+                wifiNetwork: modelData
+                showActions: true
             }
         }
     }

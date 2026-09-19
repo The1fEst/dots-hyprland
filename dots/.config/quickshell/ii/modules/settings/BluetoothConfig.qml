@@ -79,19 +79,21 @@ ContentPage {
         }
     }
 
-    ContentSection {
-        icon: "bluetooth"
-        title: Translation.tr("Bluetooth")
+    readonly property bool lookingForDevices: BluetoothStatus.available && BluetoothStatus.enabled
 
-        StyledText {
-            visible: !BluetoothStatus.available
-            Layout.leftMargin: 8
-            text: Translation.tr("This machine has no Bluetooth adapter")
-            color: Appearance.colors.colSubtext
-        }
+    function lookForDevices(look: bool): void {
+        if (Bluetooth.defaultAdapter)
+            Bluetooth.defaultAdapter.discovering = look;
+    }
+
+    onLookingForDevicesChanged: root.lookForDevices(root.lookingForDevices)
+    Component.onCompleted: root.lookForDevices(root.lookingForDevices)
+    Component.onDestruction: root.lookForDevices(false)
+
+    ContentSection {
+        visible: BluetoothStatus.available
 
         ConfigSwitch {
-            visible: BluetoothStatus.available
             buttonIcon: "bluetooth"
             text: Translation.tr("Bluetooth")
             checked: BluetoothStatus.enabled
@@ -100,32 +102,32 @@ ContentPage {
                     Bluetooth.defaultAdapter.enabled = checked;
             }
         }
+    }
 
-        ConfigSwitch {
-            visible: BluetoothStatus.available && BluetoothStatus.enabled
-            buttonIcon: "search"
-            text: Translation.tr("Look for devices")
-            checked: Bluetooth.defaultAdapter?.discovering ?? false
-            onCheckedChanged: {
-                if (Bluetooth.defaultAdapter && Bluetooth.defaultAdapter.discovering !== checked)
-                    Bluetooth.defaultAdapter.discovering = checked;
-            }
+    ContentPlaceholder {
+        visible: !BluetoothStatus.available
+        icon: "bluetooth_disabled"
+        title: Translation.tr("No Bluetooth Found")
+        description: Translation.tr("Plug in a dongle to use Bluetooth")
+    }
 
-            StyledToolTip {
-                text: Translation.tr("Devices only show up while this is on, and they have to be in pairing mode themselves")
-            }
-        }
+    ContentPlaceholder {
+        visible: BluetoothStatus.available && !BluetoothStatus.enabled
+        icon: "bluetooth_disabled"
+        title: Translation.tr("Bluetooth Turned Off")
+        description: Translation.tr("Turn on to connect devices and receive file transfers")
     }
 
     ContentSection {
         visible: BluetoothStatus.available && BluetoothStatus.enabled
         icon: "devices"
         title: Translation.tr("Devices")
+        busy: Bluetooth.defaultAdapter?.discovering ?? false
 
         StyledText {
             visible: BluetoothStatus.friendlyDeviceList.length === 0
             Layout.leftMargin: 8
-            text: Translation.tr("No devices yet")
+            text: Translation.tr("Searching for devices…")
             color: Appearance.colors.colSubtext
         }
 
