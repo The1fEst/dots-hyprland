@@ -99,7 +99,10 @@ Singleton {
         objects: [sink, source]
     }
 
+    onSinkChanged: volumeGuard.lastReady = false
+
     Connections { // Protection against sudden volume changes
+        id: volumeGuard
         target: sink?.audio ?? null
         property bool lastReady: false
         property real lastVolume: 0
