@@ -13,10 +13,20 @@ ContentPage {
 
         ContentSubsection {
             title: Translation.tr("Screenshots")
-            tooltip: Translation.tr("Leave empty to only copy to the clipboard")
+            tooltip: Translation.tr("A screenshot always goes to the clipboard. Turn this on to keep a file as well.")
+
+            ConfigSwitch {
+                buttonIcon: "save"
+                text: Translation.tr("Also save to a file")
+                checked: Config.options.screenSnip.save
+                onCheckedChanged: {
+                    Config.options.screenSnip.save = checked;
+                }
+            }
 
             OptionTextArea {
                 Layout.fillWidth: true
+                enabled: Config.options.screenSnip.save
                 placeholderText: Translation.tr("e.g. ~/Pictures/Screenshots")
                 current: Config.options.screenSnip.savePath
                 wrapMode: TextEdit.Wrap
