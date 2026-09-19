@@ -103,10 +103,21 @@ Singleton {
                 root.userName = record.UserName?.data ?? "";
                 root.realName = record.RealName?.data ?? "";
                 root.email = record.Email?.data ?? "";
-                root.iconFile = record.IconFile?.data ?? "";
                 root.accountType = record.AccountType?.data ?? 0;
+                const icon = record.IconFile?.data ?? "";
+                iconProc.candidate = icon;
+                if (icon.length === 0)
+                    root.iconFile = "";
+                else
+                    iconProc.exec(["test", "-f", icon]);
             }
         }
+    }
+
+    Process {
+        id: iconProc
+        property string candidate: ""
+        onExited: exitCode => root.iconFile = exitCode === 0 ? iconProc.candidate : ""
     }
 
     Process {
