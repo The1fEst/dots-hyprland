@@ -41,6 +41,15 @@ ContentPage {
         icon: "screenshot_frame_2"
         title: Translation.tr("Region selector (screen snipping)")
 
+        ConfigSwitch {
+            buttonIcon: "arrow_selector_tool"
+            text: Translation.tr("Include the pointer")
+            checked: Config.options.regionSelector.showPointer
+            onCheckedChanged: {
+                Config.options.regionSelector.showPointer = checked;
+            }
+        }
+
         ContentSubsection {
             title: Translation.tr("Hint target regions")
             ConfigRow {
