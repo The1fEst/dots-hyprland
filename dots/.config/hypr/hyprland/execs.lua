@@ -25,9 +25,6 @@ hl.on("hyprland.start", function ()
     -- Audio
     hl.exec_cmd("easyeffects --hide-window --service-mode")
 
-    -- Clipboard: history
-    hl.exec_cmd("stash watch --persist")
-
     -- Cursor: follow XCURSOR_* so custom/env.lua wins instead of racing this line
     hl.exec_cmd("hyprctl setcursor \"${XCURSOR_THEME:-Bibata-Modern-Classic}\" \"${XCURSOR_SIZE:-24}\"")
 end)

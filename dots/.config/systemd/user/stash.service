@@ -1,0 +1,16 @@
+[Unit]
+Description=Clipboard history
+PartOf=graphical-session.target
+After=graphical-session.target
+StartLimitIntervalSec=300
+StartLimitBurst=20
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/stash watch --persist
+Restart=always
+RestartSec=2
+Slice=session.slice
+
+[Install]
+WantedBy=hyprland-session.target
