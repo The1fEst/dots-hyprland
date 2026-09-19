@@ -206,10 +206,12 @@ Singleton {
     }
 
     function setColorProfile(monitor: var, profile: string): void {
-        root.applyTo(monitor, {
-            bitdepth: profile.startsWith("hdr") ? 10 : 8,
+        const keys = {
             cm: profile
-        });
+        };
+        if (profile.startsWith("hdr"))
+            keys.bitdepth = 10;
+        root.applyTo(monitor, keys);
     }
 
     function ruleForWhatIsRunning(monitor: var, size: string, rate: real): var {
