@@ -22,6 +22,10 @@ Singleton {
     property string logo: ""
     property string desktopEnvironment: ""
     property string windowingSystem: ""
+    property string hostname: ""
+    property string kernel: ""
+    property string processor: ""
+    property string memory: ""
 
     Timer {
         triggeredOnStart: true
@@ -107,6 +111,23 @@ Singleton {
                 const [desktop, wayland] = deCollector.text.split(",")
                 root.desktopEnvironment = desktop.trim()
                 root.windowingSystem = wayland.trim().length > 0 ? "Wayland" : "X11" // Are there others? 🤔
+            }
+        }
+    }
+
+    Process {
+        id: getMachine
+        running: true
+        command: ["bash", "-c", "uname -n; uname -r; sed -n 's/^model name[ \\t]*: //p' /proc/cpuinfo | head -1; awk '/MemTotal/ {print $2}' /proc/meminfo"]
+        stdout: StdioCollector {
+            id: machineCollector
+            onStreamFinished: {
+                const lines = machineCollector.text.split("\n");
+                root.hostname = (lines[0] ?? "").trim();
+                root.kernel = (lines[1] ?? "").trim();
+                root.processor = (lines[2] ?? "").trim();
+                const kilobytes = parseInt(lines[3] ?? "0");
+                root.memory = kilobytes > 0 ? `${(kilobytes / 1024 / 1024).toFixed(1)} GiB` : "";
             }
         }
     }

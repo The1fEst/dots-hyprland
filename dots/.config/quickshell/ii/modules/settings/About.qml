@@ -7,7 +7,55 @@ import qs.modules.common
 import qs.modules.common.widgets
 
 ContentPage {
+    id: root
+
     forceWidth: true
+
+    component DeviceFact: ConfigRow {
+        required property string label
+        required property string value
+        visible: value.length > 0
+        uniform: false
+        StyledText {
+            Layout.leftMargin: 8
+            Layout.preferredWidth: 140
+            text: label
+            color: Appearance.colors.colSubtext
+        }
+        StyledText {
+            Layout.fillWidth: true
+            Layout.rightMargin: 8
+            text: value
+            elide: Text.ElideRight
+            color: Appearance.colors.colOnLayer0
+        }
+    }
+
+    ContentSection {
+        icon: "memory"
+        title: Translation.tr("Device")
+
+        DeviceFact {
+            label: Translation.tr("Name")
+            value: SystemInfo.hostname
+        }
+        DeviceFact {
+            label: Translation.tr("Processor")
+            value: SystemInfo.processor
+        }
+        DeviceFact {
+            label: Translation.tr("Memory")
+            value: SystemInfo.memory
+        }
+        DeviceFact {
+            label: Translation.tr("Kernel")
+            value: SystemInfo.kernel
+        }
+        DeviceFact {
+            label: Translation.tr("Session")
+            value: SystemInfo.desktopEnvironment.length > 0 ? `${SystemInfo.desktopEnvironment} (${SystemInfo.windowingSystem})` : ""
+        }
+    }
 
     ContentSection {
         icon: "box"
