@@ -31,12 +31,16 @@ Item {
     }
 
     // Placeholder when list is empty
-    PagePlaceholder {
-        shown: Notifications.list.length === 0
-        icon: "notifications_active"
-        description: Translation.tr("Nothing")
-        shape: MaterialShape.Shape.Ghostish
-        descriptionHorizontalAlignment: Text.AlignHCenter
+    Item {
+        anchors.fill: listview
+
+        PagePlaceholder {
+            shown: Notifications.list.length === 0
+            icon: "notifications_active"
+            description: Translation.tr("Nothing")
+            shape: MaterialShape.Shape.Ghostish
+            descriptionHorizontalAlignment: Text.AlignHCenter
+        }
     }
 
     ButtonGroup {

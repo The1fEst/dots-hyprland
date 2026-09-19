@@ -62,11 +62,8 @@ Singleton {
                 property int tabIndex: 0
             }
 
-            property JsonObject sidebar: JsonObject {
-                property JsonObject bottomGroup: JsonObject {
-                    property bool collapsed: false
-                    property int tab: 0
-                }
+            property JsonObject calendarPanel: JsonObject {
+                property int tab: 0
             }
 
             property JsonObject idle: JsonObject {
