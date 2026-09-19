@@ -274,9 +274,7 @@ ContentPage {
                 from: 1
                 to: 1000
                 stopIndicatorValues: [350]
-                onValueChanged: {
-                    Config.options.background.widgets.clock.digital.font.weight = value;
-                }
+                onMoved: newValue => Config.options.background.widgets.clock.digital.font.weight = Math.round(newValue)
             }
 
             ConfigSlider {
@@ -287,9 +285,7 @@ ContentPage {
                 from: 50
                 to: 700
                 stopIndicatorValues: [90]
-                onValueChanged: {
-                    Config.options.background.widgets.clock.digital.font.size = value;
-                }
+                onMoved: newValue => Config.options.background.widgets.clock.digital.font.size = Math.round(newValue)
             }
 
             ConfigSlider {
@@ -300,9 +296,7 @@ ContentPage {
                 from: 25
                 to: 125
                 stopIndicatorValues: [100]
-                onValueChanged: {
-                    Config.options.background.widgets.clock.digital.font.width = value;
-                }
+                onMoved: newValue => Config.options.background.widgets.clock.digital.font.width = Math.round(newValue)
             }
             ConfigSlider {
                 text: Translation.tr("Font roundness")
@@ -311,9 +305,7 @@ ContentPage {
                 buttonIcon: "line_curve"
                 from: 0
                 to: 100
-                onValueChanged: {
-                    Config.options.background.widgets.clock.digital.font.roundness = value;
-                }
+                onMoved: newValue => Config.options.background.widgets.clock.digital.font.roundness = Math.round(newValue)
             }
         }
 
