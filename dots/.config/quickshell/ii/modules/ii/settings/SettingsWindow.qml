@@ -357,7 +357,10 @@ FloatingWindow {
                                     required property var modelData
                                     readonly property int pageIndex: root.pageIndexOf(modelData.component)
                                     toggled: root.currentPage === pageIndex
-                                    onPressed: root.currentPage = pageIndex;
+                                    onPressed: {
+                                        root.subpage = null;
+                                        root.currentPage = pageIndex;
+                                    }
                                     expanded: navRail.expanded
                                     buttonIcon: modelData.icon
                                     buttonIconRotation: modelData.iconRotation || 0
