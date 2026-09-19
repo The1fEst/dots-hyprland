@@ -165,6 +165,17 @@ ContentPage {
                     Config.options.sounds.pomodoro = checked;
                 }
             }
+            ConfigSwitch {
+                buttonIcon: "mic"
+                text: Translation.tr("Microphone")
+                checked: Config.options.sounds.microphone
+                onCheckedChanged: {
+                    Config.options.sounds.microphone = checked;
+                }
+                StyledToolTip {
+                    text: Translation.tr("Played when the microphone is muted or unmuted")
+                }
+            }
         }
 
         ContentSubsection {
