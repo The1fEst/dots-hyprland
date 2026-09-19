@@ -2,7 +2,8 @@
 # It's not for directly running.
 
 install-paru(){
-  x sudo pacman -S --needed --noconfirm base-devel
+  x sudo pacman -S --needed --noconfirm base-devel git
+  x rm -rf /tmp/buildparu
   x git clone https://aur.archlinux.org/paru.git /tmp/buildparu
   x cd /tmp/buildparu
   x makepkg -si --noconfirm

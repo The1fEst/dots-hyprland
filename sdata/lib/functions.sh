@@ -16,7 +16,11 @@ function v(){
       echo "  e = Exit now"
       echo "  s = Skip this command (NOT recommended - your setup might not work correctly)"
       echo "  yesforall = Yes and don't ask again; NOT recommended unless you really sure"
-      local p; read -p "====> " p
+      local p
+      if ! read -p "====> " p; then
+        echo -e "${STY_RED}[$0]: Nothing to read from, so nothing to confirm with. Exiting...${STY_RST}"
+        exit 1
+      fi
       case $p in
         [yY]) echo -e "${STY_BLUE}OK, executing...${STY_RST}" ;break ;;
         [eE]) echo -e "${STY_BLUE}Exiting...${STY_RST}" ;exit ;break ;;
@@ -40,7 +44,11 @@ function x(){
     echo "  r = Repeat this command (DEFAULT)"
     echo "  e = Exit now"
     echo "  i = Ignore this error and continue (your setup might not work correctly)"
-    local p; read -p " [R/e/i]: " p
+    local p
+    if ! read -p " [R/e/i]: " p; then
+      echo -e "${STY_RED}[$0]: Nothing to read from, so the command cannot be repeated.${STY_RST}"
+      break
+    fi
     case $p in
       [iI]) echo -e "${STY_BLUE}Alright, ignore and continue...${STY_RST}";cmdstatus=2;;
       [eE]) echo -e "${STY_BLUE}Alright, will exit.${STY_RST}";break;;
