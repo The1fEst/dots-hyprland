@@ -13,7 +13,7 @@ DockButton {
     property var appListRoot
     property int itemIndex: -1
     property int lastFocused: -1
-    readonly property bool dragged: appListRoot.dragIndex === root.itemIndex
+    readonly property bool dragged: appListRoot.dragging && appListRoot.dragIndex === root.itemIndex
     property real iconSize: 35
     property real countDotWidth: 10
     property real countDotHeight: 4
@@ -81,13 +81,14 @@ DockButton {
             hoverEnabled: true
             acceptedButtons: Qt.NoButton
             onEntered: {
-                appListRoot.lastHoveredButton = root
-                appListRoot.buttonHovered = true
-                lastFocused = appToplevel.toplevels.length - 1
+                if (!root.appListRoot) return;
+                root.appListRoot.lastHoveredButton = root
+                root.appListRoot.buttonHovered = true
+                root.lastFocused = appToplevel.toplevels.length - 1
             }
             onExited: {
-                if (appListRoot.lastHoveredButton === root) {
-                    appListRoot.buttonHovered = false
+                if (root.appListRoot?.lastHoveredButton === root) {
+                    root.appListRoot.buttonHovered = false
                 }
             }
         }

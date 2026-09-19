@@ -29,9 +29,12 @@ Item {
     readonly property list<var> apps: TaskbarApps.apps
     readonly property real spacing: 2
 
+    property bool dragging: false
     property int dragIndex: -1
     property int dropIndex: -1
     property real dragX: 0
+
+    onAppsChanged: if (!root.dragging) root.cancelDrag()
 
     readonly property var restOrder: {
         const rest = [];
@@ -82,6 +85,7 @@ Item {
     }
 
     function beginDrag(index: int): void {
+        root.dragging = true;
         root.dragIndex = index;
         root.dropIndex = -1;
     }
@@ -92,6 +96,7 @@ Item {
     }
 
     function cancelDrag(): void {
+        root.dragging = false;
         root.dragIndex = -1;
         root.dropIndex = -1;
     }
@@ -107,14 +112,21 @@ Item {
         }
         const arranged = root.order;
         const separatorAt = arranged.findIndex(index => root.apps[index].appId === "SEPARATOR");
-        if (separatorAt >= 0) {
-            const pinned = [];
-            for (let position = 0; position < separatorAt; position++) {
-                pinned.push(root.pinnableId(root.apps[arranged[position]]));
-            }
-            Config.options.dock.pinnedApps = pinned;
+        if (separatorAt < 0) {
+            root.cancelDrag();
+            return;
         }
-        root.cancelDrag();
+        const pinned = [];
+        for (let position = 0; position < separatorAt; position++) {
+            pinned.push(root.pinnableId(root.apps[arranged[position]]));
+        }
+        const current = Config.options.dock.pinnedApps ?? [];
+        if (pinned.length === current.length && pinned.every((appId, position) => appId === current[position])) {
+            root.cancelDrag();
+            return;
+        }
+        root.dragging = false;
+        Config.options.dock.pinnedApps = pinned;
     }
 
     function popupCenterXForButton(button) {
