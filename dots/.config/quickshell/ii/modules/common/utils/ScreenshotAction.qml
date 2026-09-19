@@ -20,6 +20,18 @@ Singleton {
         RecordWithSound
     }
 
+    /**
+     * The same command, taken after a wait. A screenshot is grabbed again once the wait
+     * is over, since the frozen copy is of the screen as it was before the wait.
+     */
+    function delayed(command, seconds, screenName = "", screenshotPath = "") {
+        if (seconds <= 0)
+            return command;
+        const cursor = Config.options.regionSelector.showPointer ? "-c " : "";
+        const again = screenshotPath.length > 0 ? ` && grim ${cursor}-o '${StringUtils.shellSingleQuoteEscape(screenName)}' '${StringUtils.shellSingleQuoteEscape(screenshotPath)}'` : "";
+        return ["bash", "-c", `sleep ${seconds}${again} && ${command[2]}`];
+    }
+
     function getCommand(x, y, width, height, screenshotPath, action, saveDir = "", shadow = false, radius = 0) {
         // Set command for action
         const rx = Math.round(x);

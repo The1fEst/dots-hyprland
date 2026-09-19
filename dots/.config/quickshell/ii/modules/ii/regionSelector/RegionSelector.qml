@@ -13,9 +13,8 @@ Scope {
         GlobalStates.regionSelectorOpen = false
     }
 
-    property var action: RegionSelection.SnipAction.Copy
-    property var selectionMode: RegionSelection.SelectionMode.RectCorners
-    
+    property int captureMode: RegionSelection.CaptureMode.Region
+
     Variants {
         model: Quickshell.screens
         delegate: Loader {
@@ -26,29 +25,27 @@ Scope {
             sourceComponent: RegionSelection {
                 screen: regionSelectorLoader.modelData
                 onDismiss: root.dismiss()
-                action: root.action
-                selectionMode: root.selectionMode
+                captureMode: root.captureMode
             }
         }
     }
 
     function screenshot() {
-        root.action = RegionSelection.SnipAction.Copy
-        root.selectionMode = RegionSelection.SelectionMode.RectCorners
+        root.captureMode = RegionSelection.CaptureMode.Region
         GlobalStates.regionSelectorOpen = true
     }
 
     function record() {
-        root.action = RegionSelection.SnipAction.Record
-        root.selectionMode = RegionSelection.SelectionMode.RectCorners
+        Config.options.regionSelector.recordSound = false
+        root.captureMode = RegionSelection.CaptureMode.RecordRegion
         // If already open then re-trigger to stop recording
         if (GlobalStates.regionSelectorOpen) GlobalStates.regionSelectorOpen = false
         GlobalStates.regionSelectorOpen = true
     }
 
     function recordWithSound() {
-        root.action = RegionSelection.SnipAction.RecordWithSound
-        root.selectionMode = RegionSelection.SelectionMode.RectCorners
+        Config.options.regionSelector.recordSound = true
+        root.captureMode = RegionSelection.CaptureMode.RecordRegion
         // If already open then re-trigger to stop recording
         if (GlobalStates.regionSelectorOpen) GlobalStates.regionSelectorOpen = false
         GlobalStates.regionSelectorOpen = true

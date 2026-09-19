@@ -29,11 +29,18 @@ PanelWindow {
 
     // Modes
     // TODO: Ask: sidebar AI
-    enum SnipAction { Copy, Edit, Record, RecordWithSound } 
+    enum SnipAction { Copy, Edit, Record, RecordWithSound }
     enum SelectionMode { RectCorners, Circle }
     enum Phase { Select, Post }
-    property var action: RegionSelection.SnipAction.Copy
-    property var selectionMode: RegionSelection.SelectionMode.RectCorners
+    enum CaptureMode { Screen, Window, Region, Shape, RecordScreen, RecordRegion }
+    property int captureMode: RegionSelection.CaptureMode.Region
+    readonly property bool wholeScreen: root.captureMode === RegionSelection.CaptureMode.Screen || root.captureMode === RegionSelection.CaptureMode.RecordScreen
+    readonly property var selectionMode: root.captureMode === RegionSelection.CaptureMode.Shape ? RegionSelection.SelectionMode.Circle : RegionSelection.SelectionMode.RectCorners
+    readonly property var action: {
+        if (root.isRecording)
+            return Config.options.regionSelector.recordSound ? RegionSelection.SnipAction.RecordWithSound : RegionSelection.SnipAction.Record;
+        return root.mouseButton === Qt.RightButton ? RegionSelection.SnipAction.Edit : RegionSelection.SnipAction.Copy;
+    }
     property var phase: RegionSelection.Phase.Select
     signal dismiss()
 
@@ -111,8 +118,9 @@ PanelWindow {
 
     // Config
     property bool isCircleSelection: (root.selectionMode === RegionSelection.SelectionMode.Circle)
-    property bool enableWindowRegions: Config.options.regionSelector.targetRegions.windows && !isCircleSelection
-    property bool enableLayerRegions: Config.options.regionSelector.targetRegions.layers && !isCircleSelection
+    readonly property bool picksARegion: root.captureMode === RegionSelection.CaptureMode.Window || root.captureMode === RegionSelection.CaptureMode.Region
+    property bool enableWindowRegions: Config.options.regionSelector.targetRegions.windows && root.picksARegion
+    property bool enableLayerRegions: Config.options.regionSelector.targetRegions.layers && root.picksARegion
 
     // Target
     property real targetedRegionX: -1
@@ -122,8 +130,13 @@ PanelWindow {
     function targetedRegionValid() {
         return (root.targetedRegionX >= 0 && root.targetedRegionY >= 0)
     }
+    /**
+     * Takes the region the pointer is over. A window shot is cut to the window itself so
+     * that its corners and the shadow drawn around them land where the window really ends;
+     * anything else gets the configured padding so borders are not shaved off.
+     */
     function setRegionToTargeted() {
-        const padding = Config.options.regionSelector.targetRegions.selectionPadding; // Make borders not cut off n stuff
+        const padding = root.captureMode === RegionSelection.CaptureMode.Window ? 0 : Config.options.regionSelector.targetRegions.selectionPadding;
         root.regionX = root.targetedRegionX - padding;
         root.regionY = root.targetedRegionY - padding;
         root.regionWidth = root.targetedRegionWidth + padding * 2;
@@ -177,7 +190,7 @@ PanelWindow {
             root.preparationDone = !checkRecordingProc.running;
         }
     }
-    property bool isRecording: root.action === RegionSelection.SnipAction.Record || root.action === RegionSelection.SnipAction.RecordWithSound
+    readonly property bool isRecording: root.captureMode === RegionSelection.CaptureMode.RecordScreen || root.captureMode === RegionSelection.CaptureMode.RecordRegion
     property bool recordingShouldStop: false
     Process {
         id: checkRecordingProc
@@ -197,6 +210,24 @@ PanelWindow {
             return;
         }
         root.visible = true;
+        root.showModeRegion();
+    }
+
+    onCaptureModeChanged: root.showModeRegion()
+
+    function showModeRegion(): void {
+        if (root.wholeScreen) {
+            root.dragStartX = 0;
+            root.dragStartY = 0;
+            root.draggingX = root.screen.width;
+            root.draggingY = root.screen.height;
+            return;
+        }
+        root.dragStartX = 0;
+        root.dragStartY = 0;
+        root.draggingX = 0;
+        root.draggingY = 0;
+        root.restoreRegion();
     }
 
     function getScreenshotAction() {
@@ -222,6 +253,7 @@ PanelWindow {
         if (root.regionWidth <= 0 || root.regionHeight <= 0) {
             console.warn("[Region Selector] Invalid region size, skipping snip.");
             root.dismiss();
+            return;
         }
 
         // Clamp region to screen bounds
@@ -230,30 +262,58 @@ PanelWindow {
         root.regionWidth = Math.max(0, Math.min(root.regionWidth, root.screen.width - root.regionX));
         root.regionHeight = Math.max(0, Math.min(root.regionHeight, root.screen.height - root.regionY));
 
-        // Adjust action
-        if (root.action === RegionSelection.SnipAction.Copy || root.action === RegionSelection.SnipAction.Edit) {
-            root.action = root.mouseButton === Qt.RightButton ? RegionSelection.SnipAction.Edit : RegionSelection.SnipAction.Copy;
-        }
-        
-        const screenshotDir = Config.options.screenSnip.savePath !== "" ? //
-            Config.options.screenSnip.savePath : "";
+        root.rememberRegion();
+
+        const screenshotDir = Config.options.screenSnip.save ? Config.options.screenSnip.savePath : "";
         var screenshotAction = root.getScreenshotAction();
+        const shadowed = root.captureMode === RegionSelection.CaptureMode.Window;
         const command = ScreenshotAction.getCommand(
-            root.regionX * root.monitorScale, //
-            root.regionY * root.monitorScale, //
-            root.regionWidth * root.monitorScale,// 
-            root.regionHeight * root.monitorScale, //
-            root.screenshotPath, //
-            screenshotAction, //
-            screenshotDir
+            root.regionX * root.monitorScale,
+            root.regionY * root.monitorScale,
+            root.regionWidth * root.monitorScale,
+            root.regionHeight * root.monitorScale,
+            root.screenshotPath,
+            screenshotAction,
+            screenshotDir,
+            shadowed,
+            shadowed ? Appearance.rounding.windowRounding * root.monitorScale : 0
         )
-        Quickshell.execDetached(command);
-        if (root.action == RegionSelection.SnipAction.Record || root.action == RegionSelection.SnipAction.RecordWithSound) {
+        Quickshell.execDetached(ScreenshotAction.delayed(command,
+            Config.options.regionSelector.countdownSeconds,
+            root.screen.name,
+            root.isRecording ? "" : root.screenshotPath));
+        if (root.isRecording) {
             root.phase = RegionSelection.Phase.Post
-            root.selectionMode = RegionSelection.SelectionMode.RectCorners
         } else {
             root.dismiss();
         }
+    }
+
+    function rememberRegion(): void {
+        const remembered = Persistent.states.regionSelector;
+        remembered.screen = root.screen.name;
+        remembered.x = root.regionX;
+        remembered.y = root.regionY;
+        remembered.width = root.regionWidth;
+        remembered.height = root.regionHeight;
+    }
+
+    function restoreRegion(): void {
+        const remembered = Persistent.states.regionSelector;
+        if (!Config.options.regionSelector.rememberRegion || remembered.screen !== root.screen.name || remembered.width <= 0 || remembered.height <= 0)
+            return;
+        root.dragStartX = remembered.x;
+        root.dragStartY = remembered.y;
+        root.draggingX = remembered.x + remembered.width;
+        root.draggingY = remembered.y + remembered.height;
+    }
+
+    function captureWholeScreen(): void {
+        root.dragStartX = 0;
+        root.dragStartY = 0;
+        root.draggingX = root.screen.width;
+        root.draggingY = root.screen.height;
+        root.snip();
     }
 
     // Only clickable in Selection phase
@@ -271,9 +331,13 @@ PanelWindow {
         visible: root.phase === RegionSelection.Phase.Select
 
         focus: root.visible
-        Keys.onPressed: (event) => { // Esc to close
+        Keys.onPressed: (event) => {
             if (event.key === Qt.Key_Escape) {
                 root.dismiss();
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Space) {
+                root.captureMode = root.captureMode === RegionSelection.CaptureMode.Window ? RegionSelection.CaptureMode.Region : RegionSelection.CaptureMode.Window;
+                event.accepted = true;
             }
         }
     }
@@ -287,14 +351,20 @@ PanelWindow {
 
         // Controls
         onPressed: (mouse) => {
+            root.mouseButton = mouse.button;
+            if (root.wholeScreen)
+                return;
             root.dragStartX = mouse.x;
             root.dragStartY = mouse.y;
             root.draggingX = mouse.x;
             root.draggingY = mouse.y;
             root.dragging = true;
-            root.mouseButton = mouse.button;
         }
         onReleased: (mouse) => {
+            if (root.wholeScreen) {
+                root.captureWholeScreen();
+                return;
+            }
             // Detect if it was a click -> Try to select targeted region
             if (root.draggingX === root.dragStartX && root.draggingY === root.dragStartY) {
                 if (root.targetedRegionValid()) {
@@ -317,6 +387,7 @@ PanelWindow {
             root.snip();
         }
         onPositionChanged: (mouse) => {
+            if (root.wholeScreen) return;
             root.updateTargetedRegion(mouse.x, mouse.y);
             if (!root.dragging) return;
             root.draggingX = mouse.x;
@@ -451,13 +522,20 @@ PanelWindow {
             spacing: 6
 
             OptionsToolbar {
-                Synchronizer on action {
-                    property alias source: root.action
-                }
-                Synchronizer on selectionMode {
-                    property alias source: root.selectionMode
+                id: optionsToolbar
+                Synchronizer on captureMode {
+                    property alias source: root.captureMode
                 }
                 onDismiss: root.dismiss();
+            }
+            ToolbarPairedFab {
+                anchors.verticalCenter: parent.verticalCenter
+                visible: root.wholeScreen
+                iconText: root.isRecording ? "screen_record" : "photo_camera"
+                onClicked: root.captureWholeScreen();
+                StyledToolTip {
+                    text: root.isRecording ? Translation.tr("Record") : Translation.tr("Capture")
+                }
             }
             ToolbarPairedFab {
                 anchors.verticalCenter: parent.verticalCenter
@@ -468,6 +546,17 @@ PanelWindow {
                 }
             }
         }
-        
+
+        RegionOptionsMenu {
+            z: 11
+            visible: root.phase === RegionSelection.Phase.Select && optionsToolbar.optionsOpen
+            opacity: regionSelectionControls.opacity
+            anchors {
+                right: regionSelectionControls.right
+                bottom: regionSelectionControls.top
+                bottomMargin: 8
+            }
+        }
+
     }
 }

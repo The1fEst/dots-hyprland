@@ -376,6 +376,9 @@ Singleton {
 
             property JsonObject regionSelector: JsonObject {
                 property bool showPointer: false
+                property int countdownSeconds: 0
+                property bool rememberRegion: false
+                property bool recordSound: false
                 property JsonObject targetRegions: JsonObject {
                     property bool windows: true
                     property bool layers: false
@@ -467,6 +470,7 @@ Singleton {
 
             property JsonObject screenSnip: JsonObject {
                 property string savePath: "" // only copy to clipboard when empty
+                property bool save: false
             }
 
             property JsonObject sounds: JsonObject {

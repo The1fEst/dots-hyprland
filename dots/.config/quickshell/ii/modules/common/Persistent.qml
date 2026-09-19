@@ -70,6 +70,14 @@ Singleton {
                 property bool inhibit: false
             }
 
+            property JsonObject regionSelector: JsonObject {
+                property string screen: ""
+                property real x: 0
+                property real y: 0
+                property real width: 0
+                property real height: 0
+            }
+
 
             property JsonObject timer: JsonObject {
                 property JsonObject pomodoro: JsonObject {
