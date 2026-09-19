@@ -13,23 +13,21 @@ ConfigSpinBox {
 
     signal committed(real value)
 
-    property bool showsCurrent: false
+    readonly property real shown: Math.min(Math.max(root.current, root.from), root.to)
 
-    Component.onCompleted: if (root.value === root.current) root.showsCurrent = true
-    onCurrentChanged: if (root.value === root.current) root.showsCurrent = true
+    property bool live: false
+    Component.onCompleted: root.live = true
 
     onValueChanged: {
-        if (root.value === root.current) {
-            root.showsCurrent = true;
+        if (root.value === root.shown)
             return;
-        }
-        if (root.showsCurrent)
+        if (root.live)
             root.committed(root.value);
     }
 
     Binding {
         target: root
         property: "value"
-        value: root.current
+        value: root.shown
     }
 }
