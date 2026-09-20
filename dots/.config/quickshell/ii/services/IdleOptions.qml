@@ -65,7 +65,7 @@ Singleton {
 
     Process {
         id: applyProc
-        command: ["bash", "-c", "pkill -x hypridle; hyprctl dispatch 'hl.dsp.exec_cmd(\"hypridle\")'"]
+        command: ["systemctl", "--user", "restart", "hypridle.service"]
         onExited: root.reload()
     }
 }
