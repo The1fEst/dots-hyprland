@@ -52,16 +52,92 @@ ContentPage {
             value: SystemInfo.memory
         }
         DeviceFact {
-            label: Translation.tr("Storage")
-            value: SystemInfo.storage
-        }
-        DeviceFact {
             label: Translation.tr("Kernel")
             value: SystemInfo.kernel
         }
         DeviceFact {
             label: Translation.tr("Session")
             value: SystemInfo.desktopEnvironment.length > 0 ? `${SystemInfo.desktopEnvironment} (${SystemInfo.windowingSystem})` : ""
+        }
+    }
+
+    ContentSection {
+        icon: "storage"
+        title: Translation.tr("Storage")
+        visible: SystemInfo.disks.length > 0
+
+        GridLayout {
+            Layout.fillWidth: true
+            columns: Math.max(1, Math.floor(root.baseWidth / 290))
+            rowSpacing: 8
+            columnSpacing: 8
+
+            Repeater {
+                model: SystemInfo.disks
+
+                delegate: Rectangle {
+                    id: disk
+                    required property var modelData
+                    readonly property real fraction: modelData.used / modelData.size
+
+                    Layout.fillWidth: true
+                    implicitHeight: diskColumn.implicitHeight + 24
+                    radius: Appearance.rounding.normal
+                    color: Appearance.colors.colLayer2
+
+                    ColumnLayout {
+                        id: diskColumn
+                        anchors {
+                            fill: parent
+                            margins: 12
+                        }
+                        spacing: 4
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 6
+                            MaterialSymbol {
+                                text: "hard_drive"
+                                iconSize: Appearance.font.pixelSize.hugeass
+                                color: Appearance.colors.colOnLayer1
+                            }
+                            StyledText {
+                                Layout.fillWidth: true
+                                text: disk.modelData.mount
+                                elide: Text.ElideMiddle
+                                color: Appearance.colors.colOnLayer1
+                            }
+                            StyledText {
+                                text: `${Math.round(disk.fraction * 100)}%`
+                                font.pixelSize: Appearance.font.pixelSize.smaller
+                                color: Appearance.colors.colSubtext
+                            }
+                        }
+
+                        StyledProgressBar {
+                            Layout.fillWidth: true
+                            Layout.topMargin: 2
+                            Layout.bottomMargin: 2
+                            value: disk.fraction
+                        }
+
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: Translation.tr("%1 free of %2").arg(SystemInfo.humanSize(disk.modelData.size - disk.modelData.used)).arg(SystemInfo.humanSize(disk.modelData.size))
+                            font.pixelSize: Appearance.font.pixelSize.smaller
+                            color: Appearance.colors.colSubtext
+                        }
+
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: `${disk.modelData.source} · ${disk.modelData.fstype}`
+                            elide: Text.ElideRight
+                            font.pixelSize: Appearance.font.pixelSize.smallest
+                            color: Appearance.colors.colSubtext
+                        }
+                    }
+                }
+            }
         }
     }
 

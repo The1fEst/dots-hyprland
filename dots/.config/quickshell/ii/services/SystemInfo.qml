@@ -27,7 +27,7 @@ Singleton {
     property string processor: ""
     property string memory: ""
     property string graphics: ""
-    property string storage: ""
+    property var disks: []
 
     function shortDeviceName(name: string): string {
         const alias = name.match(/\[([^\]]+)\]/);
@@ -170,14 +170,26 @@ Singleton {
     Process {
         id: getStorage
         running: true
-        command: ["bash", "-c", "df -B1 --output=used,size / | tail -1"]
+        command: ["bash", "-c", "df -B1 --output=source,target,fstype,used,size -x squashfs | tail -n +2"]
         stdout: StdioCollector {
             id: storageCollector
             onStreamFinished: {
-                const [used, size] = storageCollector.text.trim().split(/\s+/).map(field => parseInt(field));
-                if (!(size > 0))
-                    return;
-                root.storage = `${root.humanSize(used)} / ${root.humanSize(size)} (${Math.round(used / size * 100)}%)`;
+                const seen = [];
+                const disks = [];
+                for (const line of storageCollector.text.trim().split("\n")) {
+                    const [source, target, fstype, used, size] = line.trim().split(/\s+/);
+                    if (!source?.startsWith("/dev/") || seen.includes(source) || !(parseInt(size) > 0))
+                        continue;
+                    seen.push(source);
+                    disks.push({
+                        source: source.slice("/dev/".length),
+                        mount: (target ?? "").replace(/\\040/g, " "),
+                        fstype: fstype ?? "",
+                        used: parseInt(used),
+                        size: parseInt(size)
+                    });
+                }
+                root.disks = disks;
             }
         }
     }
