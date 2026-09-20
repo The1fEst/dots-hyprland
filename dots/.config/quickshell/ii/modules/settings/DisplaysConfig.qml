@@ -338,6 +338,17 @@ ContentPage {
             }
         }
 
+        OptionSwitch {
+            buttonIcon: "hdr_auto"
+            text: Translation.tr("Auto HDR")
+            current: HyprlandOptions.numberOr("render:cm_auto_hdr", 1) > 0
+            onCommitted: value => HyprlandOptions.set("render:cm_auto_hdr", value ? 1 : 0)
+
+            StyledToolTip {
+                text: Translation.tr("Switches to HDR while a fullscreen window has HDR content. Applies to every display.")
+            }
+        }
+
         ContentSubsection {
             title: Translation.tr("SDR transfer function")
 
