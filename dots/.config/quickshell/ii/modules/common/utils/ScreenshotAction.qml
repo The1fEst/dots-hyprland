@@ -50,7 +50,7 @@ Singleton {
         const cropInPlace = `${cropBase} '${StringUtils.shellSingleQuoteEscape(screenshotPath)}'`
         const cleanup = `rm '${StringUtils.shellSingleQuoteEscape(screenshotPath)}'`
         const slurpRegion = `${rx},${ry} ${rw}x${rh}`
-        const annotationCommand = `${Config.options.regionSelector.annotation.useSatty ? "satty" : "swappy"} -f -`;
+        const annotationCommand = "satty -f -";
         switch (action) {
             case ScreenshotAction.Action.Copy:
                 if (saveDir === "") {

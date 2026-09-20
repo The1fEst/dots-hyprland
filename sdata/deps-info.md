@@ -173,12 +173,10 @@ them; the default applications page just has no candidate to name for those role
 - `hyprshot`
   - Used in Hyprland `keybinds.conf` as fallback.
 - `satty`
-  - Annotates a screenshot after the region is picked; the default for that step.
-  - Also opens `image/*`, so it is the one window that both shows a picture and marks it up.
+  - Annotates a screenshot after the region is picked, and opens `image/*`, so it is the one
+    window that both shows a picture and marks it up.
 - `slurp`
   - Used in Hyprland and Quickshell config.
-- `swappy`
-  - The other annotator, behind the switch on the capture settings page.
 - `wf-recorder`
   - Used in Quickshell config.
 

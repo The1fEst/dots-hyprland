@@ -156,20 +156,5 @@ ContentPage {
             }
         }
 
-        ContentSubsection {
-            title: Translation.tr("Annotation")
-
-            ConfigSwitch {
-                buttonIcon: "draw"
-                text: Translation.tr("Use Satty")
-                checked: Config.options.regionSelector.annotation.useSatty
-                onCheckedChanged: {
-                    Config.options.regionSelector.annotation.useSatty = checked;
-                }
-                StyledToolTip {
-                    text: Translation.tr("Opens screenshots in Satty instead of Swappy.")
-                }
-            }
-        }
     }
 }
