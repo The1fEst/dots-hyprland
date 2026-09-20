@@ -127,6 +127,9 @@ Tips:
   - Basic component.
 - `dolphin`
   - Used in Hyprland and Quickshell config.
+- `gnome-calendar`
+  - Opens `text/calendar`, so the Calendar entry on the default applications page has
+    something to name besides a text editor.
 - `systemsettings`
   - Used in Hyprland `keybinds.conf`.
 
