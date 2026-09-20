@@ -8,6 +8,14 @@ function setup_user_group(){
 
   x sudo usermod -aG video,i2c,input "$(whoami)"
 }
+
+function network_managed_elsewhere(){
+  local svc
+  for svc in systemd-networkd iwd connman netctl dhcpcd; do
+    systemctl is-enabled --quiet "$svc" 2>/dev/null && return 0
+  done
+  return 1
+}
 #####################################################################################
 # These python packages are installed using uv into the venv (virtual environment). Once the folder of the venv gets deleted, they are all gone cleanly. So it's considered as setups, not dependencies.
 showfun install-python-packages
@@ -25,11 +33,20 @@ if [[ ! -z $(systemctl --version) ]]; then
     v sudo systemctl --machine=$(whoami)@.host --user enable ydotool --now
   fi
   v sudo systemctl enable bluetooth --now
+  if network_managed_elsewhere; then
+    printf "${STY_YELLOW}[$0]: Another network manager is enabled, leaving NetworkManager alone.${STY_RST}\n"
+  else
+    v sudo systemctl enable NetworkManager --now
+  fi
 elif [[ ! -z $(openrc --version) ]]; then
   v bash -c "echo 'modules=i2c-dev' | sudo tee -a /etc/conf.d/modules"
   v sudo rc-update add modules boot
   v sudo rc-update add ydotool default
   v sudo rc-update add bluetooth default
+  if [ -x /etc/init.d/NetworkManager ]; then
+    v sudo rc-update add NetworkManager default
+    x sudo rc-service NetworkManager start
+  fi
 
   x sudo rc-service ydotool start
   x sudo rc-service bluetooth start
@@ -41,8 +58,8 @@ elif [[ ! -z $(dinitctl --version 2>/dev/null) ]]; then
   
   # Quick check for services to avoid "service already enabled" error"
   # System services
-  for srv in userspawn bluetoothd ydotool; do
-    if [ ! -e "/etc/dinit.d/boot.d/$srv" ]; then
+  for srv in userspawn bluetoothd ydotool NetworkManager; do
+    if [ -e "/etc/dinit.d/$srv" ] && [ ! -e "/etc/dinit.d/boot.d/$srv" ]; then
       v sudo dinitctl enable "$srv"
     fi
   done
