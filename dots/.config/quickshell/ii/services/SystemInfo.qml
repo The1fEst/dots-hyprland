@@ -26,6 +26,26 @@ Singleton {
     property string kernel: ""
     property string processor: ""
     property string memory: ""
+    property string graphics: ""
+    property string storage: ""
+
+    function shortDeviceName(name: string): string {
+        const alias = name.match(/\[([^\]]+)\]/);
+        if (alias)
+            return alias[1];
+        return name.replace(/,? (Corporation|Corp\.|Inc\.|Technology (Inc\.|Co\.,? Ltd\.?)|Co\.,? Ltd\.?)$/, "").trim();
+    }
+
+    function humanSize(bytes: real): string {
+        const units = ["B", "KiB", "MiB", "GiB", "TiB"];
+        let value = bytes;
+        let unit = 0;
+        while (value >= 1024 && unit < units.length - 1) {
+            value /= 1024;
+            unit++;
+        }
+        return `${value.toFixed(unit === 0 || value >= 100 ? 0 : 1)} ${units[unit]}`;
+    }
 
     Timer {
         triggeredOnStart: true
@@ -128,6 +148,36 @@ Singleton {
                 root.processor = (lines[2] ?? "").trim();
                 const kilobytes = parseInt(lines[3] ?? "0");
                 root.memory = kilobytes > 0 ? `${(kilobytes / 1024 / 1024).toFixed(1)} GiB` : "";
+            }
+        }
+    }
+
+    Process {
+        id: getGraphics
+        running: true
+        command: ["bash", "-c", "lspci -mm | awk -F'\"' '$2 ~ /^(VGA compatible controller|3D controller|Display controller)$/ {print $4 \"\\t\" $6}'"]
+        stdout: StdioCollector {
+            id: graphicsCollector
+            onStreamFinished: {
+                root.graphics = graphicsCollector.text.trim().split("\n").filter(line => line.length > 0).map(line => {
+                    const [vendor, device] = line.split("\t");
+                    return `${root.shortDeviceName(vendor ?? "")} ${root.shortDeviceName(device ?? "")}`.trim();
+                }).join(", ");
+            }
+        }
+    }
+
+    Process {
+        id: getStorage
+        running: true
+        command: ["bash", "-c", "df -B1 --output=used,size / | tail -1"]
+        stdout: StdioCollector {
+            id: storageCollector
+            onStreamFinished: {
+                const [used, size] = storageCollector.text.trim().split(/\s+/).map(field => parseInt(field));
+                if (!(size > 0))
+                    return;
+                root.storage = `${root.humanSize(used)} / ${root.humanSize(size)} (${Math.round(used / size * 100)}%)`;
             }
         }
     }

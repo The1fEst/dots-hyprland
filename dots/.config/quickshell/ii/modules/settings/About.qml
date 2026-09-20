@@ -44,8 +44,16 @@ ContentPage {
             value: SystemInfo.processor
         }
         DeviceFact {
+            label: Translation.tr("Graphics")
+            value: SystemInfo.graphics
+        }
+        DeviceFact {
             label: Translation.tr("Memory")
             value: SystemInfo.memory
+        }
+        DeviceFact {
+            label: Translation.tr("Storage")
+            value: SystemInfo.storage
         }
         DeviceFact {
             label: Translation.tr("Kernel")
