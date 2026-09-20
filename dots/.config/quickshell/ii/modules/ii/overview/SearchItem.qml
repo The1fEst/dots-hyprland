@@ -34,6 +34,7 @@ RippleButton {
     property string materialSymbol: entry.iconType === LauncherSearchResult.IconType.Material ? entry?.iconName ?? "" : ""
     property string cliphistRawString: entry?.rawValue ?? ""
     readonly property bool cliphistImage: !!root.cliphistRawString && Cliphist.entryIsImage(root.cliphistRawString)
+    readonly property real previewWidth: Appearance.sizes.searchWidth - (root.horizontalMargin + root.buttonHorizontalPadding) * 2
     property bool blurImage: entry?.blurImage ?? false
     
     visible: root.entryShown
@@ -177,11 +178,25 @@ RippleButton {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
             spacing: 0
-            StyledText {
-                font.pixelSize: Appearance.font.pixelSize.smaller
-                color: root.selected ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colSubtext
-                visible: root.itemType && root.itemType != Translation.tr("App")
-                text: root.itemType
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 4
+                StyledText {
+                    font.pixelSize: Appearance.font.pixelSize.smaller
+                    color: root.selected ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colSubtext
+                    visible: root.itemType && root.itemType != Translation.tr("App")
+                    text: root.itemType
+                }
+                Item {
+                    Layout.fillWidth: true
+                }
+                Loader {
+                    Layout.rightMargin: root.buttonVerticalPadding
+                    Layout.topMargin: root.buttonVerticalPadding
+                    Layout.bottomMargin: -root.buttonVerticalPadding
+                    active: root.cliphistImage
+                    sourceComponent: actionsComponent
+                }
             }
             RowLayout {
                 Loader { // Checkmark for copied clipboard entry
@@ -211,15 +226,18 @@ RippleButton {
                     color: root.colForeground
                     horizontalAlignment: Text.AlignLeft
                     elide: Text.ElideRight
+                    wrapMode: root.cliphistRawString ? Text.Wrap : Text.NoWrap
+                    maximumLineCount: 3
                     text: root.selected ? StringUtils.escapeHtml(root.itemName) : root.displayContent
                 }
             }
             Loader { // Clipboard image preview
                 Layout.fillWidth: true
+                Layout.bottomMargin: root.buttonVerticalPadding
                 active: root.cliphistImage
                 sourceComponent: CliphistImage {
                     entry: root.cliphistRawString
-                    maxWidth: contentColumn.width
+                    maxWidth: root.previewWidth
                     maxHeight: 140
                     blur: root.blurImage
                 }
@@ -237,10 +255,16 @@ RippleButton {
             text: root.itemClickActionName
         }
 
+        Loader {
+            Layout.alignment: Qt.AlignVCenter
+            active: !root.cliphistImage
+            sourceComponent: actionsComponent
+        }
+    }
+
+    Component {
+        id: actionsComponent
         RowLayout {
-            Layout.alignment: Qt.AlignTop
-            Layout.topMargin: root.buttonVerticalPadding
-            Layout.bottomMargin: -root.buttonVerticalPadding // Why is this necessary? Good question.
             spacing: 4
             Repeater {
                 model: (root.entry.actions ?? []).slice(0, 4)
