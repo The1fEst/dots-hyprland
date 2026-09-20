@@ -15,9 +15,6 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("dbus-update-activation-environment --all")
     hl.exec_cmd("sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP") -- Some fix idk
 
-    -- Audio
-    hl.exec_cmd("easyeffects --hide-window --service-mode")
-
     -- Cursor: follow XCURSOR_* so custom/env.lua wins instead of racing this line
     hl.exec_cmd("hyprctl setcursor \"${XCURSOR_THEME:-Bibata-Modern-Classic}\" \"${XCURSOR_SIZE:-24}\"")
 end)
