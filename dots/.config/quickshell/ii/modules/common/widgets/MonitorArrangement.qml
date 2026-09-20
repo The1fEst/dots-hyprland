@@ -65,6 +65,53 @@ Item {
                 property real grabX: 0
                 property real grabY: 0
 
+                function coveredBy(px: real, py: real): var {
+                    const monitorWidth = plate.modelData.width;
+                    const monitorHeight = plate.modelData.height;
+                    return plate.neighbours.find(other => px < other.x + other.width && other.x < px + monitorWidth && py < other.y + other.height && other.y < py + monitorHeight) ?? null;
+                }
+
+                /**
+                 * The nearest spot next to whatever the given one lands on. Two displays
+                 * cannot share a pixel of the desktop, so one dropped over another is
+                 * moved to the side it is closest to leaving.
+                 */
+                function besideNeighbours(px: real, py: real): var {
+                    const monitorWidth = plate.modelData.width;
+                    const monitorHeight = plate.modelData.height;
+                    let spotX = px;
+                    let spotY = py;
+                    for (let tries = plate.neighbours.length + 1; tries > 0; tries--) {
+                        const covered = plate.coveredBy(spotX, spotY);
+                        if (!covered)
+                            break;
+                        const sides = [
+                            {
+                                x: covered.x - monitorWidth,
+                                y: spotY
+                            },
+                            {
+                                x: covered.x + covered.width,
+                                y: spotY
+                            },
+                            {
+                                x: spotX,
+                                y: covered.y - monitorHeight
+                            },
+                            {
+                                x: spotX,
+                                y: covered.y + covered.height
+                            }
+                        ].sort((first, second) => (Math.abs(first.x - spotX) + Math.abs(first.y - spotY)) - (Math.abs(second.x - spotX) + Math.abs(second.y - spotY)));
+                        spotX = sides[0].x;
+                        spotY = sides[0].y;
+                    }
+                    return {
+                        x: spotX,
+                        y: spotY
+                    };
+                }
+
                 function place(px: real, py: real): void {
                     const reach = root.snapDistance / root.zoom;
                     const monitorWidth = plate.modelData.width;
@@ -77,8 +124,9 @@ Item {
                         tops.push(other.y, other.y + other.height, other.y - monitorHeight, other.y + other.height - monitorHeight);
                     }
 
-                    plate.placedX = Math.round(root.snap(root.spanLeft + (px - root.originX) / root.zoom, lefts, reach));
-                    plate.placedY = Math.round(root.snap(root.spanTop + (py - root.originY) / root.zoom, tops, reach));
+                    const snapped = plate.besideNeighbours(Math.round(root.snap(root.spanLeft + (px - root.originX) / root.zoom, lefts, reach)), Math.round(root.snap(root.spanTop + (py - root.originY) / root.zoom, tops, reach)));
+                    plate.placedX = snapped.x;
+                    plate.placedY = snapped.y;
                     plate.x = (plate.placedX - root.spanLeft) * root.zoom + root.originX;
                     plate.y = (plate.placedY - root.spanTop) * root.zoom + root.originY;
                 }
