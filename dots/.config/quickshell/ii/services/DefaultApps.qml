@@ -36,4 +36,18 @@ Singleton {
         id: writeProc
         onExited: root.reload()
     }
+
+    Connections {
+        target: DesktopEntries.applications
+
+        function onValuesChanged(): void {
+            rescanTimer.restart();
+        }
+    }
+
+    Timer {
+        id: rescanTimer
+        interval: 1000
+        onTriggered: root.reload()
+    }
 }
