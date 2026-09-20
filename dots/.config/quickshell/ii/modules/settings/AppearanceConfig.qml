@@ -14,7 +14,7 @@ ContentPage {
     readonly property list<var> fontRoles: [
         {
             role: "general",
-            shellKeys: ["main", "numbers", "reading"],
+            shellKeys: ["main", "reading"],
             name: Translation.tr("General")
         },
         {
@@ -46,6 +46,10 @@ ContentPage {
 
     readonly property list<var> shellOnlyFontRoles: [
         {
+            key: "numbers",
+            name: Translation.tr("Numbers")
+        },
+        {
             key: "iconNerd",
             name: Translation.tr("Nerd icons")
         },
@@ -74,7 +78,7 @@ ContentPage {
     property bool bulkChangesFamily: true
     property bool bulkChangesSize: false
 
-    readonly property list<string> bulkShellKeys: ["main", "numbers", "reading", "title"]
+    readonly property list<string> bulkShellKeys: ["main", "reading", "title"]
 
     function adjustAll(): void {
         const parts = ({});

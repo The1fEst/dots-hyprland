@@ -225,7 +225,6 @@ Singleton {
         property QtObject variableAxes: QtObject {
             property var main: ({
                 "wght": 450,
-                "wdth": 100,
             })
             property var numbers: ({
                 "wght": 450,

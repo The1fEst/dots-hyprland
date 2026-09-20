@@ -30,8 +30,7 @@ Singleton {
     }
 
     function loadFamilies(): void {
-        if (root.familyNames.length === 0)
-            familiesProc.running = true;
+        familiesProc.running = true;
     }
 
     function apply(args: list<string>): void {
