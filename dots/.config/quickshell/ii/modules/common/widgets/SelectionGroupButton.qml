@@ -14,6 +14,7 @@ GroupButton {
     verticalPadding: 8
     bounce: false
     property string buttonIcon
+    property string fontFamily: Appearance.font.family.main
     property bool leftmost: false
     property bool rightmost: false
     leftRadius: (toggled || leftmost) ? (height / 2) : Appearance.rounding.unsharpenmore
@@ -55,6 +56,7 @@ GroupButton {
                 id: textItem
                 anchors.centerIn: parent
                 color: root.toggled ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSecondaryContainer
+                defaultFont: root.fontFamily
                 text: root.buttonText
             }
         }

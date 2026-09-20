@@ -410,12 +410,13 @@ ContentPage {
             tooltip: Translation.tr("You can also manually edit cheatsheet.superKey")
             ConfigSelectionArray {
                 currentValue: Config.options.cheatsheet.superKey
+                fontFamily: Appearance.font.family.iconNerd
                 onSelected: newValue => {
                     Config.options.cheatsheet.superKey = newValue;
                 }
                 options: ([
-                  "󰖳", "", "󰨡", "", "󰌽", "󰣇", "", "", "",
-                  "", "", "󱄛", "", "", "", "⌘", "󰀲", "󰟍", ""
+                  "󰖳", "", "󰨡", "", "󰌽", "󰣇", "", "", "",
+                  "", "", "󱄛", "", "", "", "⌘", "󰀲", "󰟍", ""
                 ]).map(icon => { return {
                   displayName: icon,
                   value: icon
