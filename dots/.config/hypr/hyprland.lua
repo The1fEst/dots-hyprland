@@ -20,14 +20,6 @@ if is_file_exists(HOME .. "/.config/hypr/hyprland/colors.lua") then
 end
 require("hyprland.keybinds")
 
--- nwg-displays support --
-if is_file_exists(HOME .. "/.config/hypr/workspaces.lua") then
-    require("workspaces")
-end
-if is_file_exists(HOME .. "/.config/hypr/monitors.lua") then
-    require("monitors")
-end
-
 -- What the settings app writes, between the defaults it overrides and the custom
 -- configurations that override it --
 if is_file_exists(HOME .. "/.config/hypr/settings.lua") then
