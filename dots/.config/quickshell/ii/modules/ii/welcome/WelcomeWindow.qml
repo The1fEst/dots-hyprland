@@ -55,6 +55,14 @@ FloatingWindow {
             margins: contentPadding
         }
 
+        focus: true
+        Keys.onPressed: (event) => {
+            if (event.key === Qt.Key_Escape) {
+                GlobalStates.welcomeOpen = false;
+                event.accepted = true;
+            }
+        }
+
         Item {
             // Titlebar
             visible: Config.options?.windows.showTitlebar

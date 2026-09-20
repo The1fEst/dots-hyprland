@@ -196,6 +196,11 @@ FloatingWindow {
         }
 
         Keys.onPressed: (event) => {
+            if (event.key === Qt.Key_Escape) {
+                GlobalStates.settingsOpen = false;
+                event.accepted = true;
+                return;
+            }
             if (event.modifiers === Qt.ControlModifier) {
                 if (event.key === Qt.Key_PageDown) {
                     root.currentPage = Math.min(root.currentPage + 1, root.pages.length - 1)
