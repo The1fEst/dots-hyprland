@@ -173,6 +173,9 @@ Tips:
 ## illogical-impulse-toolkit
 - `bluez-utils`
   - Provides `bluetoothctl`, which runs the pairing agent the Bluetooth page needs.
+- `power-profiles-daemon`
+  - Serves the profile the power toggle switches between. `tuned-ppd` provides the same
+    interface and satisfies this just as well.
 - `upower`
   - Used in Quickshell config.
 - `wtype`

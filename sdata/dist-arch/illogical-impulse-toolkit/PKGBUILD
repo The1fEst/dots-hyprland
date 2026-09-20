@@ -7,6 +7,7 @@ arch=(any)
 license=(None)
 depends=(
   bluez-utils
+  power-profiles-daemon
   upower
   wtype
   ydotool
