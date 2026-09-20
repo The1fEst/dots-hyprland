@@ -580,7 +580,7 @@
   "Open the shell config file\nAlternatively right-click to copy path": "Mở tập tin cấu hình của shell\nHoặc nhấn phải để chép đường dẫn",
   "Opens fullscreen": "Mở toàn màn hình",
   "Opens on workspace": "Mở ở vùng làm việc",
-  "Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.": "Mở ảnh chụp bằng Satty thay cho công cụ chú thích có sẵn. Cần cài satty.",
+  "Opens screenshots in Satty instead of Swappy.": "Mở ảnh chụp bằng Satty thay cho Swappy.",
   "Options": "Tùy chọn",
   "Order of the physical buttons on mice and touchpads": "Thứ tự các nút vật lý trên chuột và bàn di",
   "Other windows (%)": "Cửa sổ khác (%)",

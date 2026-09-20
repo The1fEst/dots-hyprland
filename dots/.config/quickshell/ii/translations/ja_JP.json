@@ -580,7 +580,7 @@
   "Open the shell config file\nAlternatively right-click to copy path": "シェルの設定ファイルを開きます\n右クリックするとパスをコピーします",
   "Opens fullscreen": "全画面で開く",
   "Opens on workspace": "このワークスペースで開く",
-  "Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.": "スクリーンショットを内蔵の注釈ツールではなく Satty で開きます。satty のインストールが必要です。",
+  "Opens screenshots in Satty instead of Swappy.": "スクリーンショットを Swappy ではなく Satty で開きます。",
   "Options": "オプション",
   "Order of the physical buttons on mice and touchpads": "マウスとタッチパッドの物理ボタンの並び",
   "Other windows (%)": "その他のウィンドウ（%）",

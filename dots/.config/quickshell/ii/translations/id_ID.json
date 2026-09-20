@@ -578,7 +578,7 @@
   "Open the shell config file\nAlternatively right-click to copy path": "Buka berkas konfigurasi shell\nAtau klik kanan untuk menyalin jalurnya",
   "Opens fullscreen": "Terbuka layar penuh",
   "Opens on workspace": "Terbuka di ruang kerja",
-  "Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.": "Membuka tangkapan layar di Satty alih-alih alat anotasi bawaan. Membutuhkan satty terpasang.",
+  "Opens screenshots in Satty instead of Swappy.": "Membuka tangkapan layar di Satty alih-alih Swappy.",
   "Options": "Opsi",
   "Order of the physical buttons on mice and touchpads": "Urutan tombol fisik pada tetikus dan panel sentuh",
   "Other windows (%)": "Jendela lain (%)",

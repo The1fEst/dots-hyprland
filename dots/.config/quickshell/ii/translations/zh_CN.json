@@ -580,7 +580,7 @@
   "Open the shell config file\nAlternatively right-click to copy path": "打开 Shell 配置文件\n或右键以复制路径",
   "Opens fullscreen": "以全屏打开",
   "Opens on workspace": "在此工作区打开",
-  "Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.": "用 Satty 打开截图，而不是内置标注工具。需要已安装 satty。",
+  "Opens screenshots in Satty instead of Swappy.": "用 Satty 打开截图，而不是 Swappy。",
   "Options": "选项",
   "Order of the physical buttons on mice and touchpads": "鼠标和触控板上物理按键的顺序",
   "Other windows (%)": "其他窗口（%）",

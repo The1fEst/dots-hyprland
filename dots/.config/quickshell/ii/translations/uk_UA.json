@@ -580,7 +580,7 @@
   "Open the shell config file\nAlternatively right-click to copy path": "Відкрити файл конфігурації оболонки\nАбо ПКМ, щоб скопіювати шлях",
   "Opens fullscreen": "Відкривається на весь екран",
   "Opens on workspace": "Відкривається на робочому столі",
-  "Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.": "Відкриває знімки в Satty замість вбудованої розмітки. Потрібен встановлений satty.",
+  "Opens screenshots in Satty instead of Swappy.": "Відкриває знімки в Satty замість Swappy.",
   "Options": "Параметри",
   "Order of the physical buttons on mice and touchpads": "Порядок фізичних кнопок на мишах і тачпадах",
   "Other windows (%)": "Інші вікна (%)",

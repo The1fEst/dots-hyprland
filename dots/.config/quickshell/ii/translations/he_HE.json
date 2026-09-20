@@ -580,7 +580,7 @@
   "Open the shell config file\nAlternatively right-click to copy path": "פתיחת קובץ ההגדרות של המעטפת\nלחלופין לחיצה ימנית להעתקת הנתיב",
   "Opens fullscreen": "נפתח במסך מלא",
   "Opens on workspace": "נפתח בסביבת העבודה",
-  "Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.": "פותח צילומי מסך ב־Satty במקום בכלי ההערות המובנה. דורש התקנה של satty.",
+  "Opens screenshots in Satty instead of Swappy.": "פותח צילומי מסך ב־Satty במקום ב־Swappy.",
   "Options": "אפשרויות",
   "Order of the physical buttons on mice and touchpads": "סדר הלחצנים הפיזיים בעכברים ובמשטחי מגע",
   "Other windows (%)": "חלונות אחרים (%)",

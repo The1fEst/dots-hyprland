@@ -578,7 +578,7 @@
   "Open the shell config file\nAlternatively right-click to copy path": "Shell yapılandırma dosyasını açın\nAlternatif olarak yolu kopyalamak için sağ tıklayın",
   "Opens fullscreen": "Tam ekran açılır",
   "Opens on workspace": "Şu çalışma alanında açılır",
-  "Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.": "Ekran görüntülerini yerleşik işaretleme aracı yerine Satty'de açar. satty kurulu olmalıdır.",
+  "Opens screenshots in Satty instead of Swappy.": "Ekran görüntülerini Swappy yerine Satty'de açar.",
   "Options": "Seçenekler",
   "Order of the physical buttons on mice and touchpads": "Farelerdeki ve dokunmatik yüzeylerdeki fiziksel düğmelerin sırası",
   "Other windows (%)": "Diğer pencereler (%)",

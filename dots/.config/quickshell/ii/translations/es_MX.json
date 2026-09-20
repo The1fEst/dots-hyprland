@@ -578,7 +578,7 @@
   "Open the shell config file\nAlternatively right-click to copy path": "Abrir el archivo de configuración del shell\nAlternativamente, clic derecho para copiar la ruta",
   "Opens fullscreen": "Se abre a pantalla completa",
   "Opens on workspace": "Se abre en el escritorio",
-  "Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.": "Abre las capturas en Satty en vez de la herramienta de anotación integrada. Requiere satty instalado.",
+  "Opens screenshots in Satty instead of Swappy.": "Abre las capturas en Satty en vez de Swappy.",
   "Options": "Opciones",
   "Order of the physical buttons on mice and touchpads": "Orden de los botones físicos de ratones y paneles táctiles",
   "Other windows (%)": "Otras ventanas (%)",
