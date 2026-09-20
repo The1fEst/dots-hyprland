@@ -98,7 +98,6 @@ Singleton {
                 property int fakeScreenRounding: 2 // 0: None | 1: Always | 2: When not fullscreen
                 property JsonObject fonts: JsonObject {
                     property string main: "Google Sans"
-                    property string numbers: "Google Sans Flex"
                     property string title: "Google Sans"
                     property string iconNerd: "JetBrains Mono NF"
                     property string monospace: "JetBrains Mono NF"

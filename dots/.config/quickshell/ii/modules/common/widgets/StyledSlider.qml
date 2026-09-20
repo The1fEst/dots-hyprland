@@ -214,10 +214,6 @@ Slider {
         StyledToolTip {
             extraVisibleCondition: root.pressed
             text: root.tooltipContent
-            font {
-                family: Appearance.font.family.numbers
-                variableAxes: Appearance.font.variableAxes.numbers
-            }
         }
     }
 }

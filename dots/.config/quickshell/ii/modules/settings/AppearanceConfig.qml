@@ -46,10 +46,6 @@ ContentPage {
 
     readonly property list<var> shellOnlyFontRoles: [
         {
-            key: "numbers",
-            name: Translation.tr("Numbers")
-        },
-        {
             key: "iconNerd",
             name: Translation.tr("Nerd icons")
         },

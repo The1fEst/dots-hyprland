@@ -214,7 +214,6 @@ Singleton {
     font: QtObject {
         property QtObject family: QtObject {
             property string main: Config.options.appearance.fonts.main
-            property string numbers: Config.options.appearance.fonts.numbers
             property string title: Config.options.appearance.fonts.title
             property string iconMaterial: "Material Symbols Rounded"
             property string iconNerd: Config.options.appearance.fonts.iconNerd
@@ -224,9 +223,6 @@ Singleton {
         }
         property QtObject variableAxes: QtObject {
             property var main: ({
-                "wght": 450,
-            })
-            property var numbers: ({
                 "wght": 450,
             })
             property var title: ({ // Slightly bold weight for title
