@@ -16,6 +16,8 @@ them; the default applications page just has no candidate to name for those role
   - Opens `text/calendar`.
 - `thunderbird`
   - Opens `x-scheme-handler/mailto`.
+- `vlc`
+  - Opens `video/*` and `audio/*`.
 
 ## illogical-impulse-audio
 - `cava`
@@ -170,10 +172,13 @@ them; the default applications page just has no candidate to name for those role
   - Used in Quickshell config to grab a whole screen.
 - `hyprshot`
   - Used in Hyprland `keybinds.conf` as fallback.
+- `satty`
+  - Annotates a screenshot after the region is picked; the default for that step.
+  - Also opens `image/*`, so it is the one window that both shows a picture and marks it up.
 - `slurp`
   - Used in Hyprland and Quickshell config.
 - `swappy`
-  - Used in Quickshell config.
+  - The other annotator, behind the switch on the capture settings page.
 - `wf-recorder`
   - Used in Quickshell config.
 
@@ -192,6 +197,8 @@ them; the default applications page just has no candidate to name for those role
   - Used in Quickshell config.
 
 ## illogical-impulse-widgets
+- `ffmpeg`
+  - Makes the thumbnail for a video wallpaper, in `scripts/colors/switchwall.sh`.
 - `fuzzel`
   - Used in Hyprland and Quickshell config; its config is also included.
 - `glib2`
@@ -214,13 +221,11 @@ them; the default applications page just has no candidate to name for those role
   - Used in Hyprland config.
 - `libqalculate`
   - Used in Quickshell config, providing math ability in searchbar.
+  - Note that `qalc` is the needed executable. In Arch Linux [libqalculate](https://archlinux.org/packages/extra/x86_64/libqalculate) provides it, but in Fedora [qalculate](https://packages.fedoraproject.org/pkgs/libqalculate/qalculate/fedora-43.html#files) does and [libqalculate](https://packages.fedoraproject.org/pkgs/libqalculate/libqalculate/fedora-43.html#files) does not.
 
 Optional:
 - `mpvpaper`
   - Plays video wallpapers; `scripts/colors/switchwall.sh` falls back to a still image without it.
-- `ffmpeg`
-  - Makes the thumbnail for a video wallpaper.
-  - Note that `qalc` is the needed executable. In Arch Linux [libqalculate](https://archlinux.org/packages/extra/x86_64/libqalculate) provides it, but in Fedora [qalculate](https://packages.fedoraproject.org/pkgs/libqalculate/qalculate/fedora-43.html#files) does and [libqalculate](https://packages.fedoraproject.org/pkgs/libqalculate/libqalculate/fedora-43.html#files) does not.
 
 
 # Actual packages

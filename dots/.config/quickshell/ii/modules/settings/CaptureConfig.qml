@@ -167,7 +167,7 @@ ContentPage {
                     Config.options.regionSelector.annotation.useSatty = checked;
                 }
                 StyledToolTip {
-                    text: Translation.tr("Opens screenshots in Satty instead of the built-in annotation tool. Requires satty to be installed.")
+                    text: Translation.tr("Opens screenshots in Satty instead of Swappy.")
                 }
             }
         }

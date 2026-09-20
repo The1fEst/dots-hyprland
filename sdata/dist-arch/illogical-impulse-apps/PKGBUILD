@@ -1,11 +1,12 @@
 groups=(illogical-impulse)
 pkgname=illogical-impulse-apps
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Illogical Impulse Default Applications'
 arch=(any)
 license=(None)
 depends=(
   gnome-calendar
   thunderbird
+  vlc
 )

@@ -9,6 +9,18 @@ function setup_user_group(){
   x sudo usermod -aG video,i2c,input "$(whoami)"
 }
 
+function set_default_apps(){
+  local mime
+
+  x gio mime inode/directory org.kde.dolphin.desktop
+  for mime in image/jpeg image/png image/gif image/webp image/tiff image/bmp; do
+    x gio mime "$mime" satty.desktop
+  done
+  for mime in video/mp4 video/x-matroska video/webm video/quicktime audio/mpeg audio/flac; do
+    x gio mime "$mime" vlc.desktop
+  done
+}
+
 function network_managed_elsewhere(){
   local svc
   for svc in systemd-networkd iwd connman netctl dhcpcd; do
@@ -78,7 +90,8 @@ else
   pause
 fi
 
-v gio mime inode/directory org.kde.dolphin.desktop
+showfun set_default_apps
+v set_default_apps
 v gsettings set org.gnome.desktop.interface font-name 'Google Sans Medium 11 @opsz=11,wght=500'
 v gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 v kwriteconfig6 --file kdeglobals --group KDE --key widgetStyle Darkly
