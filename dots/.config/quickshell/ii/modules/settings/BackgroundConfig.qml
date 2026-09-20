@@ -5,7 +5,24 @@ import qs.modules.common
 import qs.modules.common.widgets
 
 ContentPage {
+    id: root
     forceWidth: true
+
+    function familyOptions(current: string): var {
+        const families = DesktopAppearance.familyNames;
+        const all = (current.length === 0 || families.includes(current)) ? families : [current, ...families];
+        return all.map(value => ({
+                    displayName: value,
+                    value: value
+                }));
+    }
+
+    function indexOfValue(model: var, value: var): int {
+        const found = model.findIndex(item => item.value === value);
+        return found !== -1 ? found : 0;
+    }
+
+    Component.onCompleted: DesktopAppearance.loadFamilies()
 
     ContentSection {
         icon: "wallpaper"
@@ -258,12 +275,21 @@ ContentPage {
                 }
             }
 
-            OptionTextArea {
-                Layout.fillWidth: true
-                placeholderText: Translation.tr("Font family")
-                current: Config.options.background.widgets.clock.digital.font.family
-                wrapMode: TextEdit.Wrap
-                onCommitted: value => Config.options.background.widgets.clock.digital.font.family = value
+            ConfigRow {
+                uniform: false
+
+                ContentSubsectionLabel {
+                    text: Translation.tr("Font family")
+                }
+
+                StyledComboBox {
+                    Layout.fillWidth: true
+                    buttonIcon: "font_download"
+                    textRole: "displayName"
+                    model: root.familyOptions(Config.options.background.widgets.clock.digital.font.family)
+                    boundIndex: root.indexOfValue(model, Config.options.background.widgets.clock.digital.font.family)
+                    onActivated: index => Config.options.background.widgets.clock.digital.font.family = model[index].value
+                }
             }
 
             ConfigSlider {
