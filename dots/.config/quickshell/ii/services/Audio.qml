@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.modules.common
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Pipewire
 
 /**
@@ -17,8 +18,23 @@ Singleton {
     property PwNode source: Pipewire.defaultAudioSource
     readonly property real hardMaxValue: 2.00 // People keep joking about setting volume to 5172% so...
     property string audioTheme: Config.options.sounds.theme
+    property list<string> themeNames: []
     property real value: sink?.audio.volume ?? 0
-    
+
+    function loadThemes(): void {
+        if (root.themeNames.length === 0)
+            themesProc.running = true;
+    }
+
+    Process {
+        id: themesProc
+        command: ["bash", "-c", "find /usr/share/sounds -mindepth 2 -maxdepth 2 -type d -name stereo -printf '%h\\n' | xargs -r -n1 basename | sort -u"]
+        stdout: StdioCollector {
+            onStreamFinished: root.themeNames = text.trim().split("\n").filter(name => name.length > 0)
+        }
+    }
+
+
     function friendlyDeviceName(node) {
         return (node.nickname || node.description || Translation.tr("Unknown"));
     }

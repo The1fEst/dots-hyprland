@@ -30,6 +30,22 @@ ContentPage {
         return found !== -1 ? found : 0;
     }
 
+    function themeOptions(current: string): var {
+        const themes = Audio.themeNames;
+        const all = (current.length === 0 || themes.includes(current)) ? themes : [current, ...themes];
+        return all.map(value => ({
+                    displayName: value,
+                    value: value
+                }));
+    }
+
+    function indexOfValue(model: var, value: var): int {
+        const found = model.findIndex(item => item.value === value);
+        return found !== -1 ? found : 0;
+    }
+
+    Component.onCompleted: Audio.loadThemes()
+
     ContentSection {
         icon: "volume_up"
         title: Translation.tr("Output")
@@ -181,13 +197,12 @@ ContentPage {
         ContentSubsection {
             title: Translation.tr("Sound theme")
 
-            MaterialTextField {
-                Layout.fillWidth: true
-                placeholderText: Translation.tr("e.g. freedesktop")
-                text: Config.options.sounds.theme
-                onEditingFinished: {
-                    Config.options.sounds.theme = text.trim();
-                }
+            StyledComboBox {
+                buttonIcon: "notification_sound"
+                textRole: "displayName"
+                model: root.themeOptions(Config.options.sounds.theme)
+                boundIndex: root.indexOfValue(model, Config.options.sounds.theme)
+                onActivated: index => Config.options.sounds.theme = model[index].value
             }
         }
     }
