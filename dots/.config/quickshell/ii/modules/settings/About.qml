@@ -155,8 +155,18 @@ ContentPage {
                     font.pixelSize: Appearance.font.pixelSize.title
                 }
                 StyledText {
-                    text: "https://github.com/end-4/dots-hyprland"
+                    text: "https://github.com/The1fEst/dots-hyprland"
                     font.pixelSize: Appearance.font.pixelSize.normal
+                    textFormat: Text.MarkdownText
+                    onLinkActivated: (link) => {
+                        Qt.openUrlExternally(link)
+                    }
+                    PointingHandLinkHover {}
+                }
+                StyledText {
+                    text: Translation.tr("Forked from %1").arg("https://github.com/end-4/dots-hyprland")
+                    font.pixelSize: Appearance.font.pixelSize.smaller
+                    color: Appearance.colors.colSubtext
                     textFormat: Text.MarkdownText
                     onLinkActivated: (link) => {
                         Qt.openUrlExternally(link)
