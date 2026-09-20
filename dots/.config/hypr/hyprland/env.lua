@@ -4,8 +4,26 @@ local home_dir = os.getenv("HOME")
 hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 
 -- Applications
-local xdg_data_dirs_old = os.getenv("XDG_DATA_DIRS") or ""
-hl.env("XDG_DATA_DIRS", home_dir .. "/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:" .. xdg_data_dirs_old)
+-- A reload runs this file again over the environment the last one left behind, so the
+-- list has to be rebuilt rather than prepended to. GTK walks every entry at startup.
+local data_dirs = {
+	home_dir .. "/.local/share/flatpak/exports/share",
+	"/var/lib/flatpak/exports/share",
+	"/usr/local/share",
+	"/usr/share",
+}
+for dir in (os.getenv("XDG_DATA_DIRS") or ""):gmatch("[^:]+") do
+	table.insert(data_dirs, dir)
+end
+local seen = {}
+local unique = {}
+for _, dir in ipairs(data_dirs) do
+	if not seen[dir] and not dir:match("^%$[%w_]+$") then
+		seen[dir] = true
+		table.insert(unique, dir)
+	end
+end
+hl.env("XDG_DATA_DIRS", table.concat(unique, ":"))
 
 -- Themes
 hl.env("QT_QPA_PLATFORM", "wayland;xcb")
