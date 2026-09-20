@@ -78,6 +78,7 @@ else
   pause
 fi
 
+v gio mime inode/directory org.kde.dolphin.desktop
 v gsettings set org.gnome.desktop.interface font-name 'Google Sans Medium 11 @opsz=11,wght=500'
 v gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 v kwriteconfig6 --file kdeglobals --group KDE --key widgetStyle Darkly
