@@ -1,5 +1,5 @@
 <div align="center">
-    <h1>【 end_4's Hyprland dotfiles 】</h1>
+    <h1>【 My fork of end_4's Hyprland dotfiles 】</h1>
     <h3></h3>
 </div>
 
@@ -17,10 +17,6 @@
     <h3></h3>
 </div>
 
-> [!WARNING]  
-> Hyprland 0.55 update:
-> If your distro has not shipped Hyprland 0.55 and/or you're not ready for it, you should switch to the Pre-Hyprland Luaification release (or not update yet, if you're going to do that). See the wiki for more info: [Install](https://ii.clsty.link/en/ii-qs/01setup/#automated-installation) | [Update](https://ii.clsty.link/en/ii-qs/01setup/#updating)
-
 <details> 
   <summary>What this is/isn't</summary>
 
@@ -35,14 +31,17 @@
      
   - **Overview**: Shows open apps with live previews
   - **Material themes**: Choose your wallpaper, done, enjoy
+  - **Settings in the shell**: Seventeen pages, from Wi-Fi to display arrangement
   - **Transparent installation**: Every command is shown before it's run
 </details>
 
 <details> 
   <summary>Installation</summary>
 
-   - **Arch only.** The installer stops on anything else
-   - **IMPORTANT: Hyprland 0.55 Update**: If your distro has not shipped Hyprland 0.55 and/or you're not ready for it, you should switch to the Pre-Hyprland Luaification release. See [the wiki](https://ii.clsty.link/en/ii-qs/01setup/) for more info
+   - **Arch only.** `arch`, `endeavouros` and `cachyos` are taken by name, anything that
+     reports `arch` in `ID_LIKE` is taken with a warning, and everything else stops the
+     installer. Architectures other than x86_64 warn and carry on
+   - **Hyprland 0.55 or newer**, because the Hyprland config here is the Lua one
    - Clone this repo and run `./setup install`
      - The one-line `bash <(curl -s https://ii.clsty.link/get)` installs upstream, not this fork
      - See [the wiki](https://ii.clsty.link/en/ii-qs/01setup/) for what the steps do
@@ -71,149 +70,109 @@
 </details>
 
 <div align="center">
-    <h2>• fork changes •</h2>
+    <h2>• what this fork is •</h2>
     <h3></h3>
 </div>
 
-This fork drops everything that talks to a remote service or runs inference, supports Arch only,
-and keeps growing the settings app until the KDE and GNOME control panels are no longer needed.
-Everything not listed here is upstream.
+An Arch-only build of illogical-impulse that keeps its work on the machine and puts the
+desktop's settings inside the shell. Everything not described below comes from upstream.
 
 <details>
-  <summary>Added</summary>
+  <summary>The shell</summary>
 
-  - **Settings app** — grown from seven pages to seventeen, in a window that runs inside the
-    shell rather than as its own process. Next to a Quick page for the common ones, it covers
-    Wi-Fi, network and WireGuard, Bluetooth, displays, sound, power and idle, multitasking,
-    appearance, applications and commands, notifications, search, mouse and touchpad, keyboard,
-    accessibility, privacy and the system pages, reaching options that previously could only be
-    edited by hand in `config.json`.
-    Changing the account password and arranging displays happen here instead of in `kcmshell6`
-  - **Welcome window** — also part of the shell now, and sets up displays, sound and power saving
-    on the first run
-  - **WireGuard** — quick toggle plus a connections dialog in the right sidebar
-  - **Reboot to Windows** — a session screen button in place of the task manager one, backed by
-    `scripts/system/boot-next-windows.sh`. It arms a one-shot UEFI `BootNext` at the Windows Boot
-    Manager and reboots; the firmware clears `BootNext` itself, so a failed Windows boot lands
-    back in Linux. Needs no setup — writing the variable goes through `pkexec`, so the shell's
-    polkit agent asks for the password. To skip that prompt, allow the one call in
+  One Quickshell config, `ii`, draws every panel and window.
+
+  - **Bar** — workspaces, system tray, clock, media, resources, battery, unread
+    notifications, the keyboard layout in upper case, weather, and a count of pending
+    updates read from `checkupdates`. The clock opens the calendar panel, and a vertical
+    variant of the bar carries the clock, media, resources and battery
+  - **Dock** — icons pin, unpin and reorder by dragging
+  - **Right sidebar** — notifications, volume mixer, night light, Wi-Fi networks,
+    Bluetooth devices, WireGuard connections, and quick toggles that are added, removed
+    and rearranged by dragging
+  - **Session screen** — lock, sleep, hibernate, log out, reboot, shut down, and **Reboot
+    to Windows**, backed by `scripts/system/boot-next-windows.sh`. It arms a one-shot UEFI
+    `BootNext` at the Windows Boot Manager and reboots. The firmware clears `BootNext` on
+    the next boot, so a failed Windows boot comes back to Linux. Reading the boot list
+    needs no privileges and only writing the variable goes through `pkexec`, so the
+    shell's polkit agent asks for the password. To skip that prompt, allow the one call in
     `/etc/sudoers.d` and swap `pkexec` for `sudo -n` in the script
-  - **Pending system updates** in the bar, read from `checkupdates`
-  - **Drag to arrange** — dock icons pin, unpin and reorder by dragging; quick toggles are added,
-    removed and rearranged the same way
-  - **Region selector** — a mode panel and an options menu, the pointer can be kept in the
-    capture, and saving a screenshot to a file is a setting rather than a fixed behaviour
-  - **About page** — what the machine is, which graphics card it has, a card per mounted disk,
-    and this fork's own name and link
-  - **Calendar** — opens from the clock instead of the right sidebar
-  - **Auto HDR** — Hyprland's three automatic modes, not just on and off
-  - **Sounds** — the alert theme is picked from the themes that are installed, and the microphone
-    alert has its own switch
-  - **Lock screen** — shows the account's full name when one is set, and the keyboard layout in
-    upper case
-  - **Bar** — keyboard layout indicator in upper case
-  - `StringUtils.splitList()` for parsing the comma-separated fields the settings app now uses
+  - **Lock screen** — the account's full name when one is set, the keyboard layout in
+    upper case, battery, and fingerprint when the reader is configured. The hyprlock
+    fallback ships alongside it and shows a 12-hour clock
+  - **Region selector** — a mode panel and an options menu for pointer capture, a
+    countdown, a remembered region, window and layer targets, and the outline of a
+    rectangle or a circle. Whether a shot is also written to a file is a setting, and
+    Satty takes it for annotation
+  - **Welcome window** — sets up displays, sound and power saving on the first run
+  - Overview, media controls, on-screen keyboard and display, wallpaper selector, cheat
+    sheet, notification popups, screen corners and a polkit agent round it out
 
 </details>
 
 <details>
-  <summary>Rewritten</summary>
+  <summary>Settings</summary>
 
-  - **Media controls** — reworked `MprisController`, seeking and player filtering; the media
-    keys drive the shell over IPC instead of shelling out to `playerctl`
-  - **Bar layout** — consistency pass across the bar; the active-window widget was dropped
-  - **Panels** — the waffle family is gone and the panels load directly; `ii` is the one family
-    this fork develops
-  - **Installer** — uses `paru` instead of `yay`, and refuses to run anywhere but Arch
-  - **Fonts** — the interface defaults to Google Sans, so non-Latin text keeps a proper face;
-    Google Sans Flex stays only on the background clock, which can pick its own family
-  - **Clipboard history** — `wl-clip-persist` holds the clipboard after the program that filled it
-    exits, and the `cliphist` watchers moved from Hyprland's exec list to systemd user units.
-    Images get their own preview row, and vendor blobs stay out of the list
-  - **hypridle** — started from a systemd user unit instead of Hyprland's exec list, so the
-    settings app can restart it
-  - `scheme_for_image.py` moved from OpenCV to PIL, keeping the same colorfulness metric
-  - Lock screen clock uses a 12-hour format
+  A window inside the shell, closed with `Escape`, holding seventeen pages: Quick, Wi-Fi,
+  Network, Bluetooth, Displays, Sound, Power, Multitasking, Appearance, Apps,
+  Notifications, Search, Mouse & Touchpad, Keyboard, Accessibility, Privacy & Security and
+  System. Between them, they reach the options that otherwise live only in `config.json`,
+  and they cover ground that would otherwise need `kcmshell6`: the account password,
+  display arrangement, WireGuard, Hyprland's three Auto HDR modes, and the alert sound
+  theme picked from the themes that are installed.
+
+  The About page names the machine, its graphics card and a card per mounted disk, along
+  with this fork and the upstream it came from.
 
 </details>
 
 <details>
-  <summary>Removed: anything leaving the machine</summary>
-
-  - Screen translator — sent full screenshots to Google Cloud Vision (OCR) and the recognised
-    text to Google Translate, together with the service-account keyring plumbing
-  - `snip_to_search.sh` — uploaded screen regions to the public host uguu.se, then opened Google Lens
-  - Google favicons in the launcher, which leaked searched domains before you pressed Enter
-  - Web search in the launcher and the start menu
-  - Random wallpapers from the konachan and osu APIs
-  - Floating image overlay and its URL downloader
-  - "Open network portal" button (nmcheck.gnome.org) and the Valorant crosshair editor link
-
-</details>
-
-<details>
-  <summary>Removed: AI and heavy dependencies</summary>
-
-  - Ollama scripts and the primary-selection query keybind
-  - OpenCV, entirely. It backed content-region hints in the region selector and background
-    widget placement; the latter now picks a random spot on the monitor
-  - `hyprconfigurator.py`, along with game mode and the anti-flashbang Hyprland shader, the two
-    features that wrote through it
-  - tesseract OCR keybind
-
-</details>
-
-<details>
-  <summary>Removed: features and dead code</summary>
-
-  - Widget overlay on `Super`+`G`, with its FPS limiter, notes, recorder, resources and volume mixer
-  - Crosshair overlay
-  - Anti-flashbang in both variants — the Hyprland screen shader and the content-based
-    brightness adjustment that screenshotted the display on every window switch
-  - Left sidebar, AI chat, anime and music recognition
-  - The waffle panel family, and the machinery for picking a family at all
-  - The calendar view the bar's own calendar panel replaced
-  - The `nwg-displays` `monitors.lua` and `workspaces.lua` hooks, which fought the settings app
-    over the same files
-  - The click-to-show tooltip option, and two settings nothing ever read
-  - Leftovers from features upstream had already dropped: AI chat state, the booru service and
-    its directories, translate-shell config, an "Enable translator" switch bound to a
-    nonexistent option, and a "Generate translation with Gemini" button whose process was
-    never declared
-
-</details>
-
-<details>
-  <summary>What still uses the network</summary>
+  <summary>What leaves the machine</summary>
 
   - **Weather** — `wttr.in`, with GPS coordinates when `enableGPS` is set. Off by default
   - **Album art** — downloaded from the URL the MPRIS player reports
   - The installer fetches `uv` from `astral.sh` and cursors from GitHub releases
 
-Nothing else in `dots/` makes an outgoing request.
+  Nothing else in `dots/` makes an outgoing request. There is no AI, no OCR, no web search
+  in the launcher or the start menu, no remote wallpaper source, and no screen translator.
 
 </details>
 
 <details>
   <summary>Packaging and setup</summary>
 
-  - **Arch only.** The Fedora, Gentoo and Nix trees are gone, and the installer stops on anything
-    that is not Arch rather than half-installing
-  - Python packages drop from 33 to 16. Removed `opencv-contrib-python`, `google-auth` and
-    `requests`, plus `pywayland`, `psutil`, `setproctitle`, `libsass` and
-    `material-color-utilities`, which nothing in the repo referenced
-  - `tesseract` and its language data are gone
-  - `illogical-impulse-apps` is a new meta package for the applications the shell hands work to
-    rather than uses itself: GNOME Calendar for `text/calendar` and Thunderbird for `mailto`
-  - `power-profiles-daemon` is installed, so the power profile controls have a daemon to talk to
-  - NetworkManager is enabled by the installer, unless the machine already has another network
-    manager enabled
-  - Directories open in Dolphin instead of whatever claimed `inode/directory` first
-  - EasyEffects is installed but no longer autostarted; the sidebar toggle starts it
+  - **Arch only**, through the `illogical-impulse-*` meta packages under
+    `sdata/dist-arch`. `makepkg` cleans its work directories after each build, so nothing
+    is left behind in the repository
+  - The venv holds sixteen Python packages, eleven of them named directly:
+    `build`, `pillow`, `setuptools-scm`, `wheel`, `kde-material-you-colors`,
+    `materialyoucolor`, `click`, `loguru`, `pycairo`, `pygobject` and `tqdm`
+  - `illogical-impulse-apps` carries the applications the shell hands work to rather than
+    uses itself: GNOME Calendar for `text/calendar`, Thunderbird for `mailto` and VLC for
+    video and audio. Directories open in Dolphin, pictures in Satty
+  - `power-profiles-daemon` is installed, so the power profile controls have a daemon to
+    talk to
+  - NetworkManager is enabled by the installer, unless the machine already has another
+    network manager enabled
+  - EasyEffects is installed but not autostarted; the sidebar toggle starts it
   - The systemd user units the shell relies on ship with it: `quickshell`, `hypridle`,
-    `cliphist-text`, `cliphist-image` and `wl-clip-persist`
-  - `colors.lua` and `hyprlock/colors.conf` are no longer tracked — matugen regenerates them
-    on every wallpaper change
+    `cliphist-text`, `cliphist-image` and `wl-clip-persist`, all hanging off
+    `hyprland-session.target`
+  - `colors.lua` and `hyprlock/colors.conf` are not tracked — matugen regenerates them on
+    every wallpaper change
+
+</details>
+
+<details>
+  <summary>Odds and ends</summary>
+
+  - **Fonts** — the interface is Google Sans, so non-Latin text keeps a proper face; the
+    background clock has its own family and is set to Google Sans Flex
+  - **Clipboard** — `cliphist` keeps the history and `wl-clip-persist` holds the clipboard
+    after the program that filled it exits. Images get their own preview row, and vendor
+    blobs stay out of the list
+  - **Media keys** — they drive the shell over its IPC socket
+  - `scheme_for_image.py` reads colors through PIL
 
 </details>
 
@@ -241,6 +200,7 @@ Widget system: Quickshell | Support: Yes
     <h3></h3>
 </div>
 
+ - [@end-4](https://github.com/end-4) for the dotfiles this fork is built on
  - [@clsty](https://github.com/clsty) for making the dotfiles accessible by taking care of the install script and many other things
  - [@midn8hustlr](https://github.com/midn8hustlr) for greatly improving the color generation system
  - [@outfoxxed](https://github.com/outfoxxed/) for being extremely supportive in my Quickshell journey
