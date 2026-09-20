@@ -7,7 +7,7 @@ StartLimitBurst=20
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/stash --min-size 512 watch --mime-type image
+ExecStart=/usr/bin/wl-paste --type image --watch /usr/bin/bash -c 'cliphist store && qs -c ii ipc call cliphistService update'
 Restart=always
 RestartSec=2
 Slice=session.slice

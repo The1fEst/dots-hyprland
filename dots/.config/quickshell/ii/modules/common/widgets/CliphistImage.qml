@@ -15,7 +15,7 @@ Rectangle {
     property bool blur: false
     property string blurText: "Image hidden"
 
-    property string imageDecodePath: Directories.clipboardDecode
+    property string imageDecodePath: Directories.cliphistDecode
     property string imageDecodeFileName: `${entryNumber}`
     property string imageDecodeFilePath: `${imageDecodePath}/${imageDecodeFileName}`
     property string source
@@ -26,8 +26,14 @@ Rectangle {
         const match = root.entry.match(/^(\d+)\t/);
         return match ? parseInt(match[1]) : 0;
     }
-    readonly property int imageWidth: image.sourceSize.width
-    readonly property int imageHeight: image.sourceSize.height
+    readonly property int imageWidth: {
+        const match = root.entry?.match(/(\d+)x(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+    }
+    readonly property int imageHeight: {
+        const match = root.entry?.match(/(\d+)x(\d+)/);
+        return match ? parseInt(match[2]) : 0;
+    }
     readonly property real scale: {
         if (root.imageWidth <= 0 || root.imageHeight <= 0)
             return 0;
@@ -45,12 +51,12 @@ Rectangle {
 
     Process {
         id: decodeImageProcess
-        command: ["bash", "-c", `[ -f ${imageDecodeFilePath} ] || ${Clipboard.binary} decode ${root.entryNumber} > '${imageDecodeFilePath}'`]
+        command: ["bash", "-c", `[ -f ${imageDecodeFilePath} ] || echo '${StringUtils.shellSingleQuoteEscape(root.entry)}' | ${Cliphist.cliphistBinary} decode > '${imageDecodeFilePath}'`]
         onExited: (exitCode, exitStatus) => {
             if (exitCode === 0) {
                 root.source = imageDecodeFilePath;
             } else {
-                console.error("[ClipboardImage] Failed to decode image for entry:", root.entry);
+                console.error("[CliphistImage] Failed to decode image for entry:", root.entry);
                 root.source = "";
             }
         }
@@ -77,6 +83,9 @@ Rectangle {
         fillMode: Image.PreserveAspectFit
         antialiasing: true
         asynchronous: true
+
+        width: root.imageWidth * root.scale
+        height: root.imageHeight * root.scale
     }
 
     Loader {

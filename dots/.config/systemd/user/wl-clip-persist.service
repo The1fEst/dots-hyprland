@@ -1,0 +1,16 @@
+[Unit]
+Description=Keep the clipboard after the program that filled it exits
+PartOf=graphical-session.target
+After=graphical-session.target
+StartLimitIntervalSec=300
+StartLimitBurst=20
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/wl-clip-persist --clipboard regular
+Restart=always
+RestartSec=2
+Slice=session.slice
+
+[Install]
+WantedBy=hyprland-session.target

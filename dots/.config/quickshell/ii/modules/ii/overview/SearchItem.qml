@@ -32,7 +32,7 @@ RippleButton {
     property string itemClickActionName: entry?.verb ?? "Open"
     property string bigText: entry?.iconType === LauncherSearchResult.IconType.Text ? entry?.iconName ?? "" : ""
     property string materialSymbol: entry.iconType === LauncherSearchResult.IconType.Material ? entry?.iconName ?? "" : ""
-    property string clipboardRawString: entry?.rawValue ?? ""
+    property string cliphistRawString: entry?.rawValue ?? ""
     property bool blurImage: entry?.blurImage ?? false
     
     visible: root.entryShown
@@ -184,8 +184,8 @@ RippleButton {
             }
             RowLayout {
                 Loader { // Checkmark for copied clipboard entry
-                    visible: itemName == Quickshell.clipboardText && root.clipboardRawString
-                    active: itemName == Quickshell.clipboardText && root.clipboardRawString
+                    visible: itemName == Quickshell.clipboardText && root.cliphistRawString
+                    active: itemName == Quickshell.clipboardText && root.cliphistRawString
                     sourceComponent: Rectangle {
                         implicitWidth: activeText.implicitHeight
                         implicitHeight: activeText.implicitHeight
@@ -213,10 +213,10 @@ RippleButton {
                 }
             }
             Loader { // Clipboard image preview
-                active: root.clipboardRawString && Clipboard.entryIsImage(root.clipboardRawString)
-                sourceComponent: ClipboardImage {
+                active: root.cliphistRawString && Cliphist.entryIsImage(root.cliphistRawString)
+                sourceComponent: CliphistImage {
                     Layout.fillWidth: true
-                    entry: root.clipboardRawString
+                    entry: root.cliphistRawString
                     maxWidth: contentColumn.width
                     maxHeight: 140
                     blur: root.blurImage
