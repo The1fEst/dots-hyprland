@@ -9,6 +9,14 @@ Tips:
 - For each package included in the local `PKGBUILD`s which name does **not** have prefix `illogical-impulse-`, for example `rsync`, it's either from [Arch Linux Packages](https://archlinux.org/packages) or the [AUR](https://aur.archlinux.org/packages). Search the package name on them to get the info (e.g. what executable(s) the package provides).
 
 # Meta packages
+## illogical-impulse-apps
+Applications the shell hands work to rather than uses itself. Nothing breaks without
+them; the default applications page just has no candidate to name for those roles.
+- `gnome-calendar`
+  - Opens `text/calendar`.
+- `thunderbird`
+  - Opens `x-scheme-handler/mailto`.
+
 ## illogical-impulse-audio
 - `cava`
   - Used in Quickshell config.
@@ -127,9 +135,6 @@ Tips:
   - Basic component.
 - `dolphin`
   - Used in Hyprland and Quickshell config.
-- `gnome-calendar`
-  - Opens `text/calendar`, so the Calendar entry on the default applications page has
-    something to name besides a text editor.
 - `systemsettings`
   - Used in Hyprland `keybinds.conf`.
 

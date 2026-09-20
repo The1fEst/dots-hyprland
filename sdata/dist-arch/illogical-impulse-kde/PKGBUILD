@@ -12,6 +12,5 @@ depends=(
   plasma-nm
   polkit-kde-agent
   dolphin
-  gnome-calendar
   systemsettings
 )
