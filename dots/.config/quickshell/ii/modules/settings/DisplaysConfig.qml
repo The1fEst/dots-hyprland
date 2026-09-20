@@ -338,14 +338,29 @@ ContentPage {
             }
         }
 
-        OptionSwitch {
-            buttonIcon: "hdr_auto"
-            text: Translation.tr("Auto HDR")
-            current: HyprlandOptions.numberOr("render:cm_auto_hdr", 1) > 0
-            onCommitted: value => HyprlandOptions.set("render:cm_auto_hdr", value ? 1 : 0)
+        ContentSubsection {
+            title: Translation.tr("Auto HDR")
+            tooltip: Translation.tr("Switches to HDR while a fullscreen window has HDR content. Applies to every display.")
 
-            StyledToolTip {
-                text: Translation.tr("Switches to HDR while a fullscreen window has HDR content. Applies to every display.")
+            StyledComboBox {
+                buttonIcon: "hdr_auto"
+                textRole: "displayName"
+                model: [
+                    {
+                        displayName: Translation.tr("Off"),
+                        value: 0
+                    },
+                    {
+                        displayName: Translation.tr("HDR"),
+                        value: 1
+                    },
+                    {
+                        displayName: Translation.tr("HDR (display profile)"),
+                        value: 2
+                    }
+                ]
+                boundIndex: root.indexOfValue(model, HyprlandOptions.numberOr("render:cm_auto_hdr", 1))
+                onActivated: index => HyprlandOptions.set("render:cm_auto_hdr", model[index].value)
             }
         }
 
