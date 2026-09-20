@@ -33,6 +33,7 @@ RippleButton {
     property string bigText: entry?.iconType === LauncherSearchResult.IconType.Text ? entry?.iconName ?? "" : ""
     property string materialSymbol: entry.iconType === LauncherSearchResult.IconType.Material ? entry?.iconName ?? "" : ""
     property string cliphistRawString: entry?.rawValue ?? ""
+    readonly property bool cliphistImage: !!root.cliphistRawString && Cliphist.entryIsImage(root.cliphistRawString)
     property bool blurImage: entry?.blurImage ?? false
     
     visible: root.entryShown
@@ -203,6 +204,7 @@ RippleButton {
                 StyledText { // Item name/content
                     Layout.fillWidth: true
                     id: nameText
+                    visible: !root.cliphistImage
                     textFormat: Text.StyledText // RichText also works, but StyledText ensures elide work
                     font.pixelSize: Appearance.font.pixelSize.small
                     font.family: Appearance.font.family[root.fontType]
@@ -213,9 +215,9 @@ RippleButton {
                 }
             }
             Loader { // Clipboard image preview
-                active: root.cliphistRawString && Cliphist.entryIsImage(root.cliphistRawString)
+                Layout.fillWidth: true
+                active: root.cliphistImage
                 sourceComponent: CliphistImage {
-                    Layout.fillWidth: true
                     entry: root.cliphistRawString
                     maxWidth: contentColumn.width
                     maxHeight: 140
