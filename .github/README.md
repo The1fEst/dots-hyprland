@@ -127,9 +127,9 @@ Everything not listed here is upstream.
   - **Installer** — uses `paru` instead of `yay`, and refuses to run anywhere but Arch
   - **Fonts** — the interface defaults to Google Sans, so non-Latin text keeps a proper face;
     Google Sans Flex stays only on the background clock, which can pick its own family
-  - **Clipboard history** — back on `cliphist`, with `wl-clip-persist` holding the clipboard after
-    the program that filled it exits, both run as systemd user units. Images get their own preview
-    row, and vendor blobs stay out of the list
+  - **Clipboard history** — `wl-clip-persist` holds the clipboard after the program that filled it
+    exits, and the `cliphist` watchers moved from Hyprland's exec list to systemd user units.
+    Images get their own preview row, and vendor blobs stay out of the list
   - **hypridle** — started from a systemd user unit instead of Hyprland's exec list, so the
     settings app can restart it
   - `scheme_for_image.py` moved from OpenCV to PIL, keeping the same colorfulness metric
