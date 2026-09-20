@@ -35,6 +35,7 @@ import qs.modules.ii.settings
 import qs.modules.ii.sidebarRight
 import qs.modules.ii.verticalBar
 import qs.modules.ii.wallpaperSelector
+import qs.modules.ii.welcome
 
 ShellRoot {
     id: root
@@ -76,6 +77,7 @@ ShellRoot {
     PanelLoader { component: SidebarRight {} }
     PanelLoader { extraCondition: Config.options.bar.vertical; component: VerticalBar {} }
     PanelLoader { component: WallpaperSelector {} }
+    PanelLoader { component: WelcomeWindow {} }
 
     IpcHandler {
         target: "bar"

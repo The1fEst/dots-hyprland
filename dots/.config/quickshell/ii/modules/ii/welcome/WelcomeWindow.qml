@@ -1,11 +1,3 @@
-//@ pragma UseQApplication
-//@ pragma Env QS_NO_RELOAD_POPUP=1
-//@ pragma Env QT_QUICK_CONTROLS_STYLE=Basic
-//@ pragma Env QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000
-
-// Adjust this to make the app smaller or larger
-//@ pragma Env QT_SCALE_FACTOR=1
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -13,33 +5,46 @@ import QtQuick.Window
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
+import Quickshell.Services.Pipewire
+import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.functions
 
-ApplicationWindow {
+FloatingWindow {
     id: root
     property string firstRunFilePath: FileUtils.trimFileProtocol(`${Directories.state}/user/first_run.txt`)
     property string firstRunFileContent: "This file is just here to confirm you've been greeted :>"
     property real contentPadding: 8
     property bool showNextTime: false
-    visible: true
-    onClosing: {
+
+    visible: GlobalStates.welcomeOpen
+    onClosed: {
+        GlobalStates.welcomeOpen = false;
         Quickshell.execDetached(["notify-send", Translation.tr("Welcome app"), Translation.tr("Enjoy! You can reopen the welcome app any time with <tt>Super+Shift+Alt+/</tt>. To open the settings app, hit <tt>Super+I</tt>"), "-a", "Shell"]);
-        Qt.quit();
     }
     title: Translation.tr("illogical-impulse Welcome")
 
-    Component.onCompleted: {
-        MaterialThemeLoader.reapplyTheme();
-        Config.readWriteDelay = 0 // Welcome app always only sets one var at a time so delay isn't needed
+    IpcHandler {
+        target: "welcome"
+
+        function open(): void {
+            GlobalStates.welcomeOpen = true;
+        }
+
+        function close(): void {
+            GlobalStates.welcomeOpen = false;
+        }
+
+        function toggle(): void {
+            GlobalStates.welcomeOpen = !GlobalStates.welcomeOpen;
+        }
     }
 
-    minimumWidth: 600
-    minimumHeight: 400
-    width: 900
-    height: 650
+    minimumSize: Qt.size(600, 400)
+    implicitWidth: 900
+    implicitHeight: 650
     color: Appearance.m3colors.m3background
 
 
@@ -148,6 +153,144 @@ ApplicationWindow {
                     }
 
                     // Removed section: "Generate translation with Gemini"
+                }
+
+                ContentSection {
+                    id: displaySection
+                    icon: "display_settings"
+                    title: Translation.tr("Displays")
+
+                    property string selectedOutput: ""
+                    readonly property list<var> monitors: HyprlandData.monitorsAll
+                    readonly property var monitor: displaySection.monitors.find(one => one.name === displaySection.selectedOutput) ?? displaySection.monitors[0] ?? null
+                    readonly property string name: displaySection.monitor?.name ?? ""
+                    readonly property real logicalWidth: Math.round((displaySection.monitor?.width ?? 0) / Math.max(0.01, displaySection.monitor?.scale ?? 1))
+                    readonly property real logicalHeight: Math.round((displaySection.monitor?.height ?? 0) / Math.max(0.01, displaySection.monitor?.scale ?? 1))
+
+                    function indexOfValue(model: var, value: var): int {
+                        const found = model.findIndex(item => item.value === value);
+                        return found !== -1 ? found : 0;
+                    }
+
+                    function apply(keys: var): void {
+                        DisplayOptions.applyTo(displaySection.monitor, keys);
+                    }
+
+                    ConfigSelectionArray {
+                        visible: displaySection.monitors.length > 1
+                        currentValue: displaySection.name
+                        onSelected: newValue => {
+                            displaySection.selectedOutput = newValue;
+                        }
+                        options: displaySection.monitors.map(one => ({
+                                    value: one.name,
+                                    displayName: `${one.model || one.name} (${one.name})`
+                                }))
+                    }
+
+                    MonitorArrangement {
+                        Layout.fillWidth: true
+                        visible: displaySection.monitors.length > 1
+                        selected: displaySection.name
+                        onPicked: name => displaySection.selectedOutput = name
+                        onMoved: (name, x, y) => DisplayOptions.moveTo(name, x, y)
+                    }
+
+                    ConfigRow {
+                        ContentSubsection {
+                            title: Translation.tr("Resolution")
+
+                            StyledComboBox {
+                                buttonIcon: "aspect_ratio"
+                                textRole: "displayName"
+                                model: DisplayOptions.shownModesOf(displaySection.monitor, false).map(mode => ({
+                                            displayName: mode.native ? Translation.tr("%1 × %2 (Default)").arg(mode.width).arg(mode.height) : `${mode.width} × ${mode.height}`,
+                                            value: `${mode.width}x${mode.height}`,
+                                            mode: mode
+                                        }))
+                                boundIndex: displaySection.indexOfValue(model, `${displaySection.logicalWidth}x${displaySection.logicalHeight}`)
+                                onActivated: index => {
+                                    const picked = model[index].mode;
+                                    displaySection.apply({
+                                        size: `${picked.mode.width}x${picked.mode.height}`,
+                                        scale: picked.scale,
+                                        rate: picked.rate ?? displaySection.monitor?.refreshRate
+                                    });
+                                }
+                            }
+                        }
+
+                        ContentSubsection {
+                            title: Translation.tr("Refresh rate")
+
+                            StyledComboBox {
+                                buttonIcon: "refresh"
+                                textRole: "displayName"
+                                model: DisplayOptions.ratesOf(displaySection.monitor).map(rate => ({
+                                            displayName: Translation.tr("%1 Hz").arg(Math.round(rate)),
+                                            value: Math.round(rate)
+                                        }))
+                                boundIndex: displaySection.indexOfValue(model, Math.round(displaySection.monitor?.refreshRate ?? 0))
+                                onActivated: index => displaySection.apply({
+                                        rate: model[index].value
+                                    })
+                            }
+                        }
+                    }
+                }
+
+                ContentSection {
+                    id: soundSection
+                    icon: "volume_up"
+                    title: Translation.tr("Sound")
+
+                    function deviceLabel(node: var): string {
+                        const description = node?.description ?? "";
+                        const device = node?.nickname ?? "";
+                        if (device.length > 0 && description.length > device.length && description.startsWith(device))
+                            return `${device} · ${description.slice(device.length).trim()}`;
+                        return description || device || node?.name || "";
+                    }
+
+                    function deviceOptions(devices: var): var {
+                        return devices.map(node => ({
+                                    displayName: soundSection.deviceLabel(node),
+                                    value: node
+                                }));
+                    }
+
+                    function indexOfDevice(options: var, node: var): int {
+                        const found = options.findIndex(option => option.value === node);
+                        return found !== -1 ? found : 0;
+                    }
+
+                    PwObjectTracker {
+                        objects: [...Audio.outputDevices, ...Audio.inputDevices]
+                    }
+
+                    ContentSubsection {
+                        title: Translation.tr("Output")
+
+                        StyledComboBox {
+                            buttonIcon: "speaker"
+                            textRole: "displayName"
+                            model: soundSection.deviceOptions(Audio.outputDevices)
+                            boundIndex: soundSection.indexOfDevice(model, Audio.sink)
+                            onActivated: index => Audio.setDefaultSink(model[index].value)
+                        }
+                    }
+
+                    ContentSubsection {
+                        title: Translation.tr("Input")
+
+                        StyledComboBox {
+                            buttonIcon: "mic"
+                            textRole: "displayName"
+                            model: soundSection.deviceOptions(Audio.inputDevices)
+                            boundIndex: soundSection.indexOfDevice(model, Audio.source)
+                            onActivated: index => Audio.setDefaultSource(model[index].value)
+                        }
+                    }
                 }
 
                 ContentSection {
@@ -277,11 +420,25 @@ ApplicationWindow {
                 }
 
                 ContentSection {
-                    icon: "rule"
-                    title: Translation.tr("Policies")
+                    icon: "bedtime"
+                    title: Translation.tr("Power saving")
 
-                    ConfigRow {
-                        Layout.fillWidth: true
+                    IdleTimeoutRow {
+                        title: Translation.tr("Automatic Screen Blank")
+                        tooltip: Translation.tr("Turns the screens off after a period of inactivity")
+                        what: "screen"
+                        switchIcon: "brightness_low"
+                        switchText: Translation.tr("Blank the screen")
+                        fallbackMinutes: 15
+                    }
+
+                    IdleTimeoutRow {
+                        title: Translation.tr("Suspend when idle")
+                        tooltip: Translation.tr("Turning automatic suspend off means the machine keeps drawing power while nobody is at it")
+                        what: "suspend"
+                        switchIcon: "pause"
+                        switchText: Translation.tr("Suspend")
+                        fallbackMinutes: 45
                     }
                 }
 

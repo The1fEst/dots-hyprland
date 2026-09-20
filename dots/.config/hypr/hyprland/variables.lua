@@ -14,6 +14,7 @@ officeSoftware = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'wps
 textEditor = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'kate' 'gnome-text-editor' 'emacs'"
 volumeMixer = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'pavucontrol-qt' 'pavucontrol'"
 settingsApp = "qs ipc --any-display -c $qsConfig call settings open"
+welcomeApp = "qs ipc --any-display -c $qsConfig call welcome open"
 taskManager = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'gnome-system-monitor' 'plasma-systemmonitor --page-name Processes' 'command -v btop && kitty -1 fish -c btop'"
 
 workspaceGroupSize = 10

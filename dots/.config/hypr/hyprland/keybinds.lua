@@ -29,7 +29,7 @@ hl.bind("SUPER + K", hl.dsp.global("quickshell:oskToggle"), { description = "She
 hl.bind("SUPER + M", hl.dsp.global("quickshell:mediaControlsToggle"), { description = "Shell: Toggle media controls" })
 hl.bind("CTRL + ALT + Delete", hl.dsp.global("quickshell:sessionToggle"), { description = "Shell: Toggle session menu" })
 hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd(qsIsAlive .. " || pkill wlogout || wlogout -p layer-shell"))
-hl.bind("SHIFT + SUPER + ALT + Slash", hl.dsp.exec_cmd("qs -p $HOME/.config/quickshell/$qsConfig/welcome.qml"))
+hl.bind("SHIFT + SUPER + ALT + Slash", hl.dsp.exec_cmd(welcomeApp))
 hl.bind("CTRL + SUPER + ALT + K", hl.dsp.exec_cmd("qs -p $HOME/.config/quickshell/$qsConfig/killDialog.qml"),
     { description = "Shell: Kill conflicting daemons" })
 hl.bind("CTRL + SUPER + ALT + Slash", hl.dsp.exec_cmd("xdg-open $HOME/.config/hypr/hyprland/keybinds.lua"),

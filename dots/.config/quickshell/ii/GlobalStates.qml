@@ -28,6 +28,7 @@ Singleton {
     property string settingsPage: ""
     property bool superDown: false
     property bool superReleaseMightTrigger: true
+    property bool welcomeOpen: false
     property bool wallpaperSelectorOpen: false
     property bool workspaceShowNumbers: false
 
