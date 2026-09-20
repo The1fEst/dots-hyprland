@@ -281,6 +281,7 @@ FloatingWindow {
 
                     FloatingActionButton {
                         id: fab
+                        Layout.fillWidth: navRail.expanded
                         property bool justCopied: false
                         iconText: justCopied ? "check" : "edit"
                         buttonText: justCopied ? Translation.tr("Path copied") : Translation.tr("Config file")
