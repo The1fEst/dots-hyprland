@@ -43,6 +43,7 @@ PanelWindow {
     }
     property var phase: RegionSelection.Phase.Select
     signal dismiss()
+    signal recordingStarted(screenName: string)
 
     // Styles
     property string screenshotDir: Directories.screenshotTemp
@@ -284,6 +285,8 @@ PanelWindow {
             root.isRecording ? "" : root.screenshotPath));
         if (root.isRecording) {
             root.phase = RegionSelection.Phase.Post
+            root.recordingStarted(root.screen.name);
+            ScreenRecording.watch();
         } else {
             root.dismiss();
         }

@@ -77,6 +77,9 @@ hl.bind("SUPER + ALT + R", hl.dsp.exec_cmd(qsIsAlive .. " || " .. qsScripts .. "
 hl.bind("CTRL + ALT + R", hl.dsp.exec_cmd(qsScripts .. "/videos/record.sh --fullscreen"), { locked = true })
 hl.bind("SUPER + SHIFT + ALT + R", hl.dsp.exec_cmd(qsScripts .. "/videos/record.sh --fullscreen --sound"),
     { locked = true, description = "Utilities: Record screen (with sound)" })
+hl.bind("SUPER + CTRL + SHIFT + R", hl.dsp.global("quickshell:recordStop"),
+    { locked = true, description = "Utilities: Stop recording" })
+hl.bind("SUPER + CTRL + SHIFT + R", hl.dsp.exec_cmd(qsIsAlive .. " || pkill wf-recorder"), { locked = true })
 --# Fullscreen screenshot
 local grimhyprctl = "grim -o \"$(hyprctl activeworkspace -j | jq -r '.monitor')\""
 hl.bind("SUPER + Print", hl.dsp.exec_cmd(grimhyprctl .. " - | wl-copy"),

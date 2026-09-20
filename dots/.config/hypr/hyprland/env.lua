@@ -42,15 +42,15 @@ hl.env("DXVK_HDR", "1")
 local nvidia = is_file_exists("/proc/driver/nvidia/version")
 
 if nvidia then
-    -- Qt draws through its software fallback on this driver and every widget app drags
-    hl.env("QT_WIDGETS_RHI", "1")
-    hl.env("QT_WIDGETS_RHI_BACKEND", "opengl")
+	-- Qt draws through its software fallback on this driver and every widget app drags
+	hl.env("QT_WIDGETS_RHI", "1")
+	hl.env("QT_WIDGETS_RHI_BACKEND", "vulkan")
 
-    hl.env("LIBVA_DRIVER_NAME", "nvidia")
-    hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
-    hl.env("NVD_BACKEND", "direct")
-    hl.env("GBM_BACKEND", "nvidia-drm")
+	hl.env("LIBVA_DRIVER_NAME", "nvidia")
+	hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+	hl.env("NVD_BACKEND", "direct")
+	hl.env("GBM_BACKEND", "nvidia-drm")
 
-    hl.env("PROTON_ENABLE_NVAPI", "1")
-    hl.env("DXVK_ENABLE_NVAPI", "1")
+	hl.env("PROTON_ENABLE_NVAPI", "1")
+	hl.env("DXVK_ENABLE_NVAPI", "1")
 end
